@@ -1,2 +1,2 @@
-# laser_triggering
+# Laser triggering
 GUI for triggering excimer laser pulses
