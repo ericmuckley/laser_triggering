@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>616</width>
-    <height>437</height>
+    <height>417</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -205,22 +205,22 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="title">
-     <string>Configure instrument</string>
+     <string>Configure instruments</string>
     </property>
-    <widget class="QWidget" name="formLayoutWidget_2">
+    <widget class="QWidget" name="gridLayoutWidget">
      <property name="geometry">
       <rect>
-       <x>30</x>
-       <y>20</y>
-       <width>111</width>
-       <height>31</height>
+       <x>10</x>
+       <y>30</y>
+       <width>151</width>
+       <height>41</height>
       </rect>
      </property>
-     <layout class="QFormLayout" name="formlayout_pulsegen">
+     <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="label_pulsegeneratoraddress">
+       <widget class="QLabel" name="label">
         <property name="text">
-         <string>Address</string>
+         <string>SRS DG645</string>
         </property>
        </widget>
       </item>
@@ -234,36 +234,14 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="pulsegen_on">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
      </layout>
-    </widget>
-    <widget class="QPushButton" name="open_pulsegen">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>70</y>
-       <width>101</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Open device</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="close_pulsegen">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>100</y>
-       <width>101</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Close device</string>
-     </property>
     </widget>
    </widget>
   </widget>
@@ -278,7 +256,7 @@ p, li { white-space: pre-wrap; }
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>Menu</string>
     </property>
     <addaction name="print_ports"/>
     <addaction name="separator"/>
@@ -286,7 +264,6 @@ p, li { white-space: pre-wrap; }
    </widget>
    <addaction name="menuFile"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="quitapp">
    <property name="text">
     <string>Quit</string>

@@ -92,11 +92,10 @@ class App(QMainWindow):
         # assign actions to GUI buttons
         # example: self.ui.BUTTON_NAME.clicked.connect(self.FUNCTION_NAME)
         self.ui.trigger_pulses.clicked.connect(self.trigger_pulses_thread)
-        self.ui.open_pulsegen.clicked.connect(self.open_pulsegen)
-        self.ui.close_pulsegen.clicked.connect(self.close_pulsegen)
         
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
+        self.ui.pulsegen_on.stateChanged.connect(self.pulsegen_on)
         
         # set default data folder and create it if it doesn't exist
         #self.filedir = os.getcwd()+'\\QCMD_model_results'
@@ -115,50 +114,35 @@ class App(QMainWindow):
         for p in ports:    
             self.ui.outbox.append(str(p.device))
 
-    def open_port(address):
-        """Open serial port using port address, e.g. 'COM6'."""
-        return serial.Serial(port=address, timeout=2)
-
-    def open_pulsegen(self):
-        """Open connection to SRS pulse generator DG645."""
-        #try:
-        address = self.ui.pulsegen_address.text()
-        print(address)
-        dev = serial.Serial(port=address, timeout=2)#self.open_port(address)
-        dev.write('*IDN?\r'.encode())
-        self.srs['dev'] = dev
-        self.ui.outbox.append('Pulse generator successfully connected.')
-        self.ui.outbox.append(dev.readline().decode("utf-8"))
-        self.ui.close_pulsegen.setEnabled(True)
-        self.ui.open_pulsegen.setEnabled(False)
-        self.ui.trigger_pulses.setEnabled(True)
-        '''
-        except:
-            self.ui.outbox.append('Pulse generator could not connect.')
-            self.ui.close_pulsegen.setEnabled(False)
-            self.ui.open_pulsegen.setEnabled(True)
+    def pulsegen_on(self):
+        "Run this function when pulse generator checkbox is checked."""
+        if self.ui.pulsegen_on.isChecked():
+            try:
+                address = self.ui.pulsegen_address.text()
+                dev = serial.Serial(port=address, timeout=2)
+                dev.write('*IDN?\r'.encode())
+                self.srs['dev'] = dev
+                self.ui.outbox.append('Pulse generator successfully connected.')
+                self.ui.outbox.append(dev.readline().decode("utf-8"))
+                self.ui.trigger_pulses.setEnabled(True)
+            except:
+                self.ui.outbox.append('Pulse generator could not connect.')
+                self.ui.trigger_pulses.setEnabled(False)
+                self.srs['dev'] = None
+        else: 
+            self.srs['dev'].close()
             self.ui.trigger_pulses.setEnabled(False)
             self.srs['dev'] = None
-        '''
-    
-    def close_pulsegen(self):
-        """Close connection to pulse generator."""
-        self.srs['dev'].close()
-        self.ui.close_pulsegen.setEnabled(False)
-        self.ui.open_pulsegen.setEnabled(True)
-        self.ui.trigger_pulses.setEnabled(False)
-        self.srs['dev'] = None
-        self.ui.outbox.append('Pulse generator successfully closed.')
-        
-        
+            self.ui.outbox.append('Pulse generator successfully closed.')
+
         
     def trigger_pulses(self):
         """Fire a single burst of n pulses with spacing in seconds."""
         self.ui.trigger_pulses.setEnabled(False)
         # set pulse width in seconds
-        pulse_width = self.ui.pulse_width.value()
+        pulse_width = self.ui.pulse_width.value()/1e3
         pulse_amplitude = self.ui.pulse_amplitude.value()
-        pulse_delay = self.ui.pulse_delay.value()
+        pulse_delay = self.ui.pulse_delay.value()/1e3
         pulse_number = self.ui.pulse_number.value()
         self.ui.outbox.append('Triggering {} pulses...'.format(pulse_number))
         # set trigger source to single shot trigger
