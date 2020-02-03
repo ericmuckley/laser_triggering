@@ -1,37 +1,10 @@
 # -*- coding: utf-8 -*-
+
 """
-Created on Mon Feb  3 13:21:14 2020
+GUI applicaton for controlling laser pulses using an SRS DG645 digital
+delay pulse generator.
 
-@author: a6q
-"""
-
-# -*- coding: utf-8 -*-
-"""
-# Calculation of G' and G'' from QCM-D data
-
-This script controls the GUI functions for calculating
-viscoelastic properties from QCM-D data by
-fitting $\Delta$F and $\Delta$D QCM data to the
-Kelvin-Voigt model to obtain viscosity and shear modulus of
-an adlayer film for calculation of  G' and G'' (elastic and loss moduli).
-
-Use the *User Inputs* section to input experimental data. Run the
-viscoelastic model. Once the solution is found, you may adjust
-the range of μ and η values to limit the search space and obtain
-a solution with higher precision.  
-
-For more information about the viscoelastic model, see:
-1.   Voinova, M.V., Rodahl, M., Jonson, M. and Kasemo, B., 1999. Viscoelastic
-acoustic response of layered polymer films at fluid-solid interfaces:
-continuum mechanics approach. Physica Scripta, 59(5), p.391.
-https://iopscience.iop.org/article/10.1238/Physica.Regular.059a00391/meta
-2.   Liu, S.X. and Kim, J.T., 2009. Application of Kelvin—Voigt model in
-quantifying whey protein adsorption on polyethersulfone using QCM-D.
-JALA: Journal of the Association for Laboratory Automation, 14(4),
-pp.213-220.
-https://journals.sagepub.com/doi/full/10.1016/j.jala.2009.01.003
-
-Created on Dec 9 2019
+Created on Feb 3 2020
 @author: ericmuckley@gmail.com
 
 """
@@ -46,12 +19,19 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog
 
 import os
 import sys
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from shapely.geometry import LineString
+import time
+import serial
+from serial.tools import list_ports
+#import numpy as np
+#import pandas as pd
+#import matplotlib.pyplot as plt
+#from shapely.geometry import LineString
+
+
+
 
 # change matplotlib settings to make plots look nicer
+'''
 plt.rcParams['xtick.labelsize'] = 20
 plt.rcParams['ytick.labelsize'] = 20
 plt.rcParams['axes.linewidth'] = 3
@@ -60,6 +40,7 @@ plt.rcParams['xtick.major.width'] = 3
 plt.rcParams['ytick.minor.width'] = 3
 plt.rcParams['ytick.major.width'] = 3
 plt.rcParams['figure.autolayout'] = True
+'''
 
 
 class Worker(QtCore.QRunnable):
@@ -90,7 +71,7 @@ class App(QMainWindow):
     """Class which creates the main window of the application."""
 
     # load Qt designer XML .ui GUI file
-    Ui_MainWindow, QtBaseClass = uic.loadUiType('ui.ui')
+    Ui_MainWindow, QtBaseClass = uic.loadUiType('UI.ui')
 
     def __init__(self):
 
@@ -103,32 +84,121 @@ class App(QMainWindow):
 
         # assign functions to top menu items
         # example: self.ui.menu_item_name.triggered.connect(self.function_name)
-        self.ui.actionShowfiledir.triggered.connect(self.show_directory)
-        self.ui.actionChangefiledir.triggered.connect(self.set_directory)
-        self.ui.actionQuit.triggered.connect(self.quitapp)
+        #self.ui.actionShowfiledir.triggered.connect(self.show_directory)
+        #self.ui.actionChangefiledir.triggered.connect(self.set_directory)
+        self.ui.quitapp.triggered.connect(self.quitapp)
+        self.ui.print_ports.triggered.connect(self.print_ports)
 
         # assign actions to GUI buttons
         # example: self.ui.BUTTON_NAME.clicked.connect(self.FUNCTION_NAME)
-        self.ui.fit_model.clicked.connect(self.fit_model_in_new_thread)
-        
-        self.ui.plot_df_surf.clicked.connect(self.plot_df_surf)
-        self.ui.plot_dd_surf.clicked.connect(self.plot_dd_surf)
-        self.ui.plot_sol_surf.clicked.connect(self.plot_sol_surf)
-        self.ui.export_results.clicked.connect(self.export_results)
+        self.ui.trigger_pulses.clicked.connect(self.trigger_pulses_thread)
+        self.ui.open_pulsegen.clicked.connect(self.open_pulsegen)
+        self.ui.close_pulsegen.clicked.connect(self.close_pulsegen)
         
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
         
         # set default data folder and create it if it doesn't exist
-        self.filedir = os.getcwd()+'\\QCMD_model_results'
-        if not os.path.exists(self.filedir):
-            os.makedirs(self.filedir)
+        #self.filedir = os.getcwd()+'\\QCMD_model_results'
+        #if not os.path.exists(self.filedir):
+        #    os.makedirs(self.filedir)
+
+        self.srs = {'dev': None}
 
 
 # %% ----------- system control functions ------------------------------
+    
+    def print_ports(self):
+        """Print a list of avilable serial ports."""
+        ports = list(list_ports.comports())
+        self.ui.outbox.append('Available serial ports:')
+        for p in ports:    
+            self.ui.outbox.append(str(p.device))
+
+    def open_port(address):
+        """Open serial port using port address, e.g. 'COM6'."""
+        return serial.Serial(port=address, timeout=2)
+
+    def open_pulsegen(self):
+        """Open connection to SRS pulse generator DG645."""
+        #try:
+        address = self.ui.pulsegen_address.text()
+        print(address)
+        dev = serial.Serial(port=address, timeout=2)#self.open_port(address)
+        dev.write('*IDN?\r'.encode())
+        self.srs['dev'] = dev
+        self.ui.outbox.append('Pulse generator successfully connected.')
+        self.ui.outbox.append(dev.readline().decode("utf-8"))
+        self.ui.close_pulsegen.setEnabled(True)
+        self.ui.open_pulsegen.setEnabled(False)
+        self.ui.trigger_pulses.setEnabled(True)
+        '''
+        except:
+            self.ui.outbox.append('Pulse generator could not connect.')
+            self.ui.close_pulsegen.setEnabled(False)
+            self.ui.open_pulsegen.setEnabled(True)
+            self.ui.trigger_pulses.setEnabled(False)
+            self.srs['dev'] = None
+        '''
+    
+    def close_pulsegen(self):
+        """Close connection to pulse generator."""
+        self.srs['dev'].close()
+        self.ui.close_pulsegen.setEnabled(False)
+        self.ui.open_pulsegen.setEnabled(True)
+        self.ui.trigger_pulses.setEnabled(False)
+        self.srs['dev'] = None
+        self.ui.outbox.append('Pulse generator successfully closed.')
+        
+        
+        
+    def trigger_pulses(self):
+        """Fire a single burst of n pulses with spacing in seconds."""
+        self.ui.trigger_pulses.setEnabled(False)
+        # set pulse width in seconds
+        pulse_width = self.ui.pulse_width.value()
+        pulse_amplitude = self.ui.pulse_amplitude.value()
+        pulse_delay = self.ui.pulse_delay.value()
+        pulse_number = self.ui.pulse_number.value()
+        self.ui.outbox.append('Triggering {} pulses...'.format(pulse_number))
+        # set trigger source to single shot trigger
+        self.srs['dev'].write('TSRC5\r'.encode())
+        # set delay of A and B outputs
+        self.srs['dev'].write(('DLAY2,0,'+str(0)+'\r').encode())
+        self.srs['dev'].write(('DLAY3,2,'+str(pulse_width)+'\r').encode())
+        # set amplitude of output A
+        self.srs['dev'].write(('LAMP1,'+str(pulse_amplitude)+'\r').encode())
+        for _ in range(pulse_number):
+            # initiate single shot trigger
+            self.srs['dev'].write('*TRG\r'.encode())
+            time.sleep(pulse_delay)
+        self.ui.trigger_pulses.setEnabled(True)
+        self.ui.outbox.append('Pulse sequence complete.')
+
+
+    def trigger_pulses_thread(self):
+        """Trigger pulses in a new thread."""
+        worker = Worker(self.trigger_pulses)  # pass other args here
+        self.threadpool.start(worker)
+
+
+    def quitapp(self):
+        """Quit the application."""
+        if self.srs['dev'] != None:
+            self.srs['dev'].close()
+        self.deleteLater()
+        # close app window
+        self.close()  
+        # kill python kernel
+        sys.exit()  
+
+
+
+
+
 
     # file I/O utilities ---------------------------------------------------
-
+    '''
     def export_results(self):
         """Save modeling results to file."""
         filename = 'QCMD_results'
@@ -456,7 +526,7 @@ class App(QMainWindow):
         # kill python kernel
         sys.exit()  
 
-
+    '''
 
 # %% -------------------------- run application ----------------------------
 
