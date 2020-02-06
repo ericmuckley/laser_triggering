@@ -103,10 +103,13 @@ class App(QMainWindow):
         #self.ui.actionChangefiledir.triggered.connect(self.set_directory)
         self.ui.quitapp.triggered.connect(self.quitapp)
         self.ui.print_ports.triggered.connect(self.print_ports)
+        self.ui.show_help.triggered.connect(self.show_help)
 
         # assign actions to GUI buttons
         # example: self.ui.BUTTON_NAME.clicked.connect(self.FUNCTION_NAME)
         self.ui.trigger_pulses.clicked.connect(self.trigger_pulses_thread)
+        self.ui.run_seq.clicked.connect(self.run_seq_thread)
+        self.ui.abort_seq.clicked.connect(self.abort_seq)
         #self.ui.launch_lf.clicked.connect(self.launch_lf_thread)
         
         # assign actions to checkboxes
@@ -125,7 +128,7 @@ class App(QMainWindow):
     
     
 
-    # %% --------- Princeton Instruments LightField control ------------
+    # %% ========= Princeton Instruments LightField control ==============
     '''
 
 
@@ -156,7 +159,7 @@ class App(QMainWindow):
     '''
 
 
-    # %% ----------- SRS DG645 control ------------------------------
+    # %% ============ SRS DG645 pulse generator control =================
     
     def pulsegen_on(self):
         "Run this function when pulse generator checkbox is checked."""
@@ -215,8 +218,59 @@ class App(QMainWindow):
         self.threadpool.start(worker)
 
 
+    # %% ======= experimental sequence control functions =================
 
-    # %% ----------- system control functions ------------------------------
+    def abort_seq(self):
+        """Abort the expreimental sequence."""
+        self.abort_seq = True
+
+    def run_seq(self):
+        """Run an experimental sequence."""
+        self.ui.run_seq.setEnabled(False)
+        self.ui.abort_seq.setEnabled(True)
+        for i in range(10):
+            self.ui.outbox.append('testing...{}'.format(i))
+            time.sleep(1)
+            if self.abort_seq == True:
+                break
+        self.abort_seq = False
+        self.ui.run_seq.setEnabled(True)
+        self.ui.abort_seq.setEnabled(False)
+
+    def run_seq_thread(self):
+        """Run sequence in a new thread."""
+        worker = Worker(self.run_seq)  # pass other args here
+        self.threadpool.start(worker)
+
+
+
+
+    # %% ============ system control functions =============================
+
+    def show_help(self):
+        """Print help in the GUI output box."""
+        help_message = (
+            "\n===================\n"
+            "HELP"
+            "\n===================\n"
+            "To determine which serial ports are avilable for "
+            "connected instruments, click "
+            "'Menu --> Show available serial ports'."
+            "\n===================\n"
+            "To communicate with the SRS DG645 pulse generator, "
+            "enter the serial port address (e.g. COM6) in the address "
+            "field and ckeck the checkbox to connect to the device. "
+            "Adjust the pulse "
+            "width, pulse delay, pulse maplitude, and number of "
+            "pulses in the edit boxes. Then click 'Trigger pulses' "
+            "to send pulses from the SRS. "
+            "Uncheck the box to disconnect from the device."
+            "\n===================\n"
+            "To run the experimental sequence, click 'Run sequence' and "
+            "'Abort sequence' to stop the sequence. "
+            )
+        self.ui.outbox.append(help_message)
+        
 
 
     def print_ports(self):
@@ -242,7 +296,7 @@ class App(QMainWindow):
 
 
 
-    # file I/O utilities ---------------------------------------------------
+    # =================== file I/O utilities =============================
     '''
     def export_results(self):
         """Save modeling results to file."""
@@ -573,7 +627,7 @@ class App(QMainWindow):
 
     '''
 
-# %% -------------------------- run application ----------------------------
+# %% ====================== run application ===============================
 
 
 if __name__ == "__main__":
