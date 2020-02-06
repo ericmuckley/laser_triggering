@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>616</width>
-    <height>417</height>
+    <width>810</width>
+    <height>713</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,21 +17,21 @@
    <widget class="QGroupBox" name="groupBox_configurepulses">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>180</y>
+      <x>20</x>
+      <y>10</y>
       <width>201</width>
-      <height>201</height>
+      <height>211</height>
      </rect>
     </property>
     <property name="title">
-     <string>Configure pulses</string>
+     <string>Configure laser pulses</string>
     </property>
     <widget class="QWidget" name="formLayoutWidget">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>30</y>
-       <width>157</width>
+       <y>70</y>
+       <width>161</width>
        <height>100</height>
       </rect>
      </property>
@@ -143,7 +143,7 @@
      <property name="geometry">
       <rect>
        <x>40</x>
-       <y>140</y>
+       <y>180</y>
        <width>101</width>
        <height>23</height>
       </rect>
@@ -152,11 +152,47 @@
       <string>Trigger pulses</string>
      </property>
     </widget>
+    <widget class="QWidget" name="gridLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>161</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>SRS DG645</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="pulsegen_address">
+        <property name="text">
+         <string>COM6</string>
+        </property>
+        <property name="placeholderText">
+         <string>COM5</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="pulsegen_on">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_output">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>440</x>
       <y>20</y>
       <width>341</width>
       <height>361</height>
@@ -195,53 +231,30 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox">
+   <widget class="QGroupBox" name="groupBox_configurelightfield">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>250</x>
       <y>20</y>
-      <width>201</width>
-      <height>131</height>
+      <width>161</width>
+      <height>361</height>
      </rect>
     </property>
     <property name="title">
-     <string>Configure instruments</string>
+     <string>Configure LightField</string>
     </property>
-    <widget class="QWidget" name="gridLayoutWidget">
+    <widget class="QPushButton" name="launch_lf">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>30</x>
        <y>30</y>
-       <width>151</width>
-       <height>41</height>
+       <width>101</width>
+       <height>23</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>SRS DG645</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="pulsegen_address">
-        <property name="text">
-         <string>COM6</string>
-        </property>
-        <property name="placeholderText">
-         <string>COM5</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QCheckBox" name="pulsegen_on">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <property name="text">
+      <string>Launch LightField</string>
+     </property>
     </widget>
    </widget>
   </widget>
@@ -250,7 +263,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>616</width>
+     <width>810</width>
      <height>21</height>
     </rect>
    </property>

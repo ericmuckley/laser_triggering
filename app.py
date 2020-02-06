@@ -9,14 +9,10 @@ Created on Feb 3 2020
 
 """
 
-
-# core GUI libraries
+# --------------------- core GUI libraries --------------------------------
 from PyQt5 import QtWidgets, uic, QtCore, QtGui
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
 #from PyQtCore import QRunnable, QThreadPool, pyqtSlot
-
-# from threading import Thread
-
 import os
 import sys
 import time
@@ -26,6 +22,29 @@ from serial.tools import list_ports
 #import pandas as pd
 #import matplotlib.pyplot as plt
 #from shapely.geometry import LineString
+
+
+'''
+# --------------------- for LightField dependencies ------------------------
+import clr  # the .NET class library
+#import System.IO as sio  # for saving and opening files
+# Import c compatible List and String
+from System import String
+from System.Collections.Generic import List
+
+# Add needed dll references for LightField
+sys.path.append(os.environ['LIGHTFIELD_ROOT'])
+sys.path.append(os.environ['LIGHTFIELD_ROOT']+"\\AddInViews")
+clr.AddReference('System.IO')
+clr.AddReference('System.Collections')
+clr.AddReference('PrincetonInstruments.LightFieldViewV5')
+clr.AddReference('PrincetonInstruments.LightField.AutomationV5')
+clr.AddReference('PrincetonInstruments.LightFieldAddInSupportServices')
+# Princeton Instruments imports
+from PrincetonInstruments.LightField.Automation import Automation
+    
+'''
+
 
 
 
@@ -45,12 +64,9 @@ plt.rcParams['figure.autolayout'] = True
 
 class Worker(QtCore.QRunnable):
     """Class to start a new worker thread for background tasks.
-
     Call this thread inside a main GUI function by:
-    worker = Worker(self.function_to_execute)  # , pass other args here,...,)
-    self.threadpool.start(worker)
-    where self.function_to_execute is the function to run and its args
-    """
+    worker = Worker(self.function_to_execute) #, pass other args here,...,)
+    self.threadpool.start(worker)."""
     def __init__(self, fn, *args, **kwargs):
         """This allows the Worker class to take any function as an
         argument, along with args, and run it in a separate thread."""
@@ -58,7 +74,6 @@ class Worker(QtCore.QRunnable):
         self.fn = fn
         self.args = args
         self.kwargs = kwargs
-
     @QtCore.pyqtSlot()
     def run(self):
         """Take a function and its args which were passed to the Worker
@@ -92,6 +107,7 @@ class App(QMainWindow):
         # assign actions to GUI buttons
         # example: self.ui.BUTTON_NAME.clicked.connect(self.FUNCTION_NAME)
         self.ui.trigger_pulses.clicked.connect(self.trigger_pulses_thread)
+        #self.ui.launch_lf.clicked.connect(self.launch_lf_thread)
         
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
@@ -103,17 +119,45 @@ class App(QMainWindow):
         #    os.makedirs(self.filedir)
 
         self.srs = {'dev': None}
+        self.lf = {'app': None}
 
-
-# %% ----------- system control functions ------------------------------
     
-    def print_ports(self):
-        """Print a list of avilable serial ports."""
-        ports = list(list_ports.comports())
-        self.ui.outbox.append('Available serial ports:')
-        for p in ports:    
-            self.ui.outbox.append(str(p.device))
+    
+    
 
+    # %% --------- Princeton Instruments LightField control ------------
+    '''
+
+
+    def add_available_devices(self):
+        # Add first available device and return
+        for device in sio.experiment.AvailableDevices:
+            print("\n\tAdding Device...")
+            sio.experimentexperiment.Add(device)
+            return device
+
+
+    def launch_lf_thread(self):
+        """Launch LightField software in a new thread."""
+        worker = Worker(self.launch_lf)  # pass other args here
+        self.threadpool.start(worker)
+
+
+    def launch_lf(self):
+        """Launch LightField software."""
+        # create a C# compatible List of type String object
+        list1 = List[String]()
+        # add the command line option for an empty experiment
+        list1.Add("/empty")
+        # create the LightField Application (true for visible)
+        self.lf['app'] = Automation(True, List[String](list1))
+    
+
+    '''
+
+
+    # %% ----------- SRS DG645 control ------------------------------
+    
     def pulsegen_on(self):
         "Run this function when pulse generator checkbox is checked."""
         if self.ui.pulsegen_on.isChecked():
@@ -122,18 +166,23 @@ class App(QMainWindow):
                 dev = serial.Serial(port=address, timeout=2)
                 dev.write('*IDN?\r'.encode())
                 self.srs['dev'] = dev
-                self.ui.outbox.append('Pulse generator successfully connected.')
+                self.ui.outbox.append('Pulse generator connected.')
                 self.ui.outbox.append(dev.readline().decode("utf-8"))
                 self.ui.trigger_pulses.setEnabled(True)
-            except:
+            except serial.SerialException:
                 self.ui.outbox.append('Pulse generator could not connect.')
                 self.ui.trigger_pulses.setEnabled(False)
+                self.ui.pulsegen_on.setChecked(False)
                 self.srs['dev'] = None
         else: 
-            self.srs['dev'].close()
+            try:
+                self.srs['dev'].close()
+            except AttributeError:
+                pass
             self.ui.trigger_pulses.setEnabled(False)
             self.srs['dev'] = None
-            self.ui.outbox.append('Pulse generator successfully closed.')
+            self.ui.outbox.append('Pulse generator closed.')
+            self.ui.pulsegen_on.setChecked(False)
 
         
     def trigger_pulses(self):
@@ -164,6 +213,18 @@ class App(QMainWindow):
         """Trigger pulses in a new thread."""
         worker = Worker(self.trigger_pulses)  # pass other args here
         self.threadpool.start(worker)
+
+
+
+    # %% ----------- system control functions ------------------------------
+
+
+    def print_ports(self):
+        """Print a list of avilable serial ports."""
+        ports = list(list_ports.comports())
+        self.ui.outbox.append('Available serial ports:')
+        for p in ports:    
+            self.ui.outbox.append(str(p.device))
 
 
     def quitapp(self):
