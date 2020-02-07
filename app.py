@@ -171,10 +171,12 @@ class App(QMainWindow):
                 self.srs['dev'] = dev
                 self.ui.outbox.append('Pulse generator connected.')
                 self.ui.outbox.append(dev.readline().decode("utf-8"))
-                self.ui.trigger_pulses.setEnabled(True)
+                self.ui.pulsegen_address.setEnabled(False)
+                self.ui.config_pulse_frame.setEnabled(True)
             except serial.SerialException:
                 self.ui.outbox.append('Pulse generator could not connect.')
-                self.ui.trigger_pulses.setEnabled(False)
+                self.ui.config_pulse_frame.setEnabled(False)
+                self.ui.pulsegen_address.setEnabled(True)
                 self.ui.pulsegen_on.setChecked(False)
                 self.srs['dev'] = None
         else: 
@@ -182,7 +184,6 @@ class App(QMainWindow):
                 self.srs['dev'].close()
             except AttributeError:
                 pass
-            self.ui.trigger_pulses.setEnabled(False)
             self.srs['dev'] = None
             self.ui.outbox.append('Pulse generator closed.')
             self.ui.pulsegen_on.setChecked(False)
