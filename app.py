@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
 """
-GUI applicaton for controlling laser pulses using an SRS DG645 digital
-delay pulse generator.
+GUI applicaton for measuring Raman using Princeton Instruments
+LightField software and controlling laser pulses using an
+SRS DG645 digital delay pulse generator.
+
+To seee help, run this file, then navigate to Menu --> Show Helpin t
 
 Created on Feb 3 2020
 @author: ericmuckley@gmail.com
@@ -21,7 +24,7 @@ from serial.tools import list_ports
 #import numpy as np
 #import pandas as pd
 #import matplotlib.pyplot as plt
-#from shapely.geometry import LineString
+
 
 
 '''
@@ -45,12 +48,8 @@ from PrincetonInstruments.LightField.Automation import Automation
     
 '''
 
-
-
-
-
-# change matplotlib settings to make plots look nicer
 '''
+# change matplotlib settings to make plots look nicer
 plt.rcParams['xtick.labelsize'] = 20
 plt.rcParams['ytick.labelsize'] = 20
 plt.rcParams['axes.linewidth'] = 3
@@ -60,7 +59,6 @@ plt.rcParams['ytick.minor.width'] = 3
 plt.rcParams['ytick.major.width'] = 3
 plt.rcParams['figure.autolayout'] = True
 '''
-
 
 class Worker(QtCore.QRunnable):
     """Class to start a new worker thread for background tasks.
@@ -108,9 +106,10 @@ class App(QMainWindow):
         # assign actions to GUI buttons
         # example: self.ui.BUTTON_NAME.clicked.connect(self.FUNCTION_NAME)
         self.ui.trigger_pulses.clicked.connect(self.trigger_pulses_thread)
+        self.ui.acquire_raman.clicked.connect(self.acquire_raman)
         self.ui.run_seq.clicked.connect(self.run_seq_thread)
         self.ui.abort_seq.clicked.connect(self.abort_seq)
-        #self.ui.launch_lf.clicked.connect(self.launch_lf_thread)
+        self.ui.launch_lf.clicked.connect(self.launch_lf)
         
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
@@ -124,12 +123,31 @@ class App(QMainWindow):
         self.srs = {'dev': None}
         self.lf = {'app': None}
 
-    
+        self.help_message = (
+            "\n===================\n"
+            "HELP"
+            "\n===================\n"
+            "To determine which serial ports are avilable for "
+            "connected instruments, click "
+            "'Menu --> Show available serial ports'."
+            "\n===================\n"
+            "To communicate with the SRS DG645 pulse generator, "
+            "enter the serial port address (e.g. COM6) in the address "
+            "field and ckeck the checkbox to connect to the device. "
+            "Adjust the pulse "
+            "width, pulse delay, pulse maplitude, and number of "
+            "pulses in the edit boxes. Then click 'Trigger pulses' "
+            "to send pulses from the SRS. "
+            "Uncheck the box to disconnect from the device."
+            "\n===================\n"
+            "To run the experimental sequence, click 'Run sequence' and "
+            "'Abort sequence' to stop the sequence. "
+            )
     
     
 
     # %% ========= Princeton Instruments LightField control ==============
-    '''
+
 
 
     def add_available_devices(self):
@@ -139,24 +157,68 @@ class App(QMainWindow):
             sio.experimentexperiment.Add(device)
             return device
 
-
+    '''
     def launch_lf_thread(self):
         """Launch LightField software in a new thread."""
         worker = Worker(self.launch_lf)  # pass other args here
         self.threadpool.start(worker)
 
-
+    '''
     def launch_lf(self):
         """Launch LightField software."""
         # create a C# compatible List of type String object
-        list1 = List[String]()
+        lf_exp_list = List[String]()
         # add the command line option for an empty experiment
-        list1.Add("/empty")
+        lf_exp_list.Add("/empty")
         # create the LightField Application (true for visible)
-        self.lf['app'] = Automation(True, List[String](list1))
+        # the 2nd parameter is the experiment name to load 
+        self.lf['app'] = Automation(True, List[String](lf_exp_list))
     
 
-    '''
+    def device_found(self, experiment):
+        "Check if devices are connected to LightField."""
+        for device in experiment.ExperimentDevices:
+            if (device.Type == DeviceType.Camera):
+                return True
+
+    def save_file(self, filename, experiment):    
+        """Save a Raman acquisition file using LightField."""
+        # Set the base file name
+        experiment.SetValue(
+            ExperimentSettings.FileNameGenerationBaseFileName,
+            Path.GetFileName(filename))
+        # Option to Increment, set to false will not increment
+        experiment.SetValue(
+            ExperimentSettings.FileNameGenerationAttachIncrement, False)
+        # Option to add date
+        experiment.SetValue(
+            ExperimentSettings.FileNameGenerationAttachDate, True)
+        # Option to add time
+        experiment.SetValue(
+            ExperimentSettings.FileNameGenerationAttachTime, True)
+
+
+    def acquire_raman(self):
+        """Acquire Raman spectra using an opened instance of LightField."""
+        # get current loaded experiment
+        experiment = self.lf['app'].LightFieldApplication.Experiment
+    
+        # check for device and inform user if one is needed
+        if (self.device_found(experiment)==True):        
+            # check this location for saved spe after running
+            _file_name = "myData"
+            # pass location of saved file
+            save_file(_file_name, experiment)
+            # acquire image
+            experiment.Acquire()
+            self.ui.outbox.append(
+                    str(String.Format("{0} {1}",
+                                "Image saved to",
+                                experiment.GetValue(
+                                    ExperimentSettings.
+                                    FileNameGenerationDirectory))))       
+
+
 
 
     # %% ============ SRS DG645 pulse generator control =================
@@ -245,33 +307,44 @@ class App(QMainWindow):
 
 
 
-
     # %% ============ system control functions =============================
+
+    '''
+    def view_file_save_dir(ops_dict):
+        # Show the name of the file-saving directory in the output box on the GUI.
+        try:  # if save file directory is already set
+            ops_dict['output_box'].append('Current save file directory:')
+            ops_dict['output_box'].append(ops_dict['save_file_dir'])
+        except NameError:  # if file directory is not set
+            ops_dict['output_box'].append(
+                    'No save file directory has been set.')
+            ops_dict['output_box'].append(
+                    'Please set in File --> Change file save directory.')
+
+    def set_file_save_directory(self):
+        # set the directory for saving data files
+        self.save_file_dir = str(QFileDialog.getExistingDirectory(
+                self, 'Create or select directory for data files.'))
+        self.ui.output_box.append('Save file directory set to:')
+        self.ui.output_box.append(self.save_file_dir)
+
+    def create_report(self):
+        # Create Origin report of saved experimental data. This method
+        # opens Origin, runs an internal Origin python script, imports
+        # the saved data files, plots them, and saves the Origin file.
+        Thread(target=ops.create_report, args=(self.ops_dict,)).start()
+
+    def view_file_save_dir(self):
+        # Print the file saving directory to the output box on GUI.
+        ops.view_file_save_dir(self.keith_dict)
+
+    '''
+
+
 
     def show_help(self):
         """Print help in the GUI output box."""
-        help_message = (
-            "\n===================\n"
-            "HELP"
-            "\n===================\n"
-            "To determine which serial ports are avilable for "
-            "connected instruments, click "
-            "'Menu --> Show available serial ports'."
-            "\n===================\n"
-            "To communicate with the SRS DG645 pulse generator, "
-            "enter the serial port address (e.g. COM6) in the address "
-            "field and ckeck the checkbox to connect to the device. "
-            "Adjust the pulse "
-            "width, pulse delay, pulse maplitude, and number of "
-            "pulses in the edit boxes. Then click 'Trigger pulses' "
-            "to send pulses from the SRS. "
-            "Uncheck the box to disconnect from the device."
-            "\n===================\n"
-            "To run the experimental sequence, click 'Run sequence' and "
-            "'Abort sequence' to stop the sequence. "
-            )
-        self.ui.outbox.append(help_message)
-        
+        self.ui.outbox.append(self.help_message)
 
 
     def print_ports(self):
@@ -343,104 +416,6 @@ class App(QMainWindow):
         return uidict
 
 
-    def mu_eta_mesh(self, uidict):
-        """Create mesh of mu and eta valuses using inputs on UI."""
-        # get 2D 1mesh grid points of log mu and eta values
-        step_num=50
-        mu_mesh, eta_mesh = np.meshgrid(
-                np.linspace(uidict['mu_low'], uidict['mu_high'],
-                            step_num).astype(float),
-                np.linspace(uidict['eta_low'], uidict['eta_high'],
-                            step_num).astype(float))
-        #get mesh of mu and eta values and corresponding DF and DD values        
-        df_surf, dd_surf = self.kelvin_voigt(
-                             10**mu_mesh,
-                             10**eta_mesh,
-                             rho_f=uidict['rho'],
-                             h_f=uidict['h'],
-                             n=uidict['n'],
-                             f0=uidict['f0'],
-                             medium=uidict['medium'])
-        return mu_mesh, eta_mesh, df_surf, dd_surf          
-
-
-    def fit_model(self):
-        """Run modeling of the QCM-D dtaa using inputs from UI. """
-        self.ui.fit_model.setDisabled(True)
-        self.ui.outbox.append('------------------------------------------')
-        self.ui.outbox.append('Fitting model...')
-        # get dictionary of input values from UI
-        uidict = self.get_ui_inputs()
-        self.results = uidict.copy()
-        self.contours = {}
-        
-        # get grid of possible mu, eta, df, and dd values
-        mu_mesh, eta_mesh, df_surf, dd_surf = self.mu_eta_mesh(uidict)
-        # plot delta F heatmap
-        plt.ioff()
-        df_cont_plot = plt.contour(
-                mu_mesh, eta_mesh, df_surf, uidict['df_exp'])
-        # plot delta D heatmap
-        dd_cont_plot = plt.contour(
-                mu_mesh, eta_mesh, dd_surf, uidict['dd_exp'])
-        
-        # extract contours which correspond to experimental values
-        df_cont = self.get_contour(df_cont_plot)
-        dd_cont = self.get_contour(dd_cont_plot)
-        # find intersection of solutions
-        intersection_list = np.array(
-                self.find_intersections(df_cont, dd_cont))
-        plt.cla()
-        # if there are any solutions, select the 0th-order solution
-        if len(intersection_list) > 0:
-            sol = sorted(intersection_list, key = lambda i: float(i[1]))[-1]
-            
-            # get calculated mu and eta values, along with G' and G'' 
-            mu, eta, = 10**sol[0], 10**sol[1]
-            Gp, Gdp = mu, 2*np.pi*uidict['f0']*eta
-            # get fitted df and dd values
-            df_fit, dd_fit = self.kelvin_voigt(mu, eta,
-                                               rho_f=uidict['rho'],
-                                               h_f=uidict['h'],
-                                               n=uidict['n'],
-                                               f0=uidict['f0'],
-                                               medium=uidict['medium'])
-            # get penetration depth
-            pen_dep = self.get_penetration_depth(uidict['f0'], eta,
-                                                 uidict['rho'])
-            
-            self.results.update({'df_fit': df_fit, 'dd_fit': dd_fit,
-                                 'mu': mu, 'eta': eta,
-                                 'penetration_depth': pen_dep,
-                                 "G'": Gp, "G''": Gdp})
-            self.contours.update({'df_exp': uidict['df_exp'],
-                                  'dd_exp': uidict['dd_exp'],
-                                  'mu_mesh': mu_mesh, 'eta_mesh': eta_mesh,
-                                  'df_surf': df_surf, 'dd_surf': dd_surf,
-                                  'df_cont': df_cont, 'dd_cont': dd_cont,
-                                  'sol': sol})
-
-            self.ui.outbox.append(
-                    'Found '+str(len(intersection_list))+' solutions.')
-            self.ui.outbox.append('First-order solution:')
-            self.ui.plot_sol_surf.setDisabled(False)
-            self.ui.plot_df_surf.setDisabled(False)
-            self.ui.plot_dd_surf.setDisabled(False)
-            self.ui.export_results.setDisabled(False)
-            for key in self.results:
-                self.ui.outbox.append(str(key)+': '+str(self.results[key]))
-
-        else:
-            self.ui.outbox.append(
-                    '\n\nNo solutions exist with these parameters.')
-            self.ui.plot_sol_surf.setDisabled(True)
-            self.ui.plot_df_surf.setDisabled(True)
-            self.ui.plot_dd_surf.setDisabled(True)
-            self.ui.export_results.setDisabled(True)
-        self.ui.fit_model.setDisabled(False)
-        self.ui.outbox.moveCursor(QtGui.QTextCursor.End)
-
-
     def plot_df_surf(self):
         """Plot delta F surface."""
         plt.cla()
@@ -457,45 +432,9 @@ class App(QMainWindow):
         fig_df.show()
 
 
-    def plot_dd_surf(self):
-        """Plot delta D surface."""
-        plt.cla()
-        fig_dd = plt.figure(2)
-        plt.ion()
-        plt.contour(self.contours['mu_mesh'], self.contours['eta_mesh'],
-                    self.contours['dd_surf'], self.contours['dd_exp'])
-        plt.contourf(self.contours['mu_mesh'], self.contours['eta_mesh'],
-                     self.contours['dd_surf'], 50, cmap='rainbow')
-        self.plot_setup(title='ΔD (x 10^-6)',
-                   labels=['Log (μ) (Pa)', 'Log (η) (Pa s)'], colorbar=True)
-        plt.tight_layout()
-        fig_dd.canvas.set_window_title('ΔD surface')
-        fig_dd.show()
-
-
-    def plot_sol_surf(self):
-        """Plot solution surface."""
-        plt.cla()
-        fig_df = plt.figure(3)
-        plt.ion()
-        plt.scatter(self.contours['sol'][0],
-                    self.contours['sol'][1], marker='x',
-                    s=300, c='k', label='solution')
-        # plot contour intersection
-        plt.scatter(self.contours['df_cont'][:, 0],
-                    self.contours['df_cont'][:, 1], s=1, c='b', label='df')
-        plt.scatter(self.contours['dd_cont'][:, 0],
-                    self.contours['dd_cont'][:, 1], s=1, c='r', label='dd')
-        self.plot_setup(title='Solution',
-                   labels=['Log (μ) (Pa)', 'Log (η) (Pa s)'], legend=True)
-        plt.tight_layout()
-        fig_df.canvas.set_window_title('Solution')
-        fig_df.show()
-
-
     def plot_setup(self, labels=['X', 'Y'], fsize=20, setlimits=False,
                    title=None, legend=False, colorbar=False,
-                   limits=[0,1,0,1], save=False, filename='plot.jpg'):
+                   limits=(0,1,0,1), save=False, filename='plot.jpg'):
         """Creates a custom plot configuration to make graphs look nice.
         This can be called with matplotlib for setting axes labels,
         titles, axes ranges, and the font size of plot labels.
@@ -516,115 +455,6 @@ class App(QMainWindow):
         if save:
             fig.savefig(filename, dpi=120, bbox_inches='tight')
             plt.tight_layout()
-
-
-    def kelvin_voigt(self, mu_f, eta_f, rho_f=1e3, h_f=1e-6, n=1, f0=5e6,
-                    medium='air'):
-        """ 
-        The Kelvin-Voigt model comes from eqns (15) in the paper by 
-        Voinova: Vionova, M.V., Rodahl, M., Jonson, M. and Kasemo, B., 1999.
-        Viscoelastic acoustic response of layered polymer films at fluid-solid
-        interfaces: continuum mechanics approach. Physica Scripta, 59(5), p.391.
-        Reference: https://github.com/88tpm/QCMD/blob/master
-        /Mass-specific%20activity/Internal%20functions/voigt_rel.m.
-        
-        This function solves for Delta f and Delta d of thin adlayer on QCM.
-        It differs from voigt because it calculates relative to an
-        unloaded resonator.
-        Inputs
-            mu_f = shear modulus of film in Pa
-            eta_f = shear viscosity of film in Pa s
-            rho_f = density of film in kg m-3
-            h_f = thickness of film in m
-            n = crystal harmonic number
-            f0 = fundamental resonant frequency of crystal in Hz      
-        Output
-            deltaf = frequency change of resonator
-            deltad =  dissipation change of resonator
-        """
-        # define properties of QCM crystal
-        w = 2*np.pi*f0*n  # angular frequency
-        mu_q = 2.947e10  # shear modulus of AT-cut quatz in Pa
-        rho_q = 2648  # density of quartz (kg/m^3)
-        h_q = np.sqrt(mu_q/rho_q)/(2*f0)  # thickness of quartz
-        # define properties of medium
-        if medium == 'air':
-            rho_b = 1.1839  # density of bulk air (25 C) in kg/m^3
-            eta_b = 18.6e-6  # viscosity of bulk air (25 C) in Pa s
-        if medium == 'water':
-            rho_b = 1000  # density of bulk water in kg/m^3
-            eta_b = 8.9e-4  # viscosity of bulk water in Pa s
-        # define equations from the Kelvin-Voigt model in publication
-        # eqn 14
-        kappa_f = eta_f-(1j*mu_f/w)
-        # eqn 13
-        x_f = np.sqrt(-rho_f*np.square(w)/(mu_f + 1j*w*eta_f))
-        x_b = np.sqrt(1j*rho_b*w/eta_b)
-        # eqn 11 after simplification with h1 = h2 and h3 = infinity
-        A = (kappa_f*x_f+eta_b*x_b)/(kappa_f*x_f-eta_b*x_b)
-        # eqn 16
-        beta = kappa_f*x_f*(1-A*np.exp(2*x_f*h_f))/(1+A*np.exp(2*x_f*h_f))
-        beta0 = kappa_f*x_f*(1-A)/(1+A)
-        # eqn 15
-        df = np.imag((beta-beta0)/(2*np.pi*rho_q*h_q))
-        dd = -np.real((beta-beta0)/(np.pi*f0*n*rho_q*h_q))*1e6
-        return df, dd
-
-
-    def get_contour(self, cont_plot):
-        """Get ordered pairs of contour lines from a contour plot.
-        Input should be defined as:
-        cont_plot = plt.contour(x_mesh, y_mesh, z_surf, contour_value)"""
-        # extract contour paths from plot
-        paths = [path.vertices for path in cont_plot.collections[0].get_paths()]
-        if paths:
-            # stack all contour paths in a single 2D array
-            return np.vstack(paths)
-        else:
-            return []
-
-
-    def find_intersections(self, op_list1, op_list2):
-        """Find all intersections between two curves. Curves are defined by lists
-        of ordered pairs (x, y).
-        Returns an empty list if no intersections are found."""
-        intersections = []
-        # check if both curves contain more than 1 point:
-        if len(op_list1) > 1 and len(op_list2) > 1:
-            # loop over each pair of line segments
-            for i1 in range(len(op_list1)-1):
-                for i2 in range(len(op_list2)-1):
-                    # create segment from the first set of points
-                    seg1 = LineString([(op_list1[i1][0], op_list1[i1][1]),
-                                    (op_list1[i1+1][0], op_list1[i1+1][1])])
-                    # create segment from the second set of points
-                    seg2 = LineString([(op_list2[i2][0], op_list2[i2][1]),
-                                    (op_list2[i2+1][0], op_list2[i2+1][1])])
-                    # check if segment from set-1 intersects segment from set-2
-                    if seg1.intersects(seg2):
-                        avg_x = np.mean([op_list1[i1][0], op_list1[i1+1][0],
-                                        op_list2[i2][0], op_list2[i2+1][0]])
-                        avg_y = np.mean([op_list1[i1][1], op_list1[i1+1][1],
-                                        op_list2[i2][1], op_list2[i2+1][1]])
-                        intersections.append([avg_x, avg_y])
-        return intersections
-
-
-    def get_penetration_depth(self, freq, eta, rho):
-        """Calculate penetration depth of acoustic wave using the QCM
-        resonant requency (freq), adlayer visacosity (eta), and adlayer
-        density (rho)."""
-        return np.sqrt(eta / (np.pi * freq * rho))
-
-
-    def quitapp(self):
-        """Quit the application."""
-        self.deleteLater()
-        # self.timer.stop()  # stop timer
-        # close app window
-        self.close()  
-        # kill python kernel
-        sys.exit()  
 
     '''
 

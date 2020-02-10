@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>810</width>
-    <height>713</height>
+    <width>427</width>
+    <height>507</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Laser triggering</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBox_configurepulses">
@@ -19,8 +19,8 @@
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>221</width>
-      <height>271</height>
+      <width>201</width>
+      <height>261</height>
      </rect>
     </property>
     <property name="title">
@@ -30,7 +30,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>40</y>
+       <y>30</y>
        <width>151</width>
        <height>31</height>
       </rect>
@@ -75,8 +75,8 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>90</y>
-       <width>191</width>
+       <y>80</y>
+       <width>181</width>
        <height>161</height>
       </rect>
      </property>
@@ -217,10 +217,10 @@
    <widget class="QGroupBox" name="groupBox_output">
     <property name="geometry">
      <rect>
-      <x>440</x>
-      <y>20</y>
-      <width>341</width>
-      <height>371</height>
+      <x>30</x>
+      <y>300</y>
+      <width>371</width>
+      <height>161</height>
      </rect>
     </property>
     <property name="title">
@@ -231,8 +231,8 @@
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>321</width>
-       <height>311</height>
+       <width>351</width>
+       <height>121</height>
       </rect>
      </property>
      <property name="font">
@@ -259,10 +259,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_configurelightfield">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>240</x>
       <y>20</y>
       <width>161</width>
-      <height>371</height>
+      <height>151</height>
      </rect>
     </property>
     <property name="title">
@@ -281,14 +281,27 @@ p, li { white-space: pre-wrap; }
       <string>Launch LightField</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="acquire_raman">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>80</y>
+       <width>101</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Acquire Raman</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>310</y>
-      <width>201</width>
-      <height>141</height>
+      <x>240</x>
+      <y>190</y>
+      <width>161</width>
+      <height>91</height>
      </rect>
     </property>
     <property name="title">
@@ -297,7 +310,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="run_seq">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>30</x>
        <y>30</y>
        <width>91</width>
        <height>23</height>
@@ -313,8 +326,8 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>80</y>
+       <x>30</x>
+       <y>60</y>
        <width>91</width>
        <height>23</height>
       </rect>
@@ -330,7 +343,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>810</width>
+     <width>427</width>
      <height>21</height>
     </rect>
    </property>
@@ -359,6 +372,11 @@ p, li { white-space: pre-wrap; }
   <action name="show_help">
    <property name="text">
     <string>Show help</string>
+   </property>
+  </action>
+  <action name="actionShow_path_to_saved_data">
+   <property name="text">
+    <string>Show path to saved data</string>
    </property>
   </action>
  </widget>
