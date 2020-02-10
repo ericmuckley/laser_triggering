@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>427</width>
-    <height>507</height>
+    <width>672</width>
+    <height>665</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -218,9 +218,9 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>300</y>
+      <y>360</y>
       <width>371</width>
-      <height>161</height>
+      <height>241</height>
      </rect>
     </property>
     <property name="title">
@@ -232,7 +232,7 @@
        <x>10</x>
        <y>30</y>
        <width>351</width>
-       <height>121</height>
+       <height>201</height>
       </rect>
      </property>
      <property name="font">
@@ -261,7 +261,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>240</x>
       <y>20</y>
-      <width>161</width>
+      <width>221</width>
       <height>151</height>
      </rect>
     </property>
@@ -282,10 +282,13 @@ p, li { white-space: pre-wrap; }
      </property>
     </widget>
     <widget class="QPushButton" name="acquire_raman">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>80</y>
+       <y>60</y>
        <width>101</width>
        <height>23</height>
       </rect>
@@ -294,14 +297,43 @@ p, li { white-space: pre-wrap; }
       <string>Acquire Raman</string>
      </property>
     </widget>
+    <widget class="QLabel" name="raman_filename_label">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Raman filename</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="set_raman_filename">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>120</y>
+       <width>141</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>raman_acquisition_1</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
       <x>240</x>
       <y>190</y>
-      <width>161</width>
-      <height>91</height>
+      <width>221</width>
+      <height>151</height>
      </rect>
     </property>
     <property name="title">
@@ -310,8 +342,8 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="run_seq">
      <property name="geometry">
       <rect>
-       <x>30</x>
-       <y>30</y>
+       <x>20</x>
+       <y>110</y>
        <width>91</width>
        <height>23</height>
       </rect>
@@ -326,8 +358,8 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>30</x>
-       <y>60</y>
+       <x>120</x>
+       <y>110</y>
        <width>91</width>
        <height>23</height>
       </rect>
@@ -336,6 +368,69 @@ p, li { white-space: pre-wrap; }
       <string>Abort sequence</string>
      </property>
     </widget>
+    <widget class="QWidget" name="formLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>191</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="set_seq_cycles">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>10000</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="set_seq_cycles_label">
+        <property name="text">
+         <string>Number of cycles</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="seq_laser_triggering_label">
+        <property name="text">
+         <string>Laser triggering</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="seq_raman_acquisition_label">
+        <property name="text">
+         <string>Raman acquisition</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QCheckBox" name="seq_laser_trigger">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="seq_raman_acquisition">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -343,7 +438,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>427</width>
+     <width>672</width>
      <height>21</height>
     </rect>
    </property>

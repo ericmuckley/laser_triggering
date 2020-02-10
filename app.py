@@ -5,7 +5,13 @@ GUI applicaton for measuring Raman using Princeton Instruments
 LightField software and controlling laser pulses using an
 SRS DG645 digital delay pulse generator.
 
-To seee help, run this file, then navigate to Menu --> Show Helpin t
+To see help, run this file to open the GUI,
+then navigate to Menu --> Show Help.
+
+Updated version is stored at
+https://github.com/ericmuckley/laser_triggering
+
+
 
 Created on Feb 3 2020
 @author: ericmuckley@gmail.com
@@ -27,10 +33,10 @@ from serial.tools import list_ports
 
 
 
-'''
+
 # --------------------- for LightField dependencies ------------------------
 import clr  # the .NET class library
-#import System.IO as sio  # for saving and opening files
+import System.IO as sio  # for saving and opening files
 # Import c compatible List and String
 from System import String
 from System.Collections.Generic import List
@@ -45,8 +51,9 @@ clr.AddReference('PrincetonInstruments.LightField.AutomationV5')
 clr.AddReference('PrincetonInstruments.LightFieldAddInSupportServices')
 # Princeton Instruments imports
 from PrincetonInstruments.LightField.Automation import Automation
-    
-'''
+from PrincetonInstruments.LightField.AddIns import ExperimentSettings
+from PrincetonInstruments.LightField.AddIns import DeviceType 
+
 
 '''
 # change matplotlib settings to make plots look nicer
@@ -84,7 +91,7 @@ class App(QMainWindow):
     """Class which creates the main window of the application."""
 
     # load Qt designer XML .ui GUI file
-    Ui_MainWindow, QtBaseClass = uic.loadUiType('UI.ui')
+    Ui_MainWindow, QtBaseClass = uic.loadUiType('ui.ui')
 
     def __init__(self):
 
@@ -133,7 +140,7 @@ class App(QMainWindow):
             "\n===================\n"
             "To communicate with the SRS DG645 pulse generator, "
             "enter the serial port address (e.g. COM6) in the address "
-            "field and ckeck the checkbox to connect to the device. "
+            "field and use the checkbox to connect to the device. "
             "Adjust the pulse "
             "width, pulse delay, pulse maplitude, and number of "
             "pulses in the edit boxes. Then click 'Trigger pulses' "
@@ -143,6 +150,7 @@ class App(QMainWindow):
             "To run the experimental sequence, click 'Run sequence' and "
             "'Abort sequence' to stop the sequence. "
             )
+        self.ui.outbox.append(self.help_message)
     
     
 
@@ -153,7 +161,7 @@ class App(QMainWindow):
     def add_available_devices(self):
         # Add first available device and return
         for device in sio.experiment.AvailableDevices:
-            print("\n\tAdding Device...")
+            self.ui.outbox.append('\n\tAdding Device...')
             sio.experimentexperiment.Add(device)
             return device
 
@@ -173,7 +181,9 @@ class App(QMainWindow):
         # create the LightField Application (true for visible)
         # the 2nd parameter is the experiment name to load 
         self.lf['app'] = Automation(True, List[String](lf_exp_list))
-    
+        self.ui.acquire_raman.setEnabled(True)
+        self.ui.set_raman_filename.setEnabled(True)
+        self.ui.seq_raman_acquisition.setEnabled(True)
 
     def device_found(self, experiment):
         "Check if devices are connected to LightField."""
@@ -186,7 +196,7 @@ class App(QMainWindow):
         # Set the base file name
         experiment.SetValue(
             ExperimentSettings.FileNameGenerationBaseFileName,
-            Path.GetFileName(filename))
+            sio.Path.GetFileName(filename))
         # Option to Increment, set to false will not increment
         experiment.SetValue(
             ExperimentSettings.FileNameGenerationAttachIncrement, False)
@@ -206,9 +216,9 @@ class App(QMainWindow):
         # check for device and inform user if one is needed
         if (self.device_found(experiment)==True):        
             # check this location for saved spe after running
-            _file_name = "myData"
+            _file_name = self.ui.set_raman_filename.text()
             # pass location of saved file
-            save_file(_file_name, experiment)
+            self.save_file(_file_name, experiment)
             # acquire image
             experiment.Acquire()
             self.ui.outbox.append(
@@ -216,7 +226,10 @@ class App(QMainWindow):
                                 "Image saved to",
                                 experiment.GetValue(
                                     ExperimentSettings.
-                                    FileNameGenerationDirectory))))       
+                                    FileNameGenerationDirectory))))
+        else:
+            self.ui.outbox.append('No LightField-compatible devices found.')
+            
 
 
 
@@ -235,11 +248,13 @@ class App(QMainWindow):
                 self.ui.outbox.append(dev.readline().decode("utf-8"))
                 self.ui.pulsegen_address.setEnabled(False)
                 self.ui.config_pulse_frame.setEnabled(True)
+                self.ui.seq_laser_trigger.setEnabled(True)
             except serial.SerialException:
                 self.ui.outbox.append('Pulse generator could not connect.')
                 self.ui.config_pulse_frame.setEnabled(False)
                 self.ui.pulsegen_address.setEnabled(True)
                 self.ui.pulsegen_on.setChecked(False)
+                self.ui.seq_laser_trigger.setEnabled(False)
                 self.srs['dev'] = None
         else: 
             try:
@@ -249,7 +264,7 @@ class App(QMainWindow):
             self.srs['dev'] = None
             self.ui.outbox.append('Pulse generator closed.')
             self.ui.pulsegen_on.setChecked(False)
-
+            self.ui.seq_laser_trigger.setEnabled(False)
         
     def trigger_pulses(self):
         """Fire a single burst of n pulses with spacing in seconds."""
@@ -287,18 +302,38 @@ class App(QMainWindow):
         """Abort the expreimental sequence."""
         self.abort_seq = True
 
+
     def run_seq(self):
         """Run an experimental sequence."""
         self.ui.run_seq.setEnabled(False)
         self.ui.abort_seq.setEnabled(True)
-        for i in range(10):
-            self.ui.outbox.append('testing...{}'.format(i))
-            time.sleep(1)
+        self.ui.set_seq_cycles.setEnabled(False)
+        self.ui.outbox.append('Sequence initiated')
+        
+        tot_cycles = self.ui.set_seq_cycles.value()
+        for c in range(tot_cycles):
+            self.ui.outbox.append(
+                    'running cycle {}/{}...'.format(c+1, tot_cycles))
+            time.sleep(0.1)
             if self.abort_seq == True:
+                self.ui.outbox.append('Sequence aborted.')
                 break
+
+
+            if self.ui.seq_laser_trigger.isChecked():
+                print('checked triggering')
+             
+                
+            if self.ui.seq_raman_acquisition.isChecked():
+                print('checked acquisition')   
+            
+
         self.abort_seq = False
         self.ui.run_seq.setEnabled(True)
         self.ui.abort_seq.setEnabled(False)
+        self.ui.set_seq_cycles.setEnabled(True)
+        self.ui.outbox.append('Sequence complete.')
+
 
     def run_seq_thread(self):
         """Run sequence in a new thread."""
