@@ -19,8 +19,8 @@ Created on Feb 3 2020
 """
 
 # --------------------- core GUI libraries --------------------------------
-from PyQt5 import QtWidgets, uic, QtCore, QtGui
-from PyQt5.QtWidgets import QMainWindow, QFileDialog
+from PyQt5 import QtWidgets, uic, QtCore#, QtGui
+from PyQt5.QtWidgets import QMainWindow#, QFileDialog
 #from PyQtCore import QRunnable, QThreadPool, pyqtSlot
 import os
 import sys
