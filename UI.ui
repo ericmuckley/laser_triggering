@@ -432,6 +432,19 @@ p, li { white-space: pre-wrap; }
      </layout>
     </widget>
    </widget>
+   <widget class="QPushButton" name="create_log">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>310</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Create log</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -447,8 +460,9 @@ p, li { white-space: pre-wrap; }
      <string>Menu</string>
     </property>
     <addaction name="print_ports"/>
-    <addaction name="separator"/>
+    <addaction name="show_log_path"/>
     <addaction name="show_help"/>
+    <addaction name="separator"/>
     <addaction name="separator"/>
     <addaction name="quitapp"/>
    </widget>
@@ -472,6 +486,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionShow_path_to_saved_data">
    <property name="text">
     <string>Show path to saved data</string>
+   </property>
+  </action>
+  <action name="show_log_path">
+   <property name="text">
+    <string>Show path to log file</string>
    </property>
   </action>
  </widget>

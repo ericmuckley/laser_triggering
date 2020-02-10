@@ -27,8 +27,8 @@ import sys
 import time
 import serial
 from serial.tools import list_ports
-#import numpy as np
-#import pandas as pd
+import pandas as pd
+import numpy as np
 #import matplotlib.pyplot as plt
 
 
@@ -109,6 +109,7 @@ class App(QMainWindow):
         self.ui.quitapp.triggered.connect(self.quitapp)
         self.ui.print_ports.triggered.connect(self.print_ports)
         self.ui.show_help.triggered.connect(self.show_help)
+        self.ui.show_log_path.triggered.connect(self.show_log_path)
 
         # assign actions to GUI buttons
         # example: self.ui.BUTTON_NAME.clicked.connect(self.FUNCTION_NAME)
@@ -117,6 +118,7 @@ class App(QMainWindow):
         self.ui.run_seq.clicked.connect(self.run_seq_thread)
         self.ui.abort_seq.clicked.connect(self.abort_seq)
         self.ui.launch_lf.clicked.connect(self.launch_lf)
+        self.ui.create_log.clicked.connect(self.create_log)
         
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
@@ -127,6 +129,11 @@ class App(QMainWindow):
         #if not os.path.exists(self.filedir):
         #    os.makedirs(self.filedir)
 
+        self.home_dir = os.path.dirname(os.path.abspath(__file__))
+        self.software_start_time = time.strftime('%Y-%m-%d_%H-%M-%S')
+        self.log = np.full((1000, 3), '', dtype=object)
+        
+        self.log_row = 0
         self.srs = {'dev': None}
         self.lf = {'app': None}
 
@@ -151,10 +158,11 @@ class App(QMainWindow):
             "'Abort sequence' to stop the sequence. "
             )
         self.ui.outbox.append(self.help_message)
-    
-    
+
 
     # %% ========= Princeton Instruments LightField control ==============
+
+
 
 
 
@@ -375,6 +383,31 @@ class App(QMainWindow):
 
     '''
 
+    def get_log_path(self):
+        """Get the path to the log file."""
+        filename = self.software_start_time + '.csv'
+        log_path = self.home_dir+'\\logs\\'+filename
+        return log_path
+
+    def show_log_path(self):
+        """Show the path to the log file."""
+        self.ui.outbox.append(
+                'Log file path: {}'.format(self.get_log_path()))
+
+
+    def create_log(self):
+        """Create log file."""
+        time_string = time.strftime('%Y-%m-%d_%H-%M-%S')
+        log_path = self.get_log_path()
+        self.log[self.log_row] = [
+                time_string,
+                'howdy',
+                'some metadata here']
+        log_df = pd.DataFrame(columns=['time', 'action', 'meta'],
+                              data=self.log)
+        log_df.to_csv(log_path, index=False)
+        self.ui.outbox.append('Log file appended.')
+        self.log_row += 1
 
 
     def show_help(self):
