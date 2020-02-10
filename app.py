@@ -108,7 +108,7 @@ class App(QMainWindow):
         #self.ui.actionChangefiledir.triggered.connect(self.set_directory)
         self.ui.quitapp.triggered.connect(self.quitapp)
         self.ui.print_ports.triggered.connect(self.print_ports)
-        self.ui.show_help.triggered.connect(self.show_help)
+        self.ui.show_help.triggered.connect(self.show_help_popup)
         self.ui.show_log_path.triggered.connect(self.show_log_path)
 
         # assign actions to GUI buttons
@@ -117,55 +117,36 @@ class App(QMainWindow):
         self.ui.acquire_raman.clicked.connect(self.acquire_raman)
         self.ui.run_seq.clicked.connect(self.run_seq_thread)
         self.ui.abort_seq.clicked.connect(self.abort_seq)
-        self.ui.launch_lf.clicked.connect(self.launch_lf)
-        self.ui.create_log.clicked.connect(self.create_log)
+        self.ui.launch_lf.clicked.connect(self.launch_lf_thread)
         
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
         self.ui.pulsegen_on.stateChanged.connect(self.pulsegen_on)
         
-        # set default data folder and create it if it doesn't exist
-        #self.filedir = os.getcwd()+'\\QCMD_model_results'
-        #if not os.path.exists(self.filedir):
-        #    os.makedirs(self.filedir)
-
-        self.home_dir = os.path.dirname(os.path.abspath(__file__))
-        self.software_start_time = time.strftime('%Y-%m-%d_%H-%M-%S')
-        self.log = np.full((1000, 3), '', dtype=object)
         
-        self.log_row = 0
-        self.srs = {'dev': None}
-        self.lf = {'app': None}
+        # intialize log file for logging experimental settings
+        self.filedir = os.getcwd()+'\\logs'
+        if not os.path.exists(self.filedir):
+            os.makedirs(self.filedir)
+        self.starttime = time.strftime('%Y-%m-%d_%H-%M-%S')
+        self.log = {
+                'path': self.filedir+'\\'+self.starttime+'.csv',
+                'row_counter': 0,
+                'data': np.full((1000, 7), '', dtype=object)}
 
-        self.help_message = (
-            "\n===================\n"
-            "HELP"
-            "\n===================\n"
-            "To determine which serial ports are avilable for "
-            "connected instruments, click "
-            "'Menu --> Show available serial ports'."
-            "\n===================\n"
-            "To communicate with the SRS DG645 pulse generator, "
-            "enter the serial port address (e.g. COM6) in the address "
-            "field and use the checkbox to connect to the device. "
-            "Adjust the pulse "
-            "width, pulse delay, pulse maplitude, and number of "
-            "pulses in the edit boxes. Then click 'Trigger pulses' "
-            "to send pulses from the SRS. "
-            "Uncheck the box to disconnect from the device."
-            "\n===================\n"
-            "To run the experimental sequence, click 'Run sequence' and "
-            "'Abort sequence' to stop the sequence. "
-            )
-        self.ui.outbox.append(self.help_message)
+        
+        # intialize instances of software and instruments
+        self.srs = {'dev': None, 'tot_pulses': 0}
+        self.lf = {'app': None, 'recent_file': None}
 
+
+        # kill the process which opens LightField if its already running
+        os.system("taskkill /f /im AddInProcess.exe")
+        
 
     # %% ========= Princeton Instruments LightField control ==============
 
-
-
-
-
+    '''
     def add_available_devices(self):
         # Add first available device and return
         for device in sio.experiment.AvailableDevices:
@@ -179,7 +160,7 @@ class App(QMainWindow):
         worker = Worker(self.launch_lf)  # pass other args here
         self.threadpool.start(worker)
 
-    '''
+    
     def launch_lf(self):
         """Launch LightField software."""
         # create a C# compatible List of type String object
@@ -192,6 +173,7 @@ class App(QMainWindow):
         self.ui.acquire_raman.setEnabled(True)
         self.ui.set_raman_filename.setEnabled(True)
         self.ui.seq_raman_acquisition.setEnabled(True)
+
 
     def device_found(self, experiment):
         "Check if devices are connected to LightField."""
@@ -210,10 +192,10 @@ class App(QMainWindow):
             ExperimentSettings.FileNameGenerationAttachIncrement, False)
         # Option to add date
         experiment.SetValue(
-            ExperimentSettings.FileNameGenerationAttachDate, True)
+            ExperimentSettings.FileNameGenerationAttachDate, False)
         # Option to add time
         experiment.SetValue(
-            ExperimentSettings.FileNameGenerationAttachTime, True)
+            ExperimentSettings.FileNameGenerationAttachTime, False)
 
 
     def acquire_raman(self):
@@ -224,84 +206,22 @@ class App(QMainWindow):
         # check for device and inform user if one is needed
         if (self.device_found(experiment)==True):        
             # check this location for saved spe after running
-            _file_name = self.ui.set_raman_filename.text()
+            notes = self.ui.raman_filename_notes.text().replace(',','__')
+            file_name = time.strftime('%Y-%m-%d_%H-%M-%S')+'_'+notes
+            self.lf['recent_file'] = file_name
             # pass location of saved file
-            self.save_file(_file_name, experiment)
+            self.save_file(file_name, experiment)
             # acquire image
             experiment.Acquire()
             self.ui.outbox.append(
-                    str(String.Format("{0} {1}",
-                                "Image saved to",
+                    str(String.Format("{0} {1}", "Image saved to",
                                 experiment.GetValue(
                                     ExperimentSettings.
                                     FileNameGenerationDirectory))))
         else:
-            self.ui.outbox.append('No LightField-compatible devices found.')
-            
+            self.ui.outbox.append(
+                    '\nNo LightField-compatible devices found.')
 
-
-
-
-    # %% ============ SRS DG645 pulse generator control =================
-    
-    def pulsegen_on(self):
-        "Run this function when pulse generator checkbox is checked."""
-        if self.ui.pulsegen_on.isChecked():
-            try:
-                address = self.ui.pulsegen_address.text()
-                dev = serial.Serial(port=address, timeout=2)
-                dev.write('*IDN?\r'.encode())
-                self.srs['dev'] = dev
-                self.ui.outbox.append('Pulse generator connected.')
-                self.ui.outbox.append(dev.readline().decode("utf-8"))
-                self.ui.pulsegen_address.setEnabled(False)
-                self.ui.config_pulse_frame.setEnabled(True)
-                self.ui.seq_laser_trigger.setEnabled(True)
-            except serial.SerialException:
-                self.ui.outbox.append('Pulse generator could not connect.')
-                self.ui.config_pulse_frame.setEnabled(False)
-                self.ui.pulsegen_address.setEnabled(True)
-                self.ui.pulsegen_on.setChecked(False)
-                self.ui.seq_laser_trigger.setEnabled(False)
-                self.srs['dev'] = None
-        else: 
-            try:
-                self.srs['dev'].close()
-            except AttributeError:
-                pass
-            self.srs['dev'] = None
-            self.ui.outbox.append('Pulse generator closed.')
-            self.ui.pulsegen_on.setChecked(False)
-            self.ui.seq_laser_trigger.setEnabled(False)
-        
-    def trigger_pulses(self):
-        """Fire a single burst of n pulses with spacing in seconds."""
-        self.ui.trigger_pulses.setEnabled(False)
-        # set pulse width in seconds
-        pulse_width = self.ui.pulse_width.value()/1e3
-        pulse_amplitude = self.ui.pulse_amplitude.value()
-        pulse_delay = self.ui.pulse_delay.value()/1e3
-        pulse_number = self.ui.pulse_number.value()
-        self.ui.outbox.append('Triggering {} pulses...'.format(pulse_number))
-        # set trigger source to single shot trigger
-        self.srs['dev'].write('TSRC5\r'.encode())
-        # set delay of A and B outputs
-        self.srs['dev'].write(('DLAY2,0,'+str(0)+'\r').encode())
-        self.srs['dev'].write(('DLAY3,2,'+str(pulse_width)+'\r').encode())
-        # set amplitude of output A
-        self.srs['dev'].write(('LAMP1,'+str(pulse_amplitude)+'\r').encode())
-        for _ in range(pulse_number):
-            # initiate single shot trigger
-            self.srs['dev'].write('*TRG\r'.encode())
-            time.sleep(pulse_delay)
-        self.ui.trigger_pulses.setEnabled(True)
-        self.ui.outbox.append('Pulse sequence complete.')
-
-
-    def trigger_pulses_thread(self):
-        """Trigger pulses in a new thread."""
-        worker = Worker(self.trigger_pulses)  # pass other args here
-        self.threadpool.start(worker)
 
 
     # %% ======= experimental sequence control functions =================
@@ -310,32 +230,30 @@ class App(QMainWindow):
         """Abort the expreimental sequence."""
         self.abort_seq = True
 
-
     def run_seq(self):
         """Run an experimental sequence."""
         self.ui.run_seq.setEnabled(False)
         self.ui.abort_seq.setEnabled(True)
         self.ui.set_seq_cycles.setEnabled(False)
-        self.ui.outbox.append('Sequence initiated')
+        self.ui.outbox.append('\nSequence initiated')
         
         tot_cycles = self.ui.set_seq_cycles.value()
         for c in range(tot_cycles):
             self.ui.outbox.append(
                     'running cycle {}/{}...'.format(c+1, tot_cycles))
-            time.sleep(0.1)
             if self.abort_seq == True:
                 self.ui.outbox.append('Sequence aborted.')
                 break
-
-
             if self.ui.seq_laser_trigger.isChecked():
-                print('checked triggering')
-             
+                self.trigger_pulses()
+                time.sleep(0.1)
                 
             if self.ui.seq_raman_acquisition.isChecked():
-                print('checked acquisition')   
-            
+                self.acquire_raman()
 
+            self.log_to_file()
+            time.sleep(self.ui.pause_between_cycles.value())
+            
         self.abort_seq = False
         self.ui.run_seq.setEnabled(True)
         self.ui.abort_seq.setEnabled(False)
@@ -350,7 +268,158 @@ class App(QMainWindow):
 
 
 
+    # %% ============ SRS DG645 pulse generator control =================
+    
+    def pulsegen_on(self):
+        "Run this function when pulse generator checkbox is checked."""
+        if self.ui.pulsegen_on.isChecked():
+            try:
+                address = self.ui.pulsegen_address.text()
+                dev = serial.Serial(port=address, timeout=2)
+                dev.write('*IDN?\r'.encode())
+                self.srs['dev'] = dev
+                self.ui.outbox.append('\nPulse generator connected.')
+                self.ui.outbox.append(dev.readline().decode("utf-8"))
+                self.ui.pulsegen_address.setEnabled(False)
+                self.ui.config_pulse_frame.setEnabled(True)
+                self.ui.seq_laser_trigger.setEnabled(True)
+            except serial.SerialException:
+                self.ui.outbox.append('\nPulse generator could not connect.')
+                self.ui.config_pulse_frame.setEnabled(False)
+                self.ui.pulsegen_address.setEnabled(True)
+                self.ui.pulsegen_on.setChecked(False)
+                self.ui.seq_laser_trigger.setEnabled(False)
+                self.srs['dev'] = None
+        else: 
+            try:
+                self.srs['dev'].close()
+            except AttributeError:
+                pass
+            self.srs['dev'] = None
+            self.ui.outbox.append('\nPulse generator closed.')
+            self.ui.pulsegen_on.setChecked(False)
+            self.ui.seq_laser_trigger.setEnabled(False)
+        
+    def trigger_pulses(self):
+        """Fire a single burst of n pulses with spacing in seconds."""
+        self.ui.trigger_pulses.setEnabled(False)
+        # set pulse width in seconds
+        pulse_width = self.ui.pulse_width.value()/1e3
+        pulse_amplitude = self.ui.pulse_amplitude.value()
+        pulse_delay = self.ui.pulse_delay.value()/1e3
+        pulse_number = self.ui.pulse_number.value()
+        self.ui.outbox.append('\nTriggering {} pulses...'.format(pulse_number))
+        # set trigger source to single shot trigger
+        self.srs['dev'].write('TSRC5\r'.encode())
+        # set delay of A and B outputs
+        self.srs['dev'].write(('DLAY2,0,'+str(0)+'\r').encode())
+        self.srs['dev'].write(('DLAY3,2,'+str(pulse_width)+'\r').encode())
+        # set amplitude of output A
+        self.srs['dev'].write(('LAMP1,'+str(pulse_amplitude)+'\r').encode())
+        for _ in range(pulse_number):
+            # initiate single shot trigger
+            self.srs['dev'].write('*TRG\r'.encode())
+            time.sleep(pulse_delay)
+        self.ui.trigger_pulses.setEnabled(True)
+        self.ui.outbox.append('Pulse sequence complete.')
+        self.srs['tot_pulses'] += pulse_number
+
+
+    def trigger_pulses_thread(self):
+        """Trigger pulses in a new thread."""
+        worker = Worker(self.trigger_pulses)  # pass other args here
+        self.threadpool.start(worker)
+
+
+
     # %% ============ system control functions =============================
+
+
+    
+    
+    def show_help_popup(self):
+        """Show the help popup message."""
+        self.help_message = (
+            "HELP"
+            "\n=========================================================\n"
+            "Click 'Menu --> Show available serial ports' to check "
+            "available ports. "
+            "To communicate with the SRS DG645 pulse generator, "
+            "enter the serial port address (e.g. COM6) in the address "
+            "field and use the checkbox to connect to the device. "
+            "Adjust the pulse "
+            "width, pulse delay, pulse maplitude, and number of "
+            "pulses in the edit boxes. Then click 'Trigger pulses' "
+            "to send pulses from the SRS. "
+            "Uncheck the box to disconnect from the device."
+            "\n=========================================================\n"
+            "To configure LightField, first open LightField by "
+            "clicking 'Launch LightField.' Then configure all desired "
+            "settings inside LightField. To acquire, click 'Acquire'. "
+            "\n=========================================================\n"
+            "To run the experimental sequence, check boxes for the "
+            "pulse triggering and acquisition. Then click 'Run sequence'. "
+            "Click 'Abort sequence' to stop the sequence prematurely."
+            "\n=========================================================\n"
+            )
+        self.help_popup = QtWidgets.QMessageBox()
+        self.help_popup.setWindowTitle('Help')
+        self.help_popup.setText(self.help_message)
+        self.help_popup.exec_()
+
+
+    def show_log_path(self):
+        """Show the path to the log file."""
+        self.ui.outbox.append('\nLog file path: %s' %(self.log['path']))
+
+
+    def get_log_row_data(self):
+        """Get data for the most recent row of the log file."""
+        d = {'time': time.strftime('%Y-%m-%d_%H-%M-%S'),
+             'total_pulses': self.srs['tot_pulses'],
+             'pulsewidth_ms':  self.ui.pulse_width.value()/1e3,
+             'pulse_amplitude_V': self.ui.pulse_amplitude.value(),
+             'pulse_delay_ms': self.ui.pulse_delay.value()/1e3,
+             'pulse_number': self.ui.pulse_number.value(),
+             'recent_file': self.lf['recent_file']}
+        return d
+
+
+    def log_to_file(self):
+        """Create log file."""
+        # get most recent row of data
+        d = self.get_log_row_data()
+        # assign most recent row to last row in log data
+        self.log['data'][self.log['row_counter']] = list(d.values())
+        # convert log dtaa to Pandas DataFrame
+        log_df = pd.DataFrame(columns=list(d.keys()),
+                              data=self.log['data'])
+        # save dataframe as csv file
+        log_df.to_csv(self.log['path'], index=False)
+        self.ui.outbox.append('\nLog file appended.')
+        self.log['row_counter'] += 1
+
+
+
+    def print_ports(self):
+        """Print a list of avilable serial ports."""
+        ports = list(list_ports.comports())
+        self.ui.outbox.append('\nAvailable serial ports:')
+        for p in ports:    
+            self.ui.outbox.append(str(p.device))
+
+
+    def quitapp(self):
+        """Quit the application."""
+        if self.srs['dev'] != None:
+            self.srs['dev'].close()
+        self.deleteLater()
+        # close app window
+        self.close()  
+        # kill python kernel
+        sys.exit()  
+
+
 
     '''
     def view_file_save_dir(ops_dict):
@@ -382,60 +451,6 @@ class App(QMainWindow):
         ops.view_file_save_dir(self.keith_dict)
 
     '''
-
-    def get_log_path(self):
-        """Get the path to the log file."""
-        filename = self.software_start_time + '.csv'
-        log_path = self.home_dir+'\\logs\\'+filename
-        return log_path
-
-    def show_log_path(self):
-        """Show the path to the log file."""
-        self.ui.outbox.append(
-                'Log file path: {}'.format(self.get_log_path()))
-
-
-    def create_log(self):
-        """Create log file."""
-        time_string = time.strftime('%Y-%m-%d_%H-%M-%S')
-        log_path = self.get_log_path()
-        self.log[self.log_row] = [
-                time_string,
-                'howdy',
-                'some metadata here']
-        log_df = pd.DataFrame(columns=['time', 'action', 'meta'],
-                              data=self.log)
-        log_df.to_csv(log_path, index=False)
-        self.ui.outbox.append('Log file appended.')
-        self.log_row += 1
-
-
-    def show_help(self):
-        """Print help in the GUI output box."""
-        self.ui.outbox.append(self.help_message)
-
-
-    def print_ports(self):
-        """Print a list of avilable serial ports."""
-        ports = list(list_ports.comports())
-        self.ui.outbox.append('Available serial ports:')
-        for p in ports:    
-            self.ui.outbox.append(str(p.device))
-
-
-    def quitapp(self):
-        """Quit the application."""
-        if self.srs['dev'] != None:
-            self.srs['dev'].close()
-        self.deleteLater()
-        # close app window
-        self.close()  
-        # kill python kernel
-        sys.exit()  
-
-
-
-
 
 
     # =================== file I/O utilities =============================

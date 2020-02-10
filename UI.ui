@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>672</width>
-    <height>665</height>
+    <width>587</width>
+    <height>470</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>20</x>
       <y>20</y>
       <width>201</width>
-      <height>261</height>
+      <height>251</height>
      </rect>
     </property>
     <property name="title">
@@ -202,8 +202,8 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>120</y>
+        <x>40</x>
+        <y>130</y>
         <width>101</width>
         <height>23</height>
        </rect>
@@ -217,10 +217,10 @@
    <widget class="QGroupBox" name="groupBox_output">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>360</y>
-      <width>371</width>
-      <height>241</height>
+      <x>20</x>
+      <y>290</y>
+      <width>541</width>
+      <height>141</height>
      </rect>
     </property>
     <property name="title">
@@ -231,8 +231,8 @@
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>351</width>
-       <height>201</height>
+       <width>521</width>
+       <height>101</height>
       </rect>
      </property>
      <property name="font">
@@ -261,8 +261,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>240</x>
       <y>20</y>
-      <width>221</width>
-      <height>151</height>
+      <width>321</width>
+      <height>101</height>
      </rect>
     </property>
     <property name="title">
@@ -271,7 +271,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="launch_lf">
      <property name="geometry">
       <rect>
-       <x>30</x>
+       <x>40</x>
        <y>30</y>
        <width>101</width>
        <height>23</height>
@@ -287,53 +287,50 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>30</x>
-       <y>60</y>
+       <x>170</x>
+       <y>30</y>
        <width>101</width>
        <height>23</height>
       </rect>
      </property>
      <property name="text">
-      <string>Acquire Raman</string>
+      <string>Acquire</string>
      </property>
     </widget>
-    <widget class="QLabel" name="raman_filename_label">
+    <widget class="QWidget" name="formLayoutWidget_3">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>100</y>
-       <width>81</width>
-       <height>16</height>
+       <x>20</x>
+       <y>70</y>
+       <width>291</width>
+       <height>21</height>
       </rect>
      </property>
-     <property name="text">
-      <string>Raman filename</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="set_raman_filename">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>120</y>
-       <width>141</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>raman_acquisition_1</string>
-     </property>
+     <layout class="QFormLayout" name="formLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Filename notes</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="raman_filename_notes">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
       <x>240</x>
-      <y>190</y>
-      <width>221</width>
-      <height>151</height>
+      <y>140</y>
+      <width>321</width>
+      <height>131</height>
      </rect>
     </property>
     <property name="title">
@@ -342,14 +339,23 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="run_seq">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>110</y>
-       <width>91</width>
+       <x>230</x>
+       <y>30</y>
+       <width>71</width>
        <height>23</height>
       </rect>
      </property>
      <property name="text">
-      <string>Run sequence</string>
+      <string>Run</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="abort_seq">
@@ -358,14 +364,14 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>120</x>
-       <y>110</y>
-       <width>91</width>
+       <x>230</x>
+       <y>70</y>
+       <width>71</width>
        <height>23</height>
       </rect>
      </property>
      <property name="text">
-      <string>Abort sequence</string>
+      <string>Abort</string>
      </property>
     </widget>
     <widget class="QWidget" name="formLayoutWidget_2">
@@ -373,13 +379,19 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>20</y>
-       <width>191</width>
-       <height>80</height>
+       <width>185</width>
+       <height>91</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="1">
        <widget class="QSpinBox" name="set_seq_cycles">
+        <property name="maximumSize">
+         <size>
+          <width>60</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="minimum">
          <number>1</number>
         </property>
@@ -395,21 +407,21 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QLabel" name="seq_laser_triggering_label">
         <property name="text">
          <string>Laser triggering</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="seq_raman_acquisition_label">
         <property name="text">
          <string>Raman acquisition</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="2" column="1">
        <widget class="QCheckBox" name="seq_laser_trigger">
         <property name="enabled">
          <bool>false</bool>
@@ -419,7 +431,7 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="3" column="1">
        <widget class="QCheckBox" name="seq_raman_acquisition">
         <property name="enabled">
          <bool>false</bool>
@@ -429,21 +441,31 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="pause_between_cycles">
+        <property name="maximumSize">
+         <size>
+          <width>60</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="minimum">
+         <number>3</number>
+        </property>
+        <property name="maximum">
+         <number>10000</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="pause_between_cycles_label">
+        <property name="text">
+         <string>Pause between cycles (s)</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
-   </widget>
-   <widget class="QPushButton" name="create_log">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>310</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Create log</string>
-    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -451,7 +473,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>672</width>
+     <width>587</width>
      <height>21</height>
     </rect>
    </property>
