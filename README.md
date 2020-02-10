@@ -1,2 +1,3 @@
 # Laser triggering
-GUI for triggering excimer laser pulses
+
+GUI for automated triggering of excimer laser pulses and acquisition of Raman spectra.
