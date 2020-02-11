@@ -6,12 +6,275 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>587</width>
-    <height>470</height>
+    <width>575</width>
+    <height>510</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Laser triggering</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">/*
+QMainWindow{background-color: rgb(60, 70, 80);}
+QLabel{color: white;}
+QStatusBar{background: rgb(50, 50, 50);}
+
+QMenu {
+border: 1px solid black;
+color: white;
+background: rgb(30, 40, 50);}
+
+QMenu::item:hover { 
+background: black;}
+
+QMenu::item:selected { 
+background: black;}
+
+QMenuBar{
+background: rgb(30, 40, 50);
+spacing: 12px;
+color: white;
+font-size:16px;}
+
+QMenuBar::item{
+spacing: 3px; 
+padding: 1px 4px;
+border-radius: 5px;
+}
+
+QMenuBar::item:selected{background: black;}
+
+
+QComboBox{
+border: 1px solid black;
+background-color: black;
+color: white;}
+
+QComboBox:hover{
+border: 1px solid white;}
+
+QComboBox QAbstractItemView {
+border: 1px solid black;
+selection-background-color: rgb(0, 0, 0);
+}
+
+QComboBox::drop-down {}
+
+
+
+
+
+QPushButton{
+border: 1px solid black;
+color: white;
+background-color: rgb(60, 70, 80);
+}
+QPushButton:hover{
+border: 1px solid white;
+}
+QPushButton:pressed{
+border: 1px solid white;
+background-color: rgb(200, 200, 200);
+color: black;
+}
+
+
+
+
+
+QLineEdit, QSpinBox, QDoubleSpinBox {
+background-color:black;
+color: white;
+border: 1px solid black;}
+
+QLineEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover{
+border: 1px solid white;
+background-color: black;}
+
+
+QScrollArea{
+background: transparent;
+border: 1px solid black;
+}
+QScrollArea QWidget{
+background: transparent;
+}
+
+QScrollArea QLineEdit{
+background-color:black;
+color: white;
+border: 1px solid black;}
+
+QScrollArea QSpinBox{
+background-color:black;
+color: white;
+border: 1px solid black;}
+
+QScrollArea QDoubleSpinBox{
+background-color:black;
+color: white;
+border: 1px solid black;}
+
+
+QScrollArea QLineEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover{
+border: 1px solid white;
+background-color: black;}
+
+
+QTableWidget{
+background-color:rgb(30, 40, 50);
+font-size: 12px;
+color: white
+}
+
+
+QScrollBar:vertical {
+background: rgb(120, 120, 120);
+width: 12px;
+}
+
+QScrollBar::handle:vertical {
+background: rgb(60, 70, 80);
+min-height: 40px;
+margin: 1px;
+}
+
+QScrollBar::handle:hover{border: 1px solid white;}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+background: black;
+}
+
+QScrollBar::add-line:vertical {
+border: none;
+background: none;
+width: 0px;
+height: 0px;
+}
+QScrollBar::sub-line:vertical {
+border: none;
+background: none;
+width: 0px;
+height: 0px;
+}
+
+QTabWidget{border: 1px  rgb(200, 200, 200);}
+
+QWidget#bias_seq_tab{
+background-color: rgb(60, 70, 80);
+border: 1px solid black;
+}
+QWidget#rh_gen_tab{
+background-color: rgb(60, 70, 80);
+border: 1px solid black;
+}
+QWidget#rh_seq_tab{
+background-color: rgb(60, 70, 80);
+border: 1px solid black;
+}
+QWidget#vac_tab{
+background-color: rgb(60, 70, 80);
+border: 1px solid black;
+}
+QWidget#press_seq_tab{
+background-color: rgb(60, 70, 80);
+border: 1px solid black;
+}
+QWidget#electrical_settings_tab{
+background-color: rgb(60, 70, 80);
+border: 1px solid black;
+}
+
+
+QTabWidget::pane {
+top: 0px; 
+background-color: rgb(60, 70, 80); } 
+
+QTabBar::tab {
+border: 1px solid rgb(60, 70, 80);
+background: black; 
+color: rgb(200, 200, 200);
+padding: 6px;} 
+
+QTabBar::tab:selected { 
+background-color: rgb(200, 200, 200);
+color: black;
+margin-bottom: -2px; }
+
+QTabBar::tab:hover {
+border: 1px solid white;
+color: white;}
+
+QTextBrowser
+{border: 1px solid black;
+color: black;
+background-color: rgb(200, 200, 200);}
+
+QHeaderView{
+spacing: 10px;
+background-color: white;
+color: black;
+text-align: right;
+font-family: arial;
+font-size: 12px;}
+
+
+QGroupBox{
+color: white;
+border: 1px solid gray;
+border-radius: 2px;
+margin-top: 0.5em;
+border-color: white;
+font-family: 'Arial';
+font-size: 18px;}
+
+QGroupBox::title{
+subcontrol-position: top center;
+subcontrol-origin: margin;
+padding: 0 3px 0 3px;}
+
+
+QGroupBox#vac_seq_groupbox{
+color: white;
+border: 1px solid black;
+border-radius: 2px;
+margin-top: 0.5em;
+font-family: 'Arial';
+font-size: 12px;
+}
+
+QGroupBox#rh_seq_groupbox{
+color: white;
+border: 1px solid black;
+border-radius: 2px;
+margin-top: 0.5em;
+font-family: 'Arial';
+font-size: 12px;
+}
+
+QRadioButton, QCheckBox {
+color: white;}
+
+QRadioButton::indicator, QCheckBox::indicator {
+width: 13px;
+height: 13px;}
+
+QRadioButton::indicator::unchecked, QCheckBox::indicator::unchecked {
+border: 1px solid black;
+background:  black;}
+
+QRadioButton::indicator::checked, QCheckBox::indicator::checked {
+border: rgb(200, 200, 200);;
+background: rgb(200, 200, 200);}
+
+QRadioButton::indicator:unchecked:hover, QCheckBox::indicator:unchecked:hover {
+border: 1px solid white;
+background: black;}
+
+QRadioButton::indicator:checked:hover, QCheckBox::indicator:checked:hover {
+border: 1px solid black;
+}
+</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBox_configurepulses">
@@ -20,17 +283,27 @@
       <x>20</x>
       <y>20</y>
       <width>201</width>
-      <height>251</height>
+      <height>291</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
     <property name="title">
-     <string>Configure pulse generator</string>
+     <string>Pulse generator</string>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
     </property>
     <widget class="QWidget" name="gridLayoutWidget">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>30</y>
+       <y>50</y>
        <width>151</width>
        <height>31</height>
       </rect>
@@ -75,7 +348,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>80</y>
+       <y>90</y>
        <width>181</width>
        <height>161</height>
       </rect>
@@ -218,10 +491,15 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>290</y>
+      <y>340</y>
       <width>541</width>
       <height>141</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
     </property>
     <property name="title">
      <string>Output</string>
@@ -262,8 +540,13 @@ p, li { white-space: pre-wrap; }
       <x>240</x>
       <y>20</y>
       <width>321</width>
-      <height>101</height>
+      <height>111</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
     </property>
     <property name="title">
      <string>Configure LightField</string>
@@ -300,17 +583,17 @@ p, li { white-space: pre-wrap; }
     <widget class="QWidget" name="formLayoutWidget_3">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>10</x>
        <y>70</y>
-       <width>291</width>
-       <height>21</height>
+       <width>301</width>
+       <height>22</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="formLayout_2">
       <item row="0" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Filename notes</string>
+         <string>File notes</string>
         </property>
        </widget>
       </item>
@@ -328,10 +611,15 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>240</x>
-      <y>140</y>
+      <y>160</y>
       <width>321</width>
-      <height>131</height>
+      <height>151</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
     </property>
     <property name="title">
      <string>Experimental sequence</string>
@@ -340,7 +628,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>230</x>
-       <y>30</y>
+       <y>50</y>
        <width>71</width>
        <height>23</height>
       </rect>
@@ -365,7 +653,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>230</x>
-       <y>70</y>
+       <y>90</y>
        <width>71</width>
        <height>23</height>
       </rect>
@@ -378,7 +666,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>20</y>
+       <y>40</y>
        <width>185</width>
        <height>91</height>
       </rect>
@@ -473,7 +761,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>587</width>
+     <width>575</width>
      <height>21</height>
     </rect>
    </property>
@@ -481,10 +769,10 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Menu</string>
     </property>
+    <addaction name="show_file_list"/>
     <addaction name="print_ports"/>
     <addaction name="show_log_path"/>
     <addaction name="show_help"/>
-    <addaction name="separator"/>
     <addaction name="separator"/>
     <addaction name="quitapp"/>
    </widget>
@@ -513,6 +801,11 @@ p, li { white-space: pre-wrap; }
   <action name="show_log_path">
    <property name="text">
     <string>Show path to log file</string>
+   </property>
+  </action>
+  <action name="show_file_list">
+   <property name="text">
+    <string>Show acquisition file list</string>
    </property>
   </action>
  </widget>

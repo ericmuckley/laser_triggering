@@ -12,7 +12,6 @@ Updated version is stored at
 https://github.com/ericmuckley/laser_triggering
 
 
-
 Created on Feb 3 2020
 @author: ericmuckley@gmail.com
 
@@ -29,10 +28,7 @@ import serial
 from serial.tools import list_ports
 import pandas as pd
 import numpy as np
-#import matplotlib.pyplot as plt
-
-
-
+import matplotlib.pyplot as plt
 
 # --------------------- for LightField dependencies ------------------------
 import clr  # the .NET class library
@@ -40,7 +36,6 @@ import System.IO as sio  # for saving and opening files
 # Import c compatible List and String
 from System import String
 from System.Collections.Generic import List
-
 # Add needed dll references for LightField
 sys.path.append(os.environ['LIGHTFIELD_ROOT'])
 sys.path.append(os.environ['LIGHTFIELD_ROOT']+"\\AddInViews")
@@ -54,9 +49,7 @@ from PrincetonInstruments.LightField.Automation import Automation
 from PrincetonInstruments.LightField.AddIns import ExperimentSettings
 from PrincetonInstruments.LightField.AddIns import DeviceType 
 
-
-'''
-# change matplotlib settings to make plots look nicer
+# ------- change matplotlib settings to make plots look nicer --------------
 plt.rcParams['xtick.labelsize'] = 20
 plt.rcParams['ytick.labelsize'] = 20
 plt.rcParams['axes.linewidth'] = 3
@@ -65,7 +58,7 @@ plt.rcParams['xtick.major.width'] = 3
 plt.rcParams['ytick.minor.width'] = 3
 plt.rcParams['ytick.major.width'] = 3
 plt.rcParams['figure.autolayout'] = True
-'''
+
 
 class Worker(QtCore.QRunnable):
     """Class to start a new worker thread for background tasks.
@@ -85,7 +78,6 @@ class Worker(QtCore.QRunnable):
         class and execute it in a new thread."""
         self.fn(*self.args, **self.kwargs)
   
-
 
 class App(QMainWindow):
     """Class which creates the main window of the application."""
@@ -110,6 +102,8 @@ class App(QMainWindow):
         self.ui.print_ports.triggered.connect(self.print_ports)
         self.ui.show_help.triggered.connect(self.show_help_popup)
         self.ui.show_log_path.triggered.connect(self.show_log_path)
+        self.ui.show_file_list.triggered.connect(self.show_file_list)
+
 
         # assign actions to GUI buttons
         # example: self.ui.BUTTON_NAME.clicked.connect(self.FUNCTION_NAME)
@@ -137,7 +131,8 @@ class App(QMainWindow):
         
         # intialize instances of software and instruments
         self.srs = {'dev': None, 'tot_pulses': 0}
-        self.lf = {'app': None, 'recent_file': None}
+        self.lf = {'app': None, 'recent_file': None,
+                   'file_list': []}
 
 
         # kill the process which opens LightField if its already running
@@ -198,6 +193,15 @@ class App(QMainWindow):
             ExperimentSettings.FileNameGenerationAttachTime, False)
 
 
+    def show_file_list(self):
+        """Show the list of acquired Raman spe files."""
+        self.ui.outbox.append(
+                '\n{} Raman acquisition files'.format(
+                        len(self.lf['file_list'])))
+        for f in self.lf['file_list']:
+            self.ui.outbox.append(f)
+
+
     def acquire_raman(self):
         """Acquire Raman spectra using an opened instance of LightField."""
         # get current loaded experiment
@@ -209,6 +213,7 @@ class App(QMainWindow):
             notes = self.ui.raman_filename_notes.text().replace(',','__')
             file_name = time.strftime('%Y-%m-%d_%H-%M-%S')+'_'+notes
             self.lf['recent_file'] = file_name
+            self.lf['file_list'].append(file_name+'.spe')
             # pass location of saved file
             self.save_file(file_name, experiment)
             # acquire image
@@ -421,48 +426,9 @@ class App(QMainWindow):
 
 
 
-    '''
-    def view_file_save_dir(ops_dict):
-        # Show the name of the file-saving directory in the output box on the GUI.
-        try:  # if save file directory is already set
-            ops_dict['output_box'].append('Current save file directory:')
-            ops_dict['output_box'].append(ops_dict['save_file_dir'])
-        except NameError:  # if file directory is not set
-            ops_dict['output_box'].append(
-                    'No save file directory has been set.')
-            ops_dict['output_box'].append(
-                    'Please set in File --> Change file save directory.')
-
-    def set_file_save_directory(self):
-        # set the directory for saving data files
-        self.save_file_dir = str(QFileDialog.getExistingDirectory(
-                self, 'Create or select directory for data files.'))
-        self.ui.output_box.append('Save file directory set to:')
-        self.ui.output_box.append(self.save_file_dir)
-
-    def create_report(self):
-        # Create Origin report of saved experimental data. This method
-        # opens Origin, runs an internal Origin python script, imports
-        # the saved data files, plots them, and saves the Origin file.
-        Thread(target=ops.create_report, args=(self.ops_dict,)).start()
-
-    def view_file_save_dir(self):
-        # Print the file saving directory to the output box on GUI.
-        ops.view_file_save_dir(self.keith_dict)
-
-    '''
-
 
     # =================== file I/O utilities =============================
     '''
-    def export_results(self):
-        """Save modeling results to file."""
-        filename = 'QCMD_results'
-        filepath = self.filedir + '\\' + filename + '.csv'
-        df = pd.DataFrame(list(self.results.items()))
-        df.to_csv(filepath)
-        self.ui.outbox.append('\nFile saved to ' + filepath)
-
 
     def set_directory(self):
         """Set the directory for saving files."""
@@ -475,28 +441,6 @@ class App(QMainWindow):
         """Show the file directory in the output box."""
         self.ui.outbox.append('\nFile directory is set to ' + self.filedir)
 
-
-    def fit_model_in_new_thread(self):
-        """Run Kelvin-Voigt model in new thread."""
-        worker = Worker(self.fit_model)  # pass other args here
-        self.threadpool.start(worker)
-
-
-    def get_ui_inputs(self):
-        """Get a dictionary of inputs from the UI."""
-        uidict = {
-                'f0': float(self.ui.f0.currentText())*1e6,
-                'n': int(self.ui.n.currentText()),
-                'rho': float(self.ui.film_density.value()),
-                'h': float(self.ui.film_thickness.value())*1e-9,
-                'medium': str(self.ui.medium.currentText()),
-                'df_exp': float(self.ui.df_exp.value()),
-                'dd_exp': float(self.ui.dd_exp.value()),
-                'mu_low': int(self.ui.mu_exp_low.value()),
-                'mu_high': int(self.ui.mu_exp_high.value()),
-                'eta_low': int(self.ui.eta_exp_low.value()),
-                'eta_high': int(self.ui.eta_exp_high.value())}
-        return uidict
 
 
     def plot_df_surf(self):
