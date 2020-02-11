@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>575</width>
-    <height>510</height>
+    <width>482</width>
+    <height>614</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -283,7 +283,7 @@ border: 1px solid black;
       <x>20</x>
       <y>20</y>
       <width>201</width>
-      <height>291</height>
+      <height>241</height>
      </rect>
     </property>
     <property name="font">
@@ -303,8 +303,8 @@ border: 1px solid black;
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>50</y>
-       <width>151</width>
+       <y>40</y>
+       <width>161</width>
        <height>31</height>
       </rect>
      </property>
@@ -320,12 +320,12 @@ border: 1px solid black;
        <widget class="QLineEdit" name="pulsegen_address">
         <property name="maximumSize">
          <size>
-          <width>70</width>
+          <width>16777215</width>
           <height>16777215</height>
          </size>
         </property>
         <property name="text">
-         <string>COM6</string>
+         <string>COM13</string>
         </property>
         <property name="placeholderText">
          <string>COM5</string>
@@ -341,16 +341,13 @@ border: 1px solid black;
       </item>
      </layout>
     </widget>
-    <widget class="QFrame" name="config_pulse_frame">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
+    <widget class="QFrame" name="pulse_gen_frame">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>90</y>
+       <y>80</y>
        <width>181</width>
-       <height>161</height>
+       <height>151</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -378,6 +375,9 @@ border: 1px solid black;
        </item>
        <item row="0" column="1">
         <widget class="QDoubleSpinBox" name="pulse_width">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="decimals">
           <number>3</number>
          </property>
@@ -411,6 +411,9 @@ border: 1px solid black;
        </item>
        <item row="1" column="1">
         <widget class="QDoubleSpinBox" name="pulse_delay">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="decimals">
           <number>3</number>
          </property>
@@ -430,6 +433,9 @@ border: 1px solid black;
        </item>
        <item row="2" column="1">
         <widget class="QDoubleSpinBox" name="pulse_amplitude">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="decimals">
           <number>1</number>
          </property>
@@ -456,6 +462,9 @@ border: 1px solid black;
        </item>
        <item row="3" column="1">
         <widget class="QSpinBox" name="pulse_number">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="minimum">
           <number>1</number>
          </property>
@@ -471,12 +480,12 @@ border: 1px solid black;
      </widget>
      <widget class="QPushButton" name="trigger_pulses">
       <property name="enabled">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>130</y>
+        <y>120</y>
         <width>101</width>
         <height>23</height>
        </rect>
@@ -491,8 +500,8 @@ border: 1px solid black;
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>340</y>
-      <width>541</width>
+      <y>430</y>
+      <width>441</width>
       <height>141</height>
      </rect>
     </property>
@@ -509,7 +518,7 @@ border: 1px solid black;
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>521</width>
+       <width>421</width>
        <height>101</height>
       </rect>
      </property>
@@ -537,10 +546,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_configurelightfield">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>20</y>
-      <width>321</width>
-      <height>111</height>
+      <x>20</x>
+      <y>280</y>
+      <width>441</width>
+      <height>141</height>
      </rect>
     </property>
     <property name="font">
@@ -611,9 +620,9 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>240</x>
-      <y>160</y>
-      <width>321</width>
-      <height>151</height>
+      <y>20</y>
+      <width>221</width>
+      <height>241</height>
      </rect>
     </property>
     <property name="font">
@@ -627,8 +636,8 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="run_seq">
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>50</y>
+       <x>50</x>
+       <y>140</y>
        <width>71</width>
        <height>23</height>
       </rect>
@@ -648,12 +657,12 @@ p, li { white-space: pre-wrap; }
     </widget>
     <widget class="QPushButton" name="abort_seq">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="geometry">
       <rect>
-       <x>230</x>
-       <y>90</y>
+       <x>50</x>
+       <y>180</y>
        <width>71</width>
        <height>23</height>
       </rect>
@@ -712,7 +721,7 @@ p, li { white-space: pre-wrap; }
       <item row="2" column="1">
        <widget class="QCheckBox" name="seq_laser_trigger">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string/>
@@ -722,7 +731,7 @@ p, li { white-space: pre-wrap; }
       <item row="3" column="1">
        <widget class="QCheckBox" name="seq_raman_acquisition">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string/>
@@ -761,7 +770,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>575</width>
+     <width>482</width>
      <height>21</height>
     </rect>
    </property>
@@ -769,20 +778,17 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Menu</string>
     </property>
+    <addaction name="plot_spectra"/>
+    <addaction name="separator"/>
     <addaction name="show_file_list"/>
     <addaction name="print_ports"/>
     <addaction name="show_log_path"/>
     <addaction name="show_help"/>
     <addaction name="separator"/>
-    <addaction name="quitapp"/>
+    <addaction name="quit_app"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
-  <action name="quitapp">
-   <property name="text">
-    <string>Quit</string>
-   </property>
-  </action>
   <action name="print_ports">
    <property name="text">
     <string>Show available serial ports</string>
@@ -793,11 +799,6 @@ p, li { white-space: pre-wrap; }
     <string>Show help</string>
    </property>
   </action>
-  <action name="actionShow_path_to_saved_data">
-   <property name="text">
-    <string>Show path to saved data</string>
-   </property>
-  </action>
   <action name="show_log_path">
    <property name="text">
     <string>Show path to log file</string>
@@ -806,6 +807,16 @@ p, li { white-space: pre-wrap; }
   <action name="show_file_list">
    <property name="text">
     <string>Show acquisition file list</string>
+   </property>
+  </action>
+  <action name="quit_app">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
+  <action name="plot_spectra">
+   <property name="text">
+    <string>Plot spectra</string>
    </property>
   </action>
  </widget>

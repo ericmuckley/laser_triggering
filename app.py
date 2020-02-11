@@ -98,11 +98,12 @@ class App(QMainWindow):
         # example: self.ui.menu_item_name.triggered.connect(self.function_name)
         #self.ui.actionShowfiledir.triggered.connect(self.show_directory)
         #self.ui.actionChangefiledir.triggered.connect(self.set_directory)
-        self.ui.quitapp.triggered.connect(self.quitapp)
+        self.ui.quit_app.triggered.connect(self.quitapp)
         self.ui.print_ports.triggered.connect(self.print_ports)
         self.ui.show_help.triggered.connect(self.show_help_popup)
         self.ui.show_log_path.triggered.connect(self.show_log_path)
         self.ui.show_file_list.triggered.connect(self.show_file_list)
+        self.ui.plot_spectra.triggered.connect(self.plot_file_list)
 
 
         # assign actions to GUI buttons
@@ -138,6 +139,12 @@ class App(QMainWindow):
         # kill the process which opens LightField if its already running
         os.system("taskkill /f /im AddInProcess.exe")
         
+        
+        self.ui.pulse_gen_frame.setEnabled(False)
+        self.ui.abort_seq.setEnabled(False)
+        self.ui.seq_raman_acquisition.setEnabled(False)
+        self.ui.seq_laser_trigger.setEnabled(False)
+        
 
     # %% ========= Princeton Instruments LightField control ==============
 
@@ -158,15 +165,17 @@ class App(QMainWindow):
     
     def launch_lf(self):
         """Launch LightField software."""
+        # kill the process which opens LightField if its already running
+        os.system("taskkill /f /im AddInProcess.exe")
         # create a C# compatible List of type String object
         lf_exp_list = List[String]()
         # add the command line option for an empty experiment
-        lf_exp_list.Add("/empty")
+        lf_exp_list.Add("Default_Python_Experiment")#("/empty")
         # create the LightField Application (true for visible)
         # the 2nd parameter is the experiment name to load 
         self.lf['app'] = Automation(True, List[String](lf_exp_list))
         self.ui.acquire_raman.setEnabled(True)
-        self.ui.set_raman_filename.setEnabled(True)
+        self.ui.raman_filename_notes.setEnabled(True)
         self.ui.seq_raman_acquisition.setEnabled(True)
 
 
@@ -202,6 +211,20 @@ class App(QMainWindow):
             self.ui.outbox.append(f)
 
 
+    def plot_file_list(self):
+        """Plot the Raman acquisition spectra. They should be in csv
+        format as specified by the Default_Python_Experiment file
+        in LightField."""
+        path = 'C:\\Users\\Administrator\\Documents\\LightField\\csv_files\\'
+        for fi, f in enumerate(self.lf['file_list']):
+            df = pd.read_csv(path+str(f))
+            plt.plot(df['Wavelength'], df['Column'], label=fi)
+        self.plot_setup()
+        plt.legend()
+        plt.show()
+
+        
+
     def acquire_raman(self):
         """Acquire Raman spectra using an opened instance of LightField."""
         # get current loaded experiment
@@ -213,7 +236,7 @@ class App(QMainWindow):
             notes = self.ui.raman_filename_notes.text().replace(',','__')
             file_name = time.strftime('%Y-%m-%d_%H-%M-%S')+'_'+notes
             self.lf['recent_file'] = file_name
-            self.lf['file_list'].append(file_name+'.spe')
+            self.lf['file_list'].append(file_name+'.csv')
             # pass location of saved file
             self.save_file(file_name, experiment)
             # acquire image
@@ -286,24 +309,28 @@ class App(QMainWindow):
                 self.ui.outbox.append('\nPulse generator connected.')
                 self.ui.outbox.append(dev.readline().decode("utf-8"))
                 self.ui.pulsegen_address.setEnabled(False)
-                self.ui.config_pulse_frame.setEnabled(True)
+                self.ui.pulse_gen_frame.setEnabled(True)
                 self.ui.seq_laser_trigger.setEnabled(True)
             except serial.SerialException:
                 self.ui.outbox.append('\nPulse generator could not connect.')
-                self.ui.config_pulse_frame.setEnabled(False)
+                self.ui.pulse_gen_frame.setEnabled(False)
                 self.ui.pulsegen_address.setEnabled(True)
                 self.ui.pulsegen_on.setChecked(False)
                 self.ui.seq_laser_trigger.setEnabled(False)
                 self.srs['dev'] = None
-        else: 
+        if not self.ui.pulsegen_on.isChecked():
             try:
                 self.srs['dev'].close()
             except AttributeError:
                 pass
             self.srs['dev'] = None
             self.ui.outbox.append('\nPulse generator closed.')
+            self.ui.pulsegen_address.setEnabled(True)
             self.ui.pulsegen_on.setChecked(False)
             self.ui.seq_laser_trigger.setEnabled(False)
+            self.ui.pulse_gen_frame.setEnabled(False)
+            self.ui.seq_laser_trigger.setEnabled(False)
+            
         
     def trigger_pulses(self):
         """Fire a single burst of n pulses with spacing in seconds."""
@@ -397,10 +424,13 @@ class App(QMainWindow):
         # assign most recent row to last row in log data
         self.log['data'][self.log['row_counter']] = list(d.values())
         # convert log dtaa to Pandas DataFrame
-        log_df = pd.DataFrame(columns=list(d.keys()),
+        df = pd.DataFrame(columns=list(d.keys()),
                               data=self.log['data'])
+        # remove empty rows before saving
+        df.replace('', np.nan, inplace=True)
+        df.dropna(how='all', inplace=True)
         # save dataframe as csv file
-        log_df.to_csv(self.log['path'], index=False)
+        df.to_csv(self.log['path'], index=False)
         self.ui.outbox.append('\nLog file appended.')
         self.log['row_counter'] += 1
 
@@ -418,6 +448,8 @@ class App(QMainWindow):
         """Quit the application."""
         if self.srs['dev'] != None:
             self.srs['dev'].close()
+        # kill the process which opens LightField if its already running
+        #os.system("taskkill /f /im AddInProcess.exe")
         self.deleteLater()
         # close app window
         self.close()  
@@ -458,9 +490,9 @@ class App(QMainWindow):
         fig_df.canvas.set_window_title('Δf surface')
         fig_df.show()
 
-
+    '''
     def plot_setup(self, labels=['X', 'Y'], fsize=20, setlimits=False,
-                   title=None, legend=False, colorbar=False,
+                   title=None, legend=True, colorbar=False,
                    limits=(0,1,0,1), save=False, filename='plot.jpg'):
         """Creates a custom plot configuration to make graphs look nice.
         This can be called with matplotlib for setting axes labels,
@@ -483,7 +515,7 @@ class App(QMainWindow):
             fig.savefig(filename, dpi=120, bbox_inches='tight')
             plt.tight_layout()
 
-    '''
+    
 
 # %% ====================== run application ===============================
 
