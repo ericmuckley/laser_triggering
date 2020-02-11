@@ -224,7 +224,7 @@ class App(QMainWindow):
                 plt.plot(df['Wavelength'], df['Intensity'], label=fi,
                          c=colors[fi], lw=1)
             self.plot_setup(labels=('Wavelength (nm)', 'Intensity (counts)'))
-            #plt.legend()
+            plt.legend()
             fig.canvas.set_window_title('Spectra')
             plt.draw()
 
