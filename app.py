@@ -25,6 +25,7 @@ import os
 import sys
 import time
 import serial
+import visa
 from serial.tools import list_ports
 import pandas as pd
 import numpy as np
@@ -105,8 +106,8 @@ class App(QMainWindow):
         self.ui.show_log_path.triggered.connect(self.show_log_path)
         self.ui.show_file_list.triggered.connect(self.show_file_list)
         self.ui.plot_spectra.triggered.connect(self.plot_file_list)
-
-
+        
+        
         # assign actions to GUI buttons
         # example: self.ui.BUTTON_NAME.clicked.connect(self.FUNCTION_NAME)
         self.ui.trigger_pulses.clicked.connect(self.trigger_pulses_thread)
@@ -114,10 +115,13 @@ class App(QMainWindow):
         self.ui.run_seq.clicked.connect(self.run_seq_thread)
         self.ui.abort_seq.clicked.connect(self.abort_seq)
         self.ui.launch_lf.clicked.connect(self.launch_lf_thread)
+        self.ui.scope_acquire.clicked.connect(self.scope_acquire)
+        
         
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
         self.ui.pulsegen_on.stateChanged.connect(self.pulsegen_on)
+        self.ui.mso_on.stateChanged.connect(self.mso_on)
         
         
         # intialize log file for logging experimental settings
@@ -132,6 +136,7 @@ class App(QMainWindow):
 
         
         # intialize instances of software and instruments
+        self.mso = {'dev': None}
         self.srs = {'dev': None, 'tot_pulses': 0}
         self.lf = {'app': None, 'recent_file': None,
                    'file_list': []}
@@ -143,9 +148,10 @@ class App(QMainWindow):
         
         self.ui.pulse_gen_frame.setEnabled(False)
         self.ui.abort_seq.setEnabled(False)
+        self.ui.acquire_raman.setEnabled(False)
         self.ui.seq_raman_acquisition.setEnabled(False)
         self.ui.seq_laser_trigger.setEnabled(False)
-        
+        self.ui.scope_acquire.setEnabled(False)
 
 
 
@@ -209,25 +215,6 @@ class App(QMainWindow):
             self.ui.outbox.append(f)
 
 
-    def plot_file_list(self):
-        """Plot the Raman acquisition spectra. They should be in csv
-        format as specified by the Default_Python_Experiment file
-        in LightField."""
-        if len(self.lf['file_list']) > 0:
-            p='C:\\Users\\Administrator\\Documents\\LightField\\csv_files\\'
-            colors = cm.jet(np.linspace(0, 1, len(self.lf['file_list'])))
-            plt.ion()
-            fig = plt.figure(0)
-            fig.clf()
-            for fi, f in enumerate(self.lf['file_list']):
-                df = pd.read_csv(p+str(f))
-                plt.plot(df['Wavelength'], df['Intensity'], label=fi,
-                         c=colors[fi], lw=1)
-            self.plot_setup(labels=('Wavelength (nm)', 'Intensity (counts)'))
-            plt.legend()
-            fig.canvas.set_window_title('Spectra')
-            plt.draw()
-
 
     def acquire_raman(self):
         """Acquire Raman spectra using an opened instance of LightField."""
@@ -256,6 +243,24 @@ class App(QMainWindow):
 
 
 
+    def plot_file_list(self):
+        """Plot the Raman acquisition spectra. They should be in csv
+        format as specified by the Default_Python_Experiment file
+        in LightField."""
+        if len(self.lf['file_list']) > 0:
+            p='C:\\Users\\Administrator\\Documents\\LightField\\csv_files\\'
+            colors = cm.jet(np.linspace(0, 1, len(self.lf['file_list'])))
+            plt.ion()
+            fig = plt.figure(0)
+            fig.clf()
+            for fi, f in enumerate(self.lf['file_list']):
+                df = pd.read_csv(p+str(f))
+                plt.plot(df['Wavelength'], df['Intensity'], label=fi,
+                         c=colors[fi], lw=1)
+            self.plot_setup(labels=('Wavelength (nm)', 'Intensity (counts)'))
+            plt.legend()
+            fig.canvas.set_window_title('Spectra')
+            plt.draw()
 
 
 
@@ -263,47 +268,44 @@ class App(QMainWindow):
 
 
 
-    # %% ======= experimental sequence control functions =================
 
-    def abort_seq(self):
-        """Abort the expreimental sequence."""
-        self.abort_seq = True
-
-    def run_seq(self):
-        """Run an experimental sequence."""
-        self.ui.run_seq.setEnabled(False)
-        self.ui.abort_seq.setEnabled(True)
-        self.ui.set_seq_cycles.setEnabled(False)
-        self.ui.outbox.append('\nSequence initiated')
-        
-        tot_cycles = self.ui.set_seq_cycles.value()
-        for c in range(tot_cycles):
-            self.ui.outbox.append(
-                    'running cycle {}/{}...'.format(c+1, tot_cycles))
-            if self.abort_seq == True:
-                self.ui.outbox.append('Sequence aborted.')
-                break
-            if self.ui.seq_laser_trigger.isChecked():
-                self.trigger_pulses()
-                time.sleep(0.1)
-                
-            if self.ui.seq_raman_acquisition.isChecked():
-                self.acquire_raman()
-
-            self.log_to_file()
-            time.sleep(self.ui.pause_between_cycles.value())
-            
-        self.abort_seq = False
-        self.ui.run_seq.setEnabled(True)
-        self.ui.abort_seq.setEnabled(False)
-        self.ui.set_seq_cycles.setEnabled(True)
-        self.ui.outbox.append('Sequence complete.')
+  # %% ========= Tektronix MSO64 mixed signal oscilloscope ==============
 
 
-    def run_seq_thread(self):
-        """Run sequence in a new thread."""
-        worker = Worker(self.run_seq)  # pass other args here
-        self.threadpool.start(worker)
+    def mso_on(self):
+        "Run this function when MSO64 oscilloscope checkbox is checked."""
+        if self.ui.mso_on.isChecked():
+            try:
+                rm = visa.ResourceManager()
+                dev = rm.open_resource(self.ui.mso_address.text())
+                self.mso['dev'] = dev
+                self.ui.outbox.append('Oscilloscope connected.')
+                self.ui.outbox.append(dev.query('*IDN?'))
+                self.ui.scope_acquire.setEnabled(True)
+                self.ui.mso_address.setEnabled(False)
+            except visa.VISAIOERROR:
+                self.ui.outbox.append('Oscilloscope could not connect.')
+                self.ui.mso_address.setEnabled(True)
+                self.ui.pulsegen_on.setChecked(False)
+                self.ui.scope_acquire.setEnabled(False)
+                self.mso['dev'] = None
+        if not self.ui.mso_on.isChecked():
+            try:
+                self.mso['dev'].close()
+            except AttributeError:
+                pass
+            self.mso['dev'] = None
+            self.ui.outbox.append('Oscilloscope closed.')
+            self.ui.mso_address.setEnabled(True)
+            self.ui.mso_on.setChecked(False)
+            self.ui.scope_acquire.setEnabled(False)
+
+
+
+    def scope_acquire(self):
+        """Acquire and plot signal on oscilloscope."""
+        pass
+
 
 
 
@@ -316,8 +318,9 @@ class App(QMainWindow):
         "Run this function when pulse generator checkbox is checked."""
         if self.ui.pulsegen_on.isChecked():
             try:
-                address = self.ui.pulsegen_address.text()
-                dev = serial.Serial(port=address, timeout=2)
+                dev = serial.Serial(
+                        port=self.ui.pulsegen_address.text(),
+                        timeout=2)
                 dev.write('*IDN?\r'.encode())
                 self.srs['dev'] = dev
                 self.ui.outbox.append('\nPulse generator connected.')
@@ -378,9 +381,76 @@ class App(QMainWindow):
 
 
 
+
+    # %% ======= experimental sequence control functions =================
+
+    def abort_seq(self):
+        """Abort the expreimental sequence."""
+        self.abort_seq = True
+
+    def run_seq(self):
+        """Run an experimental sequence."""
+        self.ui.run_seq.setEnabled(False)
+        self.ui.abort_seq.setEnabled(True)
+        self.ui.set_seq_cycles.setEnabled(False)
+        self.ui.outbox.append('\nSequence initiated')
+        
+        tot_cycles = self.ui.set_seq_cycles.value()
+        for c in range(tot_cycles):
+            self.ui.outbox.append(
+                    'running cycle {}/{}...'.format(c+1, tot_cycles))
+            if self.abort_seq == True:
+                self.ui.outbox.append('Sequence aborted.')
+                break
+            if self.ui.seq_laser_trigger.isChecked():
+                self.trigger_pulses()
+                time.sleep(0.1)
+                
+            if self.ui.seq_raman_acquisition.isChecked():
+                self.acquire_raman()
+
+            self.log_to_file()
+            time.sleep(self.ui.pause_between_cycles.value())
+            
+        self.abort_seq = False
+        self.ui.run_seq.setEnabled(True)
+        self.ui.abort_seq.setEnabled(False)
+        self.ui.set_seq_cycles.setEnabled(True)
+        self.ui.outbox.append('Sequence complete.')
+
+
+    def run_seq_thread(self):
+        """Run sequence in a new thread."""
+        worker = Worker(self.run_seq)  # pass other args here
+        self.threadpool.start(worker)
+
+
+
+
     # %% ============ system control functions =============================
 
     
+    def plot_setup(self, labels=['X', 'Y'], fsize=20, setlimits=False,
+                   title=None, legend=True, limits=(0,1,0,1)):
+        """Creates a custom plot configuration to make graphs look nice.
+        This can be called with matplotlib for setting axes labels,
+        titles, axes ranges, and the font size of plot labels.
+        This should be called between plt.plot() and plt.show() commands."""
+        plt.xlabel(str(labels[0]), fontsize=fsize)
+        plt.ylabel(str(labels[1]), fontsize=fsize)
+        #fig = plt.gcf()
+        #fig.set_size_inches(6, 4)
+        if title:
+            plt.title(title, fontsize=fsize)
+        if legend:
+            plt.legend(fontsize=fsize-4)
+        if setlimits:
+            plt.xlim((limits[0], limits[1]))
+            plt.ylim((limits[2], limits[3]))
+
+
+
+
     def show_help_popup(self):
         """Show the help popup message."""
         self.help_message = (
@@ -449,12 +519,14 @@ class App(QMainWindow):
 
 
     def print_ports(self):
-        """Print a list of avilable serial ports."""
-        ports = list(list_ports.comports())
-        self.ui.outbox.append('\nAvailable serial ports:')
-        for p in ports:    
-            self.ui.outbox.append(str(p.device))
-
+        """Print a list of available serial and VISA ports."""
+        rm = visa.ResourceManager()
+        visa_ports = list(rm.list_resources())
+        serial_ports = list(list_ports.comports())
+        self.ui.outbox.append('Available instrument addresses:')
+        [self.ui.outbox.append(str(p)) for p in visa_ports]
+        [self.ui.outbox.append(str(p.device)) for p in serial_ports]
+        
 
     def quitapp(self):
         """Quit the application."""
@@ -467,11 +539,8 @@ class App(QMainWindow):
         self.close()  
         # kill python kernel
         sys.exit()  
-
-
-
-
-    # =================== file I/O utilities =============================
+ 
+    
     '''
 
     def set_directory(self):
@@ -503,23 +572,7 @@ class App(QMainWindow):
         fig_df.show()
 
     '''
-    def plot_setup(self, labels=['X', 'Y'], fsize=20, setlimits=False,
-                   title=None, legend=True, limits=(0,1,0,1)):
-        """Creates a custom plot configuration to make graphs look nice.
-        This can be called with matplotlib for setting axes labels,
-        titles, axes ranges, and the font size of plot labels.
-        This should be called between plt.plot() and plt.show() commands."""
-        plt.xlabel(str(labels[0]), fontsize=fsize)
-        plt.ylabel(str(labels[1]), fontsize=fsize)
-        #fig = plt.gcf()
-        #fig.set_size_inches(6, 4)
-        if title:
-            plt.title(title, fontsize=fsize)
-        if legend:
-            plt.legend(fontsize=fsize-4)
-        if setlimits:
-            plt.xlim((limits[0], limits[1]))
-            plt.ylim((limits[2], limits[3]))
+
 
 
 

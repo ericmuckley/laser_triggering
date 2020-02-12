@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>482</width>
-    <height>614</height>
+    <width>730</width>
+    <height>812</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -288,7 +288,7 @@ border: 1px solid black;
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <pointsize>8</pointsize>
       <weight>50</weight>
       <bold>false</bold>
      </font>
@@ -507,7 +507,7 @@ border: 1px solid black;
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <pointsize>8</pointsize>
      </font>
     </property>
     <property name="title">
@@ -554,7 +554,7 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <pointsize>8</pointsize>
      </font>
     </property>
     <property name="title">
@@ -575,7 +575,7 @@ p, li { white-space: pre-wrap; }
     </widget>
     <widget class="QPushButton" name="acquire_raman">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="geometry">
       <rect>
@@ -619,7 +619,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>240</x>
+      <x>460</x>
       <y>20</y>
       <width>221</width>
       <height>241</height>
@@ -627,7 +627,7 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <pointsize>8</pointsize>
      </font>
     </property>
     <property name="title">
@@ -764,13 +764,84 @@ p, li { white-space: pre-wrap; }
      </layout>
     </widget>
    </widget>
+   <widget class="QGroupBox" name="groupBox_scope">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>20</y>
+      <width>201</width>
+      <height>241</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Oscilloscope</string>
+    </property>
+    <widget class="QWidget" name="gridLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>30</y>
+       <width>161</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="mso_label">
+        <property name="text">
+         <string>MSO64</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="mso_address">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>COM13</string>
+        </property>
+        <property name="placeholderText">
+         <string>COM5</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="mso_on">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QPushButton" name="scope_acquire">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>190</y>
+       <width>101</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Acquire signal</string>
+     </property>
+    </widget>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>482</width>
+     <width>730</width>
      <height>21</height>
     </rect>
    </property>
@@ -778,12 +849,12 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Menu</string>
     </property>
-    <addaction name="plot_spectra"/>
-    <addaction name="separator"/>
-    <addaction name="show_file_list"/>
     <addaction name="print_ports"/>
+    <addaction name="show_file_list"/>
     <addaction name="show_log_path"/>
     <addaction name="show_help"/>
+    <addaction name="separator"/>
+    <addaction name="plot_spectra"/>
     <addaction name="separator"/>
     <addaction name="quit_app"/>
    </widget>
@@ -791,7 +862,7 @@ p, li { white-space: pre-wrap; }
   </widget>
   <action name="print_ports">
    <property name="text">
-    <string>Show available serial ports</string>
+    <string>Show available instrument ports</string>
    </property>
   </action>
   <action name="show_help">
