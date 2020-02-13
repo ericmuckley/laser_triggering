@@ -619,8 +619,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>460</x>
-      <y>20</y>
+      <x>470</x>
+      <y>270</y>
       <width>221</width>
       <height>241</height>
      </rect>
@@ -769,8 +769,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>240</x>
       <y>20</y>
-      <width>201</width>
-      <height>241</height>
+      <width>321</width>
+      <height>111</height>
      </rect>
     </property>
     <property name="title">
@@ -781,7 +781,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>161</width>
+       <width>281</width>
        <height>31</height>
       </rect>
      </property>
@@ -802,10 +802,10 @@ p, li { white-space: pre-wrap; }
          </size>
         </property>
         <property name="text">
-         <string>COM13</string>
+         <string>USB0::0x0699::0x0528::B010898::INSTR</string>
         </property>
         <property name="placeholderText">
-         <string>COM5</string>
+         <string>USB0::0x0699::0x0528::B010898::INSTR</string>
         </property>
        </widget>
       </item>
@@ -824,8 +824,8 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>190</y>
+       <x>200</x>
+       <y>70</y>
        <width>101</width>
        <height>23</height>
       </rect>
@@ -838,19 +838,12 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>90</y>
+       <y>70</y>
        <width>160</width>
-       <height>31</height>
+       <height>21</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="formLayout_3">
-      <item row="0" column="0">
-       <widget class="QLabel" name="downsample_label">
-        <property name="text">
-         <string>Downsampling factor</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QSpinBox" name="mso_downsample">
         <property name="minimum">
@@ -861,6 +854,13 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="value">
          <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="downsample_label">
+        <property name="text">
+         <string>Downsampling factor</string>
         </property>
        </widget>
       </item>

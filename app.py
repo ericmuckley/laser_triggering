@@ -303,6 +303,7 @@ class App(QMainWindow):
             self.ui.mso_downsample.setEnabled(False)
 
 
+    
     def get_scope_timescale(self, signal, downsample=10):
         """Get the time-scale associated with the scope signal."""
         # get time-scale increment
@@ -312,7 +313,7 @@ class App(QMainWindow):
                               num=int(len(signal)))
         return t_scale
 
-
+    
     def scope_acquire(self):
         """Acquire and plot signal on oscilloscope."""
         self.mso['dev'].write(':DATA:SOURCE CH1')
@@ -334,6 +335,8 @@ class App(QMainWindow):
         self.plot_setup(labels=('Time (s)', 'Signal'), legend=False)
         fig.canvas.set_window_title('Oscilloscope trace')
         plt.draw()
+        self.ui.outbox.append('Oscilloscope trace acquired.')
+        self.mso['last_trace'] = np.column_stack((timescale, signal))
 
 
 
@@ -555,9 +558,11 @@ class App(QMainWindow):
 
     def quitapp(self):
         """Quit the application."""
-        # close instances of all instruments
-        self.srs['dev'].close()
-        self.mso['dev'].close()
+        # close instances of all instruments if they exist
+        if self.srs['dev']:
+            self.srs['dev'].close()
+        if self.mso['dev']:
+            self.mso['dev'].close()
         # kill the process which opens LightField if its already running
         #os.system("taskkill /f /im AddInProcess.exe")
         self.deleteLater()
@@ -610,7 +615,6 @@ if __name__ == "__main__":
         app = QtWidgets.QApplication(sys.argv)
     else:
         app = QtWidgets.QApplication.instance()
-
     window = App()
     window.show()
     sys.exit(app.exec_())

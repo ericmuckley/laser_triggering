@@ -33,6 +33,7 @@ downsample = 10
 
 print(dev.query('WFMOutpre:WFId?'))
 
+print(dev.query('WFMOutpre:YUNit?'))
 
 
 signal_raw = np.array(dev.query(':CURVE?').split(','))
