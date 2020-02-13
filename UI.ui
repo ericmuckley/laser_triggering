@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>707</width>
-    <height>657</height>
+    <width>819</width>
+    <height>490</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -283,7 +283,7 @@ border: 1px solid black;
       <x>20</x>
       <y>20</y>
       <width>201</width>
-      <height>241</height>
+      <height>271</height>
      </rect>
     </property>
     <property name="font">
@@ -345,9 +345,9 @@ border: 1px solid black;
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>80</y>
+       <y>90</y>
        <width>181</width>
-       <height>151</height>
+       <height>161</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -362,7 +362,7 @@ border: 1px solid black;
         <x>10</x>
         <y>10</y>
         <width>161</width>
-        <height>100</height>
+        <height>101</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formlayout_inputs">
@@ -485,7 +485,7 @@ border: 1px solid black;
       <property name="geometry">
        <rect>
         <x>40</x>
-        <y>120</y>
+        <y>130</y>
         <width>101</width>
         <height>23</height>
        </rect>
@@ -500,8 +500,8 @@ border: 1px solid black;
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>470</y>
-      <width>441</width>
+      <y>310</y>
+      <width>781</width>
       <height>141</height>
      </rect>
     </property>
@@ -518,7 +518,7 @@ border: 1px solid black;
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>421</width>
+       <width>761</width>
        <height>101</height>
       </rect>
      </property>
@@ -546,10 +546,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_configurelightfield">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>290</y>
-      <width>441</width>
-      <height>141</height>
+      <x>240</x>
+      <y>180</y>
+      <width>321</width>
+      <height>111</height>
      </rect>
     </property>
     <property name="font">
@@ -619,10 +619,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>270</y>
+      <x>580</x>
+      <y>20</y>
       <width>221</width>
-      <height>241</height>
+      <height>271</height>
      </rect>
     </property>
     <property name="font">
@@ -770,7 +770,7 @@ p, li { white-space: pre-wrap; }
       <x>240</x>
       <y>20</y>
       <width>321</width>
-      <height>111</height>
+      <height>141</height>
      </rect>
     </property>
     <property name="title">
@@ -866,6 +866,22 @@ p, li { white-space: pre-wrap; }
       </item>
      </layout>
     </widget>
+    <widget class="QPushButton" name="export_scope_trace">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>100</y>
+       <width>101</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Export last trace</string>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -873,7 +889,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>707</width>
+     <width>819</width>
      <height>21</height>
     </rect>
    </property>

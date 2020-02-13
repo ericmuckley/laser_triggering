@@ -116,6 +116,7 @@ class App(QMainWindow):
         self.ui.abort_seq.clicked.connect(self.abort_seq)
         self.ui.launch_lf.clicked.connect(self.launch_lf_thread)
         self.ui.scope_acquire.clicked.connect(self.scope_acquire)
+        self.ui.export_scope_trace.clicked.connect(self.export_scope_trace)
         
         
         # assign actions to checkboxes
@@ -153,6 +154,7 @@ class App(QMainWindow):
         self.ui.seq_laser_trigger.setEnabled(False)
         self.ui.scope_acquire.setEnabled(False)
         self.ui.mso_downsample.setEnabled(False)
+        self.ui.export_scope_trace.setEnabled(False)
 
 
 
@@ -209,7 +211,7 @@ class App(QMainWindow):
     def show_file_list(self):
         """Show the list of acquired Raman spe files."""
         self.ui.outbox.append(
-                '\n{} Raman acquisition files'.format(
+                '{} Raman acquisition files'.format(
                         len(self.lf['file_list'])))
         for f in self.lf['file_list']:
             self.ui.outbox.append(f)
@@ -239,7 +241,7 @@ class App(QMainWindow):
                                     FileNameGenerationDirectory))))
         else:
             self.ui.outbox.append(
-                    '\nNo LightField-compatible devices found.')
+                    'No LightField-compatible devices found.')
 
 
 
@@ -336,8 +338,18 @@ class App(QMainWindow):
         fig.canvas.set_window_title('Oscilloscope trace')
         plt.draw()
         self.ui.outbox.append('Oscilloscope trace acquired.')
-        self.mso['last_trace'] = np.column_stack((timescale, signal))
+        self.mso['last_sig'] = np.column_stack((timescale, signal))
+        self.mso['last_sig_ts'] = time.strftime('%Y-%m-%d_%H-%M-%S')
+        self.ui.export_scope_trace.setEnabled(True)
 
+
+    def export_scope_trace(self):
+        """Export most recent oscilloscope trace to file."""
+        df = pd.DataFrame(data=self.mso['last_sig'],
+                          columns=['time', 'signal'])
+        path = self.filedir+'\\'+self.mso['last_sig_ts']+'__scope_trace.csv'
+        df.to_csv(path, index=False)
+        self.ui.outbox.append('Oscilloscope trace exported.')
 
 
     # %% ============ SRS DG645 pulse generator control =================
@@ -351,13 +363,13 @@ class App(QMainWindow):
                         timeout=2)
                 dev.write('*IDN?\r'.encode())
                 self.srs['dev'] = dev
-                self.ui.outbox.append('\nPulse generator connected.')
+                self.ui.outbox.append('Pulse generator connected.')
                 self.ui.outbox.append(dev.readline().decode("utf-8"))
                 self.ui.pulsegen_address.setEnabled(False)
                 self.ui.pulse_gen_frame.setEnabled(True)
                 self.ui.seq_laser_trigger.setEnabled(True)
             except serial.SerialException:
-                self.ui.outbox.append('\nPulse generator could not connect.')
+                self.ui.outbox.append('Pulse generator could not connect.')
                 self.ui.pulse_gen_frame.setEnabled(False)
                 self.ui.pulsegen_address.setEnabled(True)
                 self.ui.pulsegen_on.setChecked(False)
@@ -369,7 +381,7 @@ class App(QMainWindow):
             except AttributeError:
                 pass
             self.srs['dev'] = None
-            self.ui.outbox.append('\nPulse generator closed.')
+            self.ui.outbox.append('Pulse generator closed.')
             self.ui.pulsegen_address.setEnabled(True)
             self.ui.pulsegen_on.setChecked(False)
             self.ui.seq_laser_trigger.setEnabled(False)
@@ -385,7 +397,7 @@ class App(QMainWindow):
         pulse_amplitude = self.ui.pulse_amplitude.value()
         pulse_delay = self.ui.pulse_delay.value()/1e3
         pulse_number = self.ui.pulse_number.value()
-        self.ui.outbox.append('\nTriggering {} pulses...'.format(pulse_number))
+        self.ui.outbox.append('Triggering {} pulses...'.format(pulse_number))
         # set trigger source to single shot trigger
         self.srs['dev'].write('TSRC5\r'.encode())
         # set delay of A and B outputs
@@ -421,7 +433,7 @@ class App(QMainWindow):
         self.ui.run_seq.setEnabled(False)
         self.ui.abort_seq.setEnabled(True)
         self.ui.set_seq_cycles.setEnabled(False)
-        self.ui.outbox.append('\nSequence initiated')
+        self.ui.outbox.append('Sequence initiated')
         
         tot_cycles = self.ui.set_seq_cycles.value()
         for c in range(tot_cycles):
@@ -512,7 +524,7 @@ class App(QMainWindow):
 
     def show_log_path(self):
         """Show the path to the log file."""
-        self.ui.outbox.append('\nLog file path: %s' %(self.log['path']))
+        self.ui.outbox.append('Log file path: %s' %(self.log['path']))
 
 
     def get_log_row_data(self):
@@ -541,7 +553,7 @@ class App(QMainWindow):
         df.dropna(how='all', inplace=True)
         # save dataframe as csv file
         df.to_csv(self.log['path'], index=False)
-        self.ui.outbox.append('\nLog file appended.')
+        self.ui.outbox.append('Log file appended.')
         self.log['row_counter'] += 1
 
 
@@ -578,12 +590,12 @@ class App(QMainWindow):
         """Set the directory for saving files."""
         self.filedir = str(QFileDialog.getExistingDirectory(
                 self, 'Select a directory for storing data'))
-        self.ui.outbox.append('\nFile directory is set to ' + self.filedir)
+        self.ui.outbox.append('File directory is set to ' + self.filedir)
 
 
     def show_directory(self):
         """Show the file directory in the output box."""
-        self.ui.outbox.append('\nFile directory is set to ' + self.filedir)
+        self.ui.outbox.append('File directory is set to ' + self.filedir)
 
 
 
