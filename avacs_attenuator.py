@@ -23,12 +23,13 @@ def print_ports():
 
 print_ports()
 
-address = 'COM5'
+address = 'COM11'
 
 
 dev = serial.Serial(port=address, baudrate=9600, timeout=2)
 
-dev.write(('3').encode('utf-8'))
+dev.write(('mhRS\n').encode('utf-8'))
+print(dev.readline())
 
 
 dev.close()
