@@ -152,7 +152,7 @@ class App(QMainWindow):
         self.ui.seq_raman_acquisition.setEnabled(False)
         self.ui.seq_laser_trigger.setEnabled(False)
         self.ui.scope_acquire.setEnabled(False)
-
+        self.ui.mso_downsample.setEnabled(False)
 
 
 
@@ -283,11 +283,13 @@ class App(QMainWindow):
                 self.ui.outbox.append(dev.query('*IDN?'))
                 self.ui.scope_acquire.setEnabled(True)
                 self.ui.mso_address.setEnabled(False)
+                self.ui.mso_downsample.setEnabled(True)
             except visa.VISAIOERROR:
                 self.ui.outbox.append('Oscilloscope could not connect.')
                 self.ui.mso_address.setEnabled(True)
                 self.ui.pulsegen_on.setChecked(False)
                 self.ui.scope_acquire.setEnabled(False)
+                self.ui.mso_downsample.setEnabled(False)
                 self.mso['dev'] = None
         if not self.ui.mso_on.isChecked():
             try:
@@ -299,16 +301,59 @@ class App(QMainWindow):
             self.ui.mso_address.setEnabled(True)
             self.ui.mso_on.setChecked(False)
             self.ui.scope_acquire.setEnabled(False)
+            self.ui.mso_downsample.setEnabled(False)
 
+
+    def get_scope_timescale(self, signal, downsample=10):
+        """Get the time-scale associated with the scope signal."""
+        # get time-scale increment
+        dt = float(self.mso['dev'].query('WFMOutpre:XINcr?'))
+        # calculate the actual values of the x-scale
+        t_scale = np.linspace(0, len(signal)*downsample*dt,
+                              num=int(len(signal)))
+        return t_scale
 
 
     def scope_acquire(self):
         """Acquire and plot signal on oscilloscope."""
-        pass
+        self.mso['dev'].write(':DATA:SOURCE CH1')
+        self.mso['dev'].write(':DATa:START 1')
+        self.mso['dev'].write(':DATa:STOP 12500000')
+        #dev.write('WFMOutpre:NR_PT 100000')
+        self.mso['dev'].write(':WFMOutpre:ENCDG ASCII')
+        self.mso['dev'].write(':WFMOOutpre:BYT_NR 1')
+        #dev.write(':HEADER 0')
+        
+        
+        
+        
+        downsample = self.ui.mso_downsample.value()
+        
+        signal_raw = np.array(dev.query(':CURVE?').split(','))
+        signal = signal_raw.astype(float)[::downsample]
+        
+        
+        
+        timescale = get_scope_timescale(signal, downsample=downsample)
+        
+        
+        #signalmso['dev'].query('WFMOutpre:WFId?'))
+        '''
+        
+        
+        
 
+        
+        
+        plt.plot(time_scale, signal, lw=0.5)
+        fig = plt.gcf()
+        fig.set_size_inches(15,6)
+        plt.show()
 
-
-
+        
+        signal_raw = np.array(dev.query(':CURVE?').split(','))
+        signal = signal_raw.astype(float)[::downsample]
+        '''
 
 
 
@@ -530,8 +575,9 @@ class App(QMainWindow):
 
     def quitapp(self):
         """Quit the application."""
-        if self.srs['dev'] != None:
-            self.srs['dev'].close()
+        # close instances of all instruments
+        self.srs['dev'].close()
+        self.mso['dev'].close()
         # kill the process which opens LightField if its already running
         #os.system("taskkill /f /im AddInProcess.exe")
         self.deleteLater()
