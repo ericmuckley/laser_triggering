@@ -258,7 +258,6 @@ class App(QMainWindow):
                 plt.plot(df['Wavelength'], df['Intensity'], label=fi,
                          c=colors[fi], lw=1)
             self.plot_setup(labels=('Wavelength (nm)', 'Intensity (counts)'))
-            plt.legend()
             fig.canvas.set_window_title('Spectra')
             plt.draw()
 
@@ -319,41 +318,22 @@ class App(QMainWindow):
         self.mso['dev'].write(':DATA:SOURCE CH1')
         self.mso['dev'].write(':DATa:START 1')
         self.mso['dev'].write(':DATa:STOP 12500000')
-        #dev.write('WFMOutpre:NR_PT 100000')
         self.mso['dev'].write(':WFMOutpre:ENCDG ASCII')
         self.mso['dev'].write(':WFMOOutpre:BYT_NR 1')
-        #dev.write(':HEADER 0')
-        
-        
-        
-        
         downsample = self.ui.mso_downsample.value()
-        
-        signal_raw = np.array(dev.query(':CURVE?').split(','))
+        # get signal from scope
+        signal_raw = np.array(self.mso['dev'].query(':CURVE?').split(','))
         signal = signal_raw.astype(float)[::downsample]
-        
-        
-        
-        timescale = get_scope_timescale(signal, downsample=downsample)
-        
-        
-        #signalmso['dev'].query('WFMOutpre:WFId?'))
-        '''
-        
-        
-        
-
-        
-        
-        plt.plot(time_scale, signal, lw=0.5)
-        fig = plt.gcf()
-        fig.set_size_inches(15,6)
-        plt.show()
-
-        
-        signal_raw = np.array(dev.query(':CURVE?').split(','))
-        signal = signal_raw.astype(float)[::downsample]
-        '''
+        # get timescale associated with scope trace        
+        timescale = self.get_scope_timescale(signal, downsample=downsample)
+        # plot scope trace
+        plt.ion()
+        fig = plt.figure(1)
+        fig.clf()
+        plt.plot(timescale, signal, lw=1)
+        self.plot_setup(labels=('Time (s)', 'Signal'), legend=False)
+        fig.canvas.set_window_title('Oscilloscope trace')
+        plt.draw()
 
 
 
