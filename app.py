@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 
 """
-GUI applicaton for measuring Raman using Princeton Instruments
-LightField software and controlling laser pulses using an
-SRS DG645 digital delay pulse generator.
+GUI applicaton for automated control of laser processing procedures.
+Instrument-specific modules are located in "my_libs" directory.
 
 To see help, run this file to open the GUI,
 then navigate to Menu --> Show Help.
 
-Updated version is stored at
+Updated version of this application is stored at
 https://github.com/ericmuckley/laser_triggering
-
 
 Created on Feb 3 2020
 @author: ericmuckley@gmail.com
@@ -19,25 +17,29 @@ Created on Feb 3 2020
 
 # --------------------- core GUI libraries --------------------------------
 from PyQt5 import QtWidgets, uic, QtCore#, QtGui
-from PyQt5.QtWidgets import QMainWindow#, QFileDialog
+from PyQt5.QtWidgets import QMainWindow, QFileDialog
 #from PyQtCore import QRunnable, QThreadPool, pyqtSlot
 import os
 import sys
 import time
-import serial
-import visa
-from serial.tools import list_ports
-import pandas as pd
+#import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import cm
+#from matplotlib import cm
+
+# -------- import custom modules for contorlling instruments ---------------
+from instr_libs import avacs  # Laseroptik AVACS beam attenuator
+from instr_libs import srs  # SRS DG645 digital delay pulse generator
+from instr_libs import mso  #  Tektronix MSO64 oscilloscope
+from instr_libs import ops  # for controlling operations of main GUI
+from instr_libs import lf  # for controlling LightField Raman software
 
 # --------------------- for LightField dependencies ------------------------
 import clr  # the .NET class library
 import System.IO as sio  # for saving and opening files
 # Import c compatible List and String
-from System import String
-from System.Collections.Generic import List
+#from System import String
+#from System.Collections.Generic import List
 # Add needed dll references for LightField
 sys.path.append(os.environ['LIGHTFIELD_ROOT'])
 sys.path.append(os.environ['LIGHTFIELD_ROOT']+"\\AddInViews")
@@ -47,9 +49,9 @@ clr.AddReference('PrincetonInstruments.LightFieldViewV5')
 clr.AddReference('PrincetonInstruments.LightField.AutomationV5')
 clr.AddReference('PrincetonInstruments.LightFieldAddInSupportServices')
 # Princeton Instruments imports
-from PrincetonInstruments.LightField.Automation import Automation
+#from PrincetonInstruments.LightField.Automation import Automation
 from PrincetonInstruments.LightField.AddIns import ExperimentSettings
-from PrincetonInstruments.LightField.AddIns import DeviceType 
+#from PrincetonInstruments.LightField.AddIns import DeviceType 
 
 # ------- change matplotlib settings to make plots look nicer --------------
 plt.rcParams['xtick.labelsize'] = 20
@@ -97,16 +99,16 @@ class App(QMainWindow):
         self.threadpool = QtCore.QThreadPool()
 
         # assign functions to top menu items
-        # example: self.ui.menu_item_name.triggered.connect(self.function_name)
-        #self.ui.actionShowfiledir.triggered.connect(self.show_directory)
-        #self.ui.actionChangefiledir.triggered.connect(self.set_directory)
+        # example: self.ui.menu_item_name.triggered.connect(self.func_name)
         self.ui.quit_app.triggered.connect(self.quitapp)
         self.ui.print_ports.triggered.connect(self.print_ports)
         self.ui.show_help.triggered.connect(self.show_help_popup)
         self.ui.show_log_path.triggered.connect(self.show_log_path)
         self.ui.show_file_list.triggered.connect(self.show_file_list)
         self.ui.plot_spectra.triggered.connect(self.plot_file_list)
-        
+        self.ui.export_settings.triggered.connect(self.export_settings)
+        self.ui.import_settings.triggered.connect(self.import_settings)
+        self.ui.set_filedir.triggered.connect(self.set_filedir)
         
         # assign actions to GUI buttons
         # example: self.ui.BUTTON_NAME.clicked.connect(self.FUNCTION_NAME)
@@ -117,12 +119,16 @@ class App(QMainWindow):
         self.ui.launch_lf.clicked.connect(self.launch_lf_thread)
         self.ui.scope_acquire.clicked.connect(self.scope_acquire)
         self.ui.export_scope_trace.clicked.connect(self.export_scope_trace)
-        
+        self.ui.avacs_set_now.clicked.connect(self.avacs_set_now)
+                
         
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
         self.ui.pulsegen_on.stateChanged.connect(self.pulsegen_on)
         self.ui.mso_on.stateChanged.connect(self.mso_on)
+        self.ui.avacs_on.stateChanged.connect(self.avacs_on)
+
+        
         
         
         # intialize log file for logging experimental settings
@@ -130,66 +136,80 @@ class App(QMainWindow):
         if not os.path.exists(self.filedir):
             os.makedirs(self.filedir)
         self.starttime = time.strftime('%Y-%m-%d_%H-%M-%S')
-        self.log = {
-                'path': self.filedir+'\\'+self.starttime+'.csv',
-                'row_counter': 0,
-                'data': np.full((1000, 7), '', dtype=object)}
 
+        # intialize dictionaries for transporting GUI data to other modules
+        self.ops = {
+                'app': self.ui,
+                'row_counter': 0,
+                'filedir': self.filedir,
+                'outbox': self.ui.outbox,
+                'starttime': self.starttime,
+                'data': np.full((1000, 7), '', dtype=object),
+                'path': self.filedir+'\\'+self.starttime+'.csv'}
+        self.avacs = {
+                'dev': None,
+                'on': self.ui.avacs_on,
+                'outbox': self.ui.outbox,
+                'angle': self.ui.avacs_angle,
+                'address': self.ui.avacs_address,
+                'set_now': self.ui.avacs_set_now}
+        self.srs = {
+                'dev': None,
+                'tot_pulses': 0,
+                'outbox': self.ui.outbox,
+                'on': self.ui.pulsegen_on,
+                'width': self.ui.pulse_width,
+                'delay': self.ui.pulse_delay,
+                'number': self.ui.pulse_number,
+                'trigger': self.ui.trigger_pulses,
+                'address': self.ui.pulsegen_address,
+                'amplitude': self.ui.pulse_amplitude,
+                'seq_laser_trigger': self.ui.seq_laser_trigger}
+        self.mso = {
+                'dev': None,
+                'on': self.ui.mso_on,
+                'filedir': self.filedir,
+                'outbox': self.ui.outbox,
+                'address': self.ui.mso_address,
+                'acquire': self.ui.scope_acquire,
+                'downsample': self.ui.mso_downsample,
+                'export': self.ui.export_scope_trace}
         
-        # intialize instances of software and instruments
-        self.mso = {'dev': None}
-        self.srs = {'dev': None, 'tot_pulses': 0}
-        self.lf = {'app': None, 'recent_file': None,
-                   'file_list': []}
+        self.lf = {
+                'app': None,
+                'recent_file': None,
+                'file_list': [],
+                'outbox': self.ui.outbox,
+                'acquire': self.ui.acquire_raman,
+                'notes': self.ui.raman_filename_notes,
+                'seq': self.ui.seq_raman_acquisition}
+        
 
 
         # kill the process which opens LightField if its already running
         os.system("taskkill /f /im AddInProcess.exe")
         
-        
-        self.ui.pulse_gen_frame.setEnabled(False)
+        # initialize GUI settings
+        srs.enable_pulse_gen_buttons(self.srs, False)
         self.ui.abort_seq.setEnabled(False)
         self.ui.acquire_raman.setEnabled(False)
         self.ui.seq_raman_acquisition.setEnabled(False)
-        self.ui.seq_laser_trigger.setEnabled(False)
         self.ui.scope_acquire.setEnabled(False)
         self.ui.mso_downsample.setEnabled(False)
         self.ui.export_scope_trace.setEnabled(False)
-
-
-
-
+        self.ui.avacs_angle.setEnabled(False)
+        self.ui.avacs_set_now.setEnabled(False)
 
     # %% ========= Princeton Instruments LightField control ==============
-
 
     def launch_lf_thread(self):
         """Launch LightField software in a new thread."""
         worker = Worker(self.launch_lf)  # pass other args here
         self.threadpool.start(worker)
 
-    
     def launch_lf(self):
         """Launch LightField software."""
-        # kill the process which opens LightField if its already running
-        os.system("taskkill /f /im AddInProcess.exe")
-        # create a C# compatible List of type String object
-        lf_exp_list = List[String]()
-        # add the command line option for an empty experiment
-        lf_exp_list.Add("Default_Python_Experiment")#("/empty")
-        # create the LightField Application (true for visible)
-        # the 2nd parameter is the experiment name to load 
-        self.lf['app'] = Automation(True, List[String](lf_exp_list))
-        self.ui.acquire_raman.setEnabled(True)
-        self.ui.raman_filename_notes.setEnabled(True)
-        self.ui.seq_raman_acquisition.setEnabled(True)
-
-
-    def device_found(self, experiment):
-        "Check if devices are connected to LightField."""
-        for device in experiment.ExperimentDevices:
-            if (device.Type == DeviceType.Camera):
-                return True
+        lf.launch_lf(self.lf)
 
     def save_file(self, filename, experiment):    
         """Save a Raman acquisition file using LightField."""
@@ -207,219 +227,19 @@ class App(QMainWindow):
         experiment.SetValue(
             ExperimentSettings.FileNameGenerationAttachTime, False)
 
-
     def show_file_list(self):
         """Show the list of acquired Raman spe files."""
-        self.ui.outbox.append(
-                '{} Raman acquisition files'.format(
-                        len(self.lf['file_list'])))
-        for f in self.lf['file_list']:
-            self.ui.outbox.append(f)
-
-
+        lf.show_file_list(self.lf)
 
     def acquire_raman(self):
         """Acquire Raman spectra using an opened instance of LightField."""
-        # get current loaded experiment
-        experiment = self.lf['app'].LightFieldApplication.Experiment
-    
-        # check for device and inform user if one is needed
-        if (self.device_found(experiment)==True):        
-            # check this location for saved spe after running
-            notes = self.ui.raman_filename_notes.text().replace(',','__')
-            file_name = time.strftime('%Y-%m-%d_%H-%M-%S')+'_'+notes
-            self.lf['recent_file'] = file_name
-            self.lf['file_list'].append(file_name+'.csv')
-            # pass location of saved file
-            self.save_file(file_name, experiment)
-            # acquire image
-            experiment.Acquire()
-            self.ui.outbox.append(
-                    str(String.Format("{0} {1}", "Data saved to",
-                                experiment.GetValue(
-                                    ExperimentSettings.
-                                    FileNameGenerationDirectory))))
-        else:
-            self.ui.outbox.append(
-                    'No LightField-compatible devices found.')
-
-
+        lf.acquire_raman(self.lf)
 
     def plot_file_list(self):
         """Plot the Raman acquisition spectra. They should be in csv
         format as specified by the Default_Python_Experiment file
         in LightField."""
-        if len(self.lf['file_list']) > 0:
-            p='C:\\Users\\Administrator\\Documents\\LightField\\csv_files\\'
-            colors = cm.jet(np.linspace(0, 1, len(self.lf['file_list'])))
-            plt.ion()
-            fig = plt.figure(0)
-            fig.clf()
-            for fi, f in enumerate(self.lf['file_list']):
-                df = pd.read_csv(p+str(f))
-                plt.plot(df['Wavelength'], df['Intensity'], label=fi,
-                         c=colors[fi], lw=1)
-            self.plot_setup(labels=('Wavelength (nm)', 'Intensity (counts)'))
-            fig.canvas.set_window_title('Spectra')
-            plt.draw()
-
-
-
-
-
-
-
-
-  # %% ========= Tektronix MSO64 mixed signal oscilloscope ==============
-
-
-    def mso_on(self):
-        "Run this function when MSO64 oscilloscope checkbox is checked."""
-        if self.ui.mso_on.isChecked():
-            try:
-                rm = visa.ResourceManager()
-                dev = rm.open_resource(self.ui.mso_address.text())
-                self.mso['dev'] = dev
-                self.ui.outbox.append('Oscilloscope connected.')
-                self.ui.outbox.append(dev.query('*IDN?'))
-                self.ui.scope_acquire.setEnabled(True)
-                self.ui.mso_address.setEnabled(False)
-                self.ui.mso_downsample.setEnabled(True)
-            except visa.VISAIOERROR:
-                self.ui.outbox.append('Oscilloscope could not connect.')
-                self.ui.mso_address.setEnabled(True)
-                self.ui.pulsegen_on.setChecked(False)
-                self.ui.scope_acquire.setEnabled(False)
-                self.ui.mso_downsample.setEnabled(False)
-                self.mso['dev'] = None
-        if not self.ui.mso_on.isChecked():
-            try:
-                self.mso['dev'].close()
-            except AttributeError:
-                pass
-            self.mso['dev'] = None
-            self.ui.outbox.append('Oscilloscope closed.')
-            self.ui.mso_address.setEnabled(True)
-            self.ui.mso_on.setChecked(False)
-            self.ui.scope_acquire.setEnabled(False)
-            self.ui.mso_downsample.setEnabled(False)
-
-
-    
-    def get_scope_timescale(self, signal, downsample=10):
-        """Get the time-scale associated with the scope signal."""
-        # get time-scale increment
-        dt = float(self.mso['dev'].query('WFMOutpre:XINcr?'))
-        # calculate the actual values of the x-scale
-        t_scale = np.linspace(0, len(signal)*downsample*dt,
-                              num=int(len(signal)))
-        return t_scale
-
-    
-    def scope_acquire(self):
-        """Acquire and plot signal on oscilloscope."""
-        self.mso['dev'].write(':DATA:SOURCE CH1')
-        self.mso['dev'].write(':DATa:START 1')
-        self.mso['dev'].write(':DATa:STOP 12500000')
-        self.mso['dev'].write(':WFMOutpre:ENCDG ASCII')
-        self.mso['dev'].write(':WFMOOutpre:BYT_NR 1')
-        downsample = self.ui.mso_downsample.value()
-        # get signal from scope
-        signal_raw = np.array(self.mso['dev'].query(':CURVE?').split(','))
-        signal = signal_raw.astype(float)[::downsample]
-        # get timescale associated with scope trace        
-        timescale = self.get_scope_timescale(signal, downsample=downsample)
-        # plot scope trace
-        plt.ion()
-        fig = plt.figure(1)
-        fig.clf()
-        plt.plot(timescale, signal, lw=1)
-        self.plot_setup(labels=('Time (s)', 'Signal'), legend=False)
-        fig.canvas.set_window_title('Oscilloscope trace')
-        plt.draw()
-        self.ui.outbox.append('Oscilloscope trace acquired.')
-        self.mso['last_sig'] = np.column_stack((timescale, signal))
-        self.mso['last_sig_ts'] = time.strftime('%Y-%m-%d_%H-%M-%S')
-        self.ui.export_scope_trace.setEnabled(True)
-
-
-    def export_scope_trace(self):
-        """Export most recent oscilloscope trace to file."""
-        df = pd.DataFrame(data=self.mso['last_sig'],
-                          columns=['time', 'signal'])
-        path = self.filedir+'\\'+self.mso['last_sig_ts']+'__scope_trace.csv'
-        df.to_csv(path, index=False)
-        self.ui.outbox.append('Oscilloscope trace exported.')
-
-
-    # %% ============ SRS DG645 pulse generator control =================
-    
-    def pulsegen_on(self):
-        "Run this function when pulse generator checkbox is checked."""
-        if self.ui.pulsegen_on.isChecked():
-            try:
-                dev = serial.Serial(
-                        port=self.ui.pulsegen_address.text(),
-                        timeout=2)
-                dev.write('*IDN?\r'.encode())
-                self.srs['dev'] = dev
-                self.ui.outbox.append('Pulse generator connected.')
-                self.ui.outbox.append(dev.readline().decode("utf-8"))
-                self.ui.pulsegen_address.setEnabled(False)
-                self.ui.pulse_gen_frame.setEnabled(True)
-                self.ui.seq_laser_trigger.setEnabled(True)
-            except serial.SerialException:
-                self.ui.outbox.append('Pulse generator could not connect.')
-                self.ui.pulse_gen_frame.setEnabled(False)
-                self.ui.pulsegen_address.setEnabled(True)
-                self.ui.pulsegen_on.setChecked(False)
-                self.ui.seq_laser_trigger.setEnabled(False)
-                self.srs['dev'] = None
-        if not self.ui.pulsegen_on.isChecked():
-            try:
-                self.srs['dev'].close()
-            except AttributeError:
-                pass
-            self.srs['dev'] = None
-            self.ui.outbox.append('Pulse generator closed.')
-            self.ui.pulsegen_address.setEnabled(True)
-            self.ui.pulsegen_on.setChecked(False)
-            self.ui.seq_laser_trigger.setEnabled(False)
-            self.ui.pulse_gen_frame.setEnabled(False)
-            self.ui.seq_laser_trigger.setEnabled(False)
-            
-        
-    def trigger_pulses(self):
-        """Fire a single burst of n pulses with spacing in seconds."""
-        self.ui.trigger_pulses.setEnabled(False)
-        # set pulse width in seconds
-        pulse_width = self.ui.pulse_width.value()/1e3
-        pulse_amplitude = self.ui.pulse_amplitude.value()
-        pulse_delay = self.ui.pulse_delay.value()/1e3
-        pulse_number = self.ui.pulse_number.value()
-        self.ui.outbox.append('Triggering {} pulses...'.format(pulse_number))
-        # set trigger source to single shot trigger
-        self.srs['dev'].write('TSRC5\r'.encode())
-        # set delay of A and B outputs
-        self.srs['dev'].write(('DLAY2,0,'+str(0)+'\r').encode())
-        self.srs['dev'].write(('DLAY3,2,'+str(pulse_width)+'\r').encode())
-        # set amplitude of output A
-        self.srs['dev'].write(('LAMP1,'+str(pulse_amplitude)+'\r').encode())
-        for _ in range(pulse_number):
-            # initiate single shot trigger
-            self.srs['dev'].write('*TRG\r'.encode())
-            time.sleep(pulse_delay)
-        self.ui.trigger_pulses.setEnabled(True)
-        self.ui.outbox.append('Pulse sequence complete.')
-        self.srs['tot_pulses'] += pulse_number
-
-
-    def trigger_pulses_thread(self):
-        """Trigger pulses in a new thread."""
-        worker = Worker(self.trigger_pulses)  # pass other args here
-        self.threadpool.start(worker)
-
-
+        lf.plot_file_list(self.lf)
 
 
     # %% ======= experimental sequence control functions =================
@@ -466,161 +286,100 @@ class App(QMainWindow):
 
 
 
+  # %% ========= Tektronix MSO64 mixed signal oscilloscope ==============
+
+    def mso_on(self):
+        "Run this function when MSO64 oscilloscope checkbox is checked."""
+        mso.mso_on(self.mso)
+    
+    def scope_acquire(self):
+        """Acquire and plot signal from oscilloscope."""
+        mso.acquire(self.mso)
+
+    def export_scope_trace(self):
+        """Export most recent oscilloscope trace to file."""
+        mso.export(self.mso)
+
+
+    # %% ============ SRS DG645 pulse generator control =================
+    
+    def pulsegen_on(self):
+        "Run this function when pulse generator checkbox is checked."""
+        srs.pulsegen_on(self.srs)
+  
+    def trigger_pulses(self):
+        """Fire a single burst of n pulses with spacing in seconds."""
+        srs.trigger_pulses(self.srs)
+
+    def trigger_pulses_thread(self):
+        """Trigger pulses in a new thread."""
+        worker = Worker(self.trigger_pulses)  # pass other args here
+        self.threadpool.start(worker)
+
+
+    # %% ============ Laseroptik AVACS beam attenuator ===================
+    
+    def avacs_on(self):
+        """Laseroptik beam attenuator checkbox is checked/unchecked."""
+        avacs.avacs_on(self.avacs)
+
+    def avacs_set_now(self):
+        """Set angle of the beam attenuator."""
+        avacs.set_now(self.avacs)
+
 
     # %% ============ system control functions =============================
 
-    
-    def plot_setup(self, labels=['X', 'Y'], fsize=20, setlimits=False,
-                   title=None, legend=True, limits=(0,1,0,1)):
-        """Creates a custom plot configuration to make graphs look nice.
-        This can be called with matplotlib for setting axes labels,
-        titles, axes ranges, and the font size of plot labels.
-        This should be called between plt.plot() and plt.show() commands."""
-        plt.xlabel(str(labels[0]), fontsize=fsize)
-        plt.ylabel(str(labels[1]), fontsize=fsize)
-        #fig = plt.gcf()
-        #fig.set_size_inches(6, 4)
-        if title:
-            plt.title(title, fontsize=fsize)
-        if legend:
-            plt.legend(fontsize=fsize-4)
-        if setlimits:
-            plt.xlim((limits[0], limits[1]))
-            plt.ylim((limits[2], limits[3]))
+    def set_filedir(self):
+        # set the directory for saving data files
+        self.ops['filedir'] = str(QFileDialog.getExistingDirectory(
+                self, 'Create or select directory for data files.'))
+        self.ui.outbox.append('Save file directory set to:')
+        self.ui.outbox.append(self.ops['filedir'])
 
+    def export_settings(self):
+        """Export all GUI settings to file."""
+        ops.export_settings(self.ops)
 
-
+    def import_settings(self):
+        """Import all GUI settings from file."""
+        import_settings_filepath = QFileDialog.getOpenFileName(
+                self, 'Select experiment settings file', '.ini')[0]
+        ops.import_settings(self.ops, import_settings_filepath)
 
     def show_help_popup(self):
         """Show the help popup message."""
-        self.help_message = (
-            "HELP"
-            "\n=========================================================\n"
-            "Click 'Menu --> Show available serial ports' to check "
-            "available ports. "
-            "To communicate with the SRS DG645 pulse generator, "
-            "enter the serial port address (e.g. COM6) in the address "
-            "field and use the checkbox to connect to the device. "
-            "Adjust the pulse "
-            "width, pulse delay, pulse maplitude, and number of "
-            "pulses in the edit boxes. Then click 'Trigger pulses' "
-            "to send pulses from the SRS. "
-            "Uncheck the box to disconnect from the device."
-            "\n=========================================================\n"
-            "To configure LightField, first open LightField by "
-            "clicking 'Launch LightField.' Then configure all desired "
-            "settings inside LightField. To acquire, click 'Acquire'. "
-            "\n=========================================================\n"
-            "To run the experimental sequence, check boxes for the "
-            "pulse triggering and acquisition. Then click 'Run sequence'. "
-            "Click 'Abort sequence' to stop the sequence prematurely."
-            "\n=========================================================\n"
-            )
-        self.help_popup = QtWidgets.QMessageBox()
-        self.help_popup.setWindowTitle('Help')
-        self.help_popup.setText(self.help_message)
-        self.help_popup.exec_()
-
+        ops.show_help_popup(self.ops)
 
     def show_log_path(self):
         """Show the path to the log file."""
-        self.ui.outbox.append('Log file path: %s' %(self.log['path']))
-
-
-    def get_log_row_data(self):
-        """Get data for the most recent row of the log file."""
-        d = {'time': time.strftime('%Y-%m-%d_%H-%M-%S'),
-             'total_pulses': self.srs['tot_pulses'],
-             'pulsewidth_ms':  self.ui.pulse_width.value()/1e3,
-             'pulse_amplitude_V': self.ui.pulse_amplitude.value(),
-             'pulse_delay_ms': self.ui.pulse_delay.value()/1e3,
-             'pulse_number': self.ui.pulse_number.value(),
-             'recent_file': self.lf['recent_file']}
-        return d
-
+        self.ui.outbox.append('Log file path: %s' %(self.ops['path']))
 
     def log_to_file(self):
         """Create log file."""
-        # get most recent row of data
-        d = self.get_log_row_data()
-        # assign most recent row to last row in log data
-        self.log['data'][self.log['row_counter']] = list(d.values())
-        # convert log dtaa to Pandas DataFrame
-        df = pd.DataFrame(columns=list(d.keys()),
-                              data=self.log['data'])
-        # remove empty rows before saving
-        df.replace('', np.nan, inplace=True)
-        df.dropna(how='all', inplace=True)
-        # save dataframe as csv file
-        df.to_csv(self.log['path'], index=False)
-        self.ui.outbox.append('Log file appended.')
-        self.log['row_counter'] += 1
-
-
+        ops.log_to_file(self.ops, self.srs, self.lf)
 
     def print_ports(self):
         """Print a list of available serial and VISA ports."""
-        rm = visa.ResourceManager()
-        visa_ports = list(rm.list_resources())
-        serial_ports = list(list_ports.comports())
-        self.ui.outbox.append('Available instrument addresses:')
-        [self.ui.outbox.append(str(p)) for p in visa_ports]
-        [self.ui.outbox.append(str(p.device)) for p in serial_ports]
-        
+        ops.print_ports(self.ops)
 
     def quitapp(self):
         """Quit the application."""
-        # close instances of all instruments if they exist
         if self.srs['dev']:
             self.srs['dev'].close()
         if self.mso['dev']:
             self.mso['dev'].close()
+        if self.avacs['dev']:
+            self.avacs['dev'].close()
         # kill the process which opens LightField if its already running
         #os.system("taskkill /f /im AddInProcess.exe")
+        # close app window and kill python kernel
         self.deleteLater()
-        # close app window
         self.close()  
-        # kill python kernel
-        sys.exit()  
+        sys.exit()
  
     
-    '''
-
-    def set_directory(self):
-        """Set the directory for saving files."""
-        self.filedir = str(QFileDialog.getExistingDirectory(
-                self, 'Select a directory for storing data'))
-        self.ui.outbox.append('File directory is set to ' + self.filedir)
-
-
-    def show_directory(self):
-        """Show the file directory in the output box."""
-        self.ui.outbox.append('File directory is set to ' + self.filedir)
-
-
-
-    def plot_df_surf(self):
-        """Plot delta F surface."""
-        plt.cla()
-        fig_df = plt.figure(5)
-        plt.ion()
-        plt.contour(self.contours['mu_mesh'], self.contours['eta_mesh'],
-                    self.contours['df_surf'], self.contours['df_exp'])
-        plt.contourf(self.contours['mu_mesh'], self.contours['eta_mesh'],
-                     self.contours['df_surf'], 50, cmap='rainbow')
-        self.plot_setup(title='Δf (Hz/cm^2)',
-                   labels=['Log (μ) (Pa)', 'Log (η) (Pa s)'], colorbar=True)
-        plt.tight_layout()
-        fig_df.canvas.set_window_title('Δf surface')
-        fig_df.show()
-
-    '''
-
-
-
-
 # %% ====================== run application ===============================
-
 
 if __name__ == "__main__":
     if not QtWidgets.QApplication.instance():
