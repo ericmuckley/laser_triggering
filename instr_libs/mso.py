@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import time
 
+
 def mso_on(mso):
     "Run this function when MSO64 oscilloscope checkbox is checked."""
     if mso['on'].isChecked():

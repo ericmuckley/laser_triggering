@@ -22,10 +22,9 @@ from PyQt5.QtWidgets import QMainWindow, QFileDialog
 import os
 import sys
 import time
-#import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-#from matplotlib import cm
+
 
 # -------- import custom modules for contorlling instruments ---------------
 from instr_libs import avacs  # Laseroptik AVACS beam attenuator
@@ -34,24 +33,6 @@ from instr_libs import mso  #  Tektronix MSO64 oscilloscope
 from instr_libs import ops  # for controlling operations of main GUI
 from instr_libs import lf  # for controlling LightField Raman software
 
-# --------------------- for LightField dependencies ------------------------
-import clr  # the .NET class library
-import System.IO as sio  # for saving and opening files
-# Import c compatible List and String
-#from System import String
-#from System.Collections.Generic import List
-# Add needed dll references for LightField
-sys.path.append(os.environ['LIGHTFIELD_ROOT'])
-sys.path.append(os.environ['LIGHTFIELD_ROOT']+"\\AddInViews")
-clr.AddReference('System.IO')
-clr.AddReference('System.Collections')
-clr.AddReference('PrincetonInstruments.LightFieldViewV5')
-clr.AddReference('PrincetonInstruments.LightField.AutomationV5')
-clr.AddReference('PrincetonInstruments.LightFieldAddInSupportServices')
-# Princeton Instruments imports
-#from PrincetonInstruments.LightField.Automation import Automation
-from PrincetonInstruments.LightField.AddIns import ExperimentSettings
-#from PrincetonInstruments.LightField.AddIns import DeviceType 
 
 # ------- change matplotlib settings to make plots look nicer --------------
 plt.rcParams['xtick.labelsize'] = 20
@@ -200,46 +181,6 @@ class App(QMainWindow):
         self.ui.avacs_angle.setEnabled(False)
         self.ui.avacs_set_now.setEnabled(False)
 
-    # %% ========= Princeton Instruments LightField control ==============
-
-    def launch_lf_thread(self):
-        """Launch LightField software in a new thread."""
-        worker = Worker(self.launch_lf)  # pass other args here
-        self.threadpool.start(worker)
-
-    def launch_lf(self):
-        """Launch LightField software."""
-        lf.launch_lf(self.lf)
-
-    def save_file(self, filename, experiment):    
-        """Save a Raman acquisition file using LightField."""
-        # Set the base file name
-        experiment.SetValue(
-            ExperimentSettings.FileNameGenerationBaseFileName,
-            sio.Path.GetFileName(filename))
-        # Option to Increment, set to false will not increment
-        experiment.SetValue(
-            ExperimentSettings.FileNameGenerationAttachIncrement, False)
-        # Option to add date
-        experiment.SetValue(
-            ExperimentSettings.FileNameGenerationAttachDate, False)
-        # Option to add time
-        experiment.SetValue(
-            ExperimentSettings.FileNameGenerationAttachTime, False)
-
-    def show_file_list(self):
-        """Show the list of acquired Raman spe files."""
-        lf.show_file_list(self.lf)
-
-    def acquire_raman(self):
-        """Acquire Raman spectra using an opened instance of LightField."""
-        lf.acquire_raman(self.lf)
-
-    def plot_file_list(self):
-        """Plot the Raman acquisition spectra. They should be in csv
-        format as specified by the Default_Python_Experiment file
-        in LightField."""
-        lf.plot_file_list(self.lf)
 
 
     # %% ======= experimental sequence control functions =================
@@ -271,7 +212,7 @@ class App(QMainWindow):
 
             self.log_to_file()
             time.sleep(self.ui.pause_between_cycles.value())
-            
+
         self.abort_seq = False
         self.ui.run_seq.setEnabled(True)
         self.ui.abort_seq.setEnabled(False)
@@ -284,6 +225,31 @@ class App(QMainWindow):
         worker = Worker(self.run_seq)  # pass other args here
         self.threadpool.start(worker)
 
+
+    # %% ========= Princeton Instruments LightField control ==============
+
+    def launch_lf_thread(self):
+        """Launch LightField software in a new thread."""
+        worker = Worker(self.launch_lf)  # pass other args here
+        self.threadpool.start(worker)
+
+    def launch_lf(self):
+        """Launch LightField software."""
+        lf.launch_lf(self.lf)
+
+    def show_file_list(self):
+        """Show the list of acquired Raman spe files."""
+        lf.show_file_list(self.lf)
+
+    def acquire_raman(self):
+        """Acquire Raman spectra using an opened instance of LightField."""
+        lf.acquire_raman(self.lf)
+
+    def plot_file_list(self):
+        """Plot the Raman acquisition spectra. They should be in csv
+        format as specified by the Default_Python_Experiment file
+        in LightField."""
+        lf.plot_file_list(self.lf)
 
 
   # %% ========= Tektronix MSO64 mixed signal oscilloscope ==============

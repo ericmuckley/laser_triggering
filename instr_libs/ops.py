@@ -21,6 +21,7 @@ from PyQt5.QtWidgets import QSpinBox, QDoubleSpinBox, QCheckBox, QRadioButton
 from PyQt5.QtCore import QSettings
 
 
+
 def show_help_popup(ops):
     """Show the help popup message."""
     help_message = (
