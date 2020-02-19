@@ -21,4 +21,5 @@ After installation of the _thorlabs_apt_ library, three files in the support_fil
 1. _APT.dll_
 2. _ATP.lib_
 3. _ATPAPI.h_
+
 This allows communication between Thorlabs instruments, Windows, and Python.
