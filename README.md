@@ -20,6 +20,7 @@ The application is started by running the ```app.py``` file.
     * **_README.md_**: the file you are reading, which describes instructuins for use
     * **_ui.ui_**: user interface file, created in QT Desginer, which is called by _app.py_ and provides thelayout of graphical user interface widgets for the application.
     * **RUN_LASER_TRIGGERING.bat_**: Windows bat file. Make a shortcut of this file and place it anywhere on the PC to run _app.py_ by clicking on the shortcut.
+    * **requirements.txt**: text file containing list of all dependencies. These can be installed using Anaconda as described in the _Installation_ section below.
 * **instr_libs**
     * **_avacs.py_**: modules for controlling Laseroptik AVACS beam attenuator
     * **_kcube.py_**: modules for controlling Thorlabs KDC101 brushed servo motor controllers
@@ -36,6 +37,7 @@ The application is started by running the ```app.py``` file.
 
 ## Installation of dependencies
 Prior to use, Python libraries and dependencies must be installed. To install dependencies, it is recommended to use Anaconda (https://www.anaconda.com/distribution/#download-section).
+
 To install all dependencies on a Windows 64-bit computer, create an Anaconda envinrment and populate it with the required dependencies by opening the Anaconda command prompt and running: 
 ```conda create --name <env> --file requirements.txt```
 where <env> is the name of the new environment.
