@@ -30,8 +30,10 @@ import matplotlib.pyplot as plt
 from instr_libs import avacs  # Laseroptik AVACS beam attenuator
 from instr_libs import srs  # SRS DG645 digital delay pulse generator
 from instr_libs import mso  #  Tektronix MSO64 oscilloscope
+from instr_libs import kcube  # Thorlabs KDC101 stepper motor controllers
 from instr_libs import ops  # for controlling operations of main GUI
 from instr_libs import lf  # for controlling LightField Raman software
+
 
 
 # ------- change matplotlib settings to make plots look nicer --------------
@@ -101,7 +103,12 @@ class App(QMainWindow):
         self.ui.scope_acquire.clicked.connect(self.scope_acquire)
         self.ui.export_scope_trace.clicked.connect(self.export_scope_trace)
         self.ui.avacs_set_now.clicked.connect(self.avacs_set_now)
-                
+        self.ui.polarizer_on.clicked.connect(self.polarizer_on)
+        self.ui.analyzer_on.clicked.connect(self.analyzer_on)
+        self.ui.analyzer_move_to.clicked.connect(self.analyzer_move_to)
+        self.ui.polarizer_move_to.clicked.connect(self.polarizer_move_to)
+        self.ui.get_p_angle.clicked.connect(self.get_p_angle)
+        self.ui.get_a_angle.clicked.connect(self.get_a_angle)
         
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
@@ -164,14 +171,34 @@ class App(QMainWindow):
                 'acquire': self.ui.acquire_raman,
                 'notes': self.ui.raman_filename_notes,
                 'seq': self.ui.seq_raman_acquisition}
-        
 
+        self.kcube = {
+                'pdev': None,
+                'adev': None,
+                'outbox': self.ui.outbox,
+                'a_on': self.ui.analyzer_on,
+                'p_on': self.ui.polarizer_on,
+                'ahome': self.ui.analyzer_home,
+                'phome': self.ui.polarizer_home,
+                'aset': self.ui.analyzer_move_to,
+                'pset': self.ui.polarizer_move_to,
+                'aangle': self.ui.analyzer_angle,
+                'pangle': self.ui.polarizer_angle,
+                'get_p_angle': self.ui.get_p_angle,
+                'get_a_angle': self.ui.get_a_angle,
+                'aaddress': self.ui.analyzer_address,
+                'paddress': self.ui.polarizer_address}
+        
 
         # kill the process which opens LightField if its already running
         os.system("taskkill /f /im AddInProcess.exe")
         
-        # initialize GUI settings
+        # initialize GUI settings by disabling buttons
         srs.enable_pulse_gen_buttons(self.srs, False)
+        kcube.enable_polarizer(self.kcube, False)
+        kcube.enable_analyzer(self.kcube, False)
+        
+        
         self.ui.abort_seq.setEnabled(False)
         self.ui.acquire_raman.setEnabled(False)
         self.ui.seq_raman_acquisition.setEnabled(False)
@@ -224,6 +251,40 @@ class App(QMainWindow):
         """Run sequence in a new thread."""
         worker = Worker(self.run_seq)  # pass other args here
         self.threadpool.start(worker)
+
+
+
+
+
+    # %% ========= Thorlabs KDC101 servo motor controllers= ==============
+
+    def analyzer_on(self):
+        """Checkbox for analyzer controller is checked/unchecked."""
+        kcube.analyzer_on(self.kcube)
+
+    def polarizer_on(self):
+        """Checkbox for polarizer controller is checked/unchecked."""
+        kcube.polarizer_on(self.kcube)
+
+    def analyzer_move_to(self):
+        """Move the analyzer to specified angle."""
+        kcube.analyzer_move_to(self.kcube)
+
+    def polarizer_move_to(self):
+        """Move the polarizer to specified angle."""
+        kcube.polarizer_move_to(self.kcube)
+
+    def get_a_angle(self):
+        """Get current angle of the analyzer."""
+        kcube.get_a_angle(self.kcube)
+    
+    def get_p_angle(self):
+        """Get current angle of the polarizer."""
+        kcube.get_p_angle(self.kcube)
+
+        
+
+
 
 
     # %% ========= Princeton Instruments LightField control ==============

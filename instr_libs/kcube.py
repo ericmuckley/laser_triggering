@@ -1,79 +1,111 @@
 # -*- coding: utf-8 -*-
 """
 
-Module to control the Thorlabs KCD101 K-Cube brushed motor controller
+Module to control the Thorlabs KCD101 K-Cube brushed motor controller.
+Fuctionality is based on code available here:
+https://github.com/qpit/thorlabs_apt/blob/master/thorlabs_apt/core.py
 
 Created on Wed Feb 19 10:07:30 2020
 @author: ericmuckley@gmail.com
 """
 
-
-import time
 import thorlabs_apt as apt
 
 
-#filename = "%s/APT.dll" % os.path.dirname(__file__)
+def enable_polarizer(kcube, enable):
+    """Enable/disable buttons related to polarizer controller."""
+    kcube['pset'].setEnabled(enable)
+    kcube['phome'].setEnabled(enable)
+    kcube['pangle'].setEnabled(enable)
+    kcube['get_p_angle'].setEnabled(enable)
+    kcube['paddress'].setEnabled(not enable)
+
+
+def enable_analyzer(kcube, enable):
+    """Enable/disable buttons related to analyzer controller."""
+    kcube['aset'].setEnabled(enable)
+    kcube['ahome'].setEnabled(enable)
+    kcube['aangle'].setEnabled(enable)
+    kcube['get_a_angle'].setEnabled(enable)
+    kcube['aaddress'].setEnabled(not enable)
+
+
+def polarizer_on(kcube):
+    """Polarizer checkbox is checked or unchecked."""
+    if kcube['p_on'].isChecked():
+        #try:
+        kcube['pdev'] = apt.Motor(int(kcube['paddress'].text()))
+        kcube['outbox'].append('Polarizer controller connected.')
+        kcube['outbox'].append(str(kcube['pdev'].hardware_info))
+        kcube['outbox'].append(
+                'Serial num: '+str(kcube['pdev'].serial_number))
+        enable_polarizer(kcube, True)
+        '''
+        except:
+            kcube['outbox'].append('Polarizer controller could not connect.')
+            enable_polarizer(kcube, False)
+            kcube['p_on'].setChecked(False)
+            kcube['pdev'] = None
+        '''
+    if not kcube['p_on'].isChecked():
+        kcube['pdev'] = None
+        enable_polarizer(kcube, False)
+        kcube['p_on'].setChecked(False)
+        kcube['outbox'].append('Polarizer controller closed.')
+
+
+def analyzer_on(kcube):
+    """Analyzer checkbox is checked or unchecked."""
+    if kcube['a_on'].isChecked():
+        try:
+            kcube['adev'] = apt.Motor(int(kcube['aaddress'].text()))
+            kcube['outbox'].append('Analyzer controller connected.')
+            kcube['outbox'].append(str(kcube['adev'].hardware_info))
+            kcube['outbox'].append(
+                'Serial num: '+str(kcube['adev'].serial_number))
+            enable_analyzer(kcube, True)
+        except:
+            kcube['outbox'].append('Analyzer controller could not connect.')
+            enable_analyzer(kcube, False)
+            kcube['a_on'].setChecked(False)
+            kcube['adev'] = None
+    if not kcube['a_on'].isChecked():
+        kcube['adev'] = None
+        enable_analyzer(kcube, False)
+        kcube['a_on'].setChecked(False)
+        kcube['outbox'].append('Analyzer controller closed.')
+
+
+def polarizer_move_to(kcube):
+    """Move the polarizer to specified angle."""
+    kcube['pdev'].move_to()
+
+
+def get_p_angle(kcube):
+    """Get the current angle of the polarizer."""
+    kcube['outbox'].append(
+            'Polarizer angle (deg): '+str(round(kcube['pdev'].position, 2)))
+
+def get_a_angle(kcube):
+    """Get the current angle of the analyzer."""
+    kcube['outbox'].append(
+            'Analyzer angle (deg): '+str(round(kcube['adev'].position, 2)))
 
 
 
-print(apt.list_available_devices())
-
-
-dev = apt.Motor(27255762)
-
-
-print(dev.hardware_info)
-
-#print(dev.is_in_motion)
-
-dev.set_velocity_parameters(0, 25, 25)
-
-# max velocity and aceleration = 25.0
-
-#motor.move_home(True)
-#dev.move_to(45)
-dev.move_by(5)
-
-
-
-#print(os.path.dirname(__file__))
-
-#print("%s/APT.dll" % os.path.dirname(__file__))
-
-"""
-FROM MANUAL:
-
-// Set baud rate to 115200.
-// 8 data bits, 1 stop bit, no parity
-// RTS/CTS Handshake
-
-"""
-
-
-
-'''
-dev = serial.Serial(port=srs['address'].text(), timeout=2)
-dev.write('*IDN?\r'.encode())
-srs['dev'] = dev
-srs['outbox'].append('Pulse generator connected.')
-srs['outbox'].append(dev.readline().decode("utf-8"))
-enable_pulse_gen_buttons(srs, True)
-except serial.SerialException:
-srs['outbox'].append('Pulse generator could not connect.')
-srs['on'].setChecked(False)
-enable_pulse_gen_buttons(srs, False)
-srs['dev'] = None
-if not srs['on'].isChecked():
-try:
-srs['dev'].close()
-except AttributeError:
-pass
-srs['dev'] = None
-srs['outbox'].append('Pulse generator closed.')
-srs['on'].setChecked(False)
-enable_pulse_gen_buttons(srs, False)
-'''
 
 
 if __name__ == '__main__':
-    pass
+    
+    print(apt.list_available_devices())
+
+    dev = apt.Motor(27255762)
+
+    #print(dev.hardware_info)
+    #print(dev.is_in_motion)
+    #dev.set_velocity_parameters(0, 25, 25)
+    # max velocity and aceleration = 25.0
+    #motor.move_home(True)
+    dev.move_to(90)
+    #dev.move_by(15)
+    print(dev.position)

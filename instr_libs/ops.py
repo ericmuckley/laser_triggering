@@ -14,6 +14,7 @@ import time
 import visa
 import pandas as pd
 import inspect
+import thorlabs_apt as apt
 from serial.tools import list_ports
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QLabel, QComboBox, QLineEdit, QSlider, QFileDialog
@@ -94,11 +95,12 @@ def print_ports(ops):
     rm = visa.ResourceManager()
     visa_ports = list(rm.list_resources())
     serial_ports = list(list_ports.comports())
+    ftid_usb_ports = list(apt.list_available_devices())
     ops['outbox'].append('Available instrument addresses:')
     [ops['outbox'].append(str(p)) for p in visa_ports]
     [ops['outbox'].append(str(p.device)) for p in serial_ports]
+    [ops['outbox'].append(str(p)) for p in ftid_usb_ports]
     
-
 
 
 def export_settings(ops):
