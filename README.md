@@ -13,6 +13,18 @@ This respository contains code for an application which allows automated laser p
 The application is started by running the ```app.py``` file.
 
 
+## Description of files
+
+* Main repository
+    * _app.py_: main file for starting the GUI application
+    * _README.md_: this file, which describes instructuins for use
+    * _ui.ui_: user interface file, created in QT Desginer, which is called by _app.py_ and provides thelayout of graphical user interface widgets for the application.
+    * RUN_LASER_TRIGGERING.bat_: Windows bat file. Make a shortbut of this file and place anywhere on the PC to run _app.py_ by clicking on the shortcut.
+* instru_libs
+    * _avacs.py_:
+    * _kcube.py_:
+
+
 
 ## Installation of dependencies
 Prior to use, Python libraries and dependencies must be installed. To install dependencies, it is recommended to use Anaconda (https://www.anaconda.com/distribution/#download-section).
