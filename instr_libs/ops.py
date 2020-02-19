@@ -94,12 +94,12 @@ def print_ports(ops):
     """Print a list of available serial and VISA ports."""
     rm = visa.ResourceManager()
     visa_ports = list(rm.list_resources())
-    serial_ports = list(list_ports.comports())
+    ser_ports = list(list_ports.comports())
     ftid_usb_ports = list(apt.list_available_devices())
     ops['outbox'].append('Available instrument addresses:')
-    [ops['outbox'].append(str(p)) for p in visa_ports]
-    [ops['outbox'].append(str(p.device)) for p in serial_ports]
-    [ops['outbox'].append(str(p)) for p in ftid_usb_ports]
+    [ops['outbox'].append('Visa port: '+str(p)) for p in visa_ports]
+    [ops['outbox'].append('Serial port: '+str(p.device)) for p in ser_ports]
+    [ops['outbox'].append('FTID USB port: '+str(p)) for p in ftid_usb_ports]
     
 
 

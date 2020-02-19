@@ -302,7 +302,7 @@ border: 1px solid black;
      <rect>
       <x>20</x>
       <y>20</y>
-      <width>221</width>
+      <width>231</width>
       <height>191</height>
      </rect>
     </property>
@@ -484,8 +484,8 @@ border: 1px solid black;
    <widget class="QGroupBox" name="groupBox_output">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>620</y>
+      <x>290</x>
+      <y>590</y>
       <width>321</width>
       <height>181</height>
      </rect>
@@ -755,8 +755,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_scope">
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>440</y>
+      <x>460</x>
+      <y>370</y>
       <width>221</width>
       <height>141</height>
      </rect>
@@ -874,8 +874,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_avacs">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>130</y>
+      <x>510</x>
+      <y>190</y>
       <width>221</width>
       <height>131</height>
      </rect>
@@ -956,12 +956,12 @@ p, li { white-space: pre-wrap; }
      </layout>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_2">
+   <widget class="QGroupBox" name="groupBox_thorlabs">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>250</y>
-      <width>221</width>
+      <width>231</width>
       <height>371</height>
      </rect>
     </property>
@@ -973,8 +973,8 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>60</y>
-       <width>181</width>
-       <height>80</height>
+       <width>191</width>
+       <height>109</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
@@ -1008,24 +1008,7 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="pangle_label">
-        <property name="text">
-         <string>Angle (deg)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QDoubleSpinBox" name="polarizer_angle"/>
-      </item>
-      <item row="2" column="0">
-       <widget class="QPushButton" name="polarizer_home">
-        <property name="text">
-         <string>Go home</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
+      <item row="1" column="2">
        <widget class="QPushButton" name="polarizer_move_to">
         <property name="maximumSize">
          <size>
@@ -1038,6 +1021,30 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
+      <item row="2" column="0">
+       <widget class="QPushButton" name="polarizer_home">
+        <property name="text">
+         <string>Go home</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="pangle_label">
+        <property name="text">
+         <string>Angle (deg)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="polarizer_angle"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QPushButton" name="get_p_angle">
+        <property name="text">
+         <string>Get polarizer angle</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
     <widget class="QWidget" name="gridLayoutWidget_7">
@@ -1045,8 +1052,8 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>240</y>
-       <width>181</width>
-       <height>80</height>
+       <width>201</width>
+       <height>109</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout_7">
@@ -1057,10 +1064,30 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
+      <item row="2" column="0">
+       <widget class="QPushButton" name="analyzer_home">
+        <property name="text">
+         <string>Go home</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="2">
        <widget class="QCheckBox" name="analyzer_on">
         <property name="text">
          <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="analyzer_move_to">
+        <property name="maximumSize">
+         <size>
+          <width>500</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Set</string>
         </property>
        </widget>
       </item>
@@ -1090,23 +1117,10 @@ p, li { white-space: pre-wrap; }
       <item row="1" column="1">
        <widget class="QDoubleSpinBox" name="analyzer_angle"/>
       </item>
-      <item row="2" column="0">
-       <widget class="QPushButton" name="analyzer_home">
+      <item row="3" column="0">
+       <widget class="QPushButton" name="get_a_angle">
         <property name="text">
-         <string>Go home</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QPushButton" name="analyzer_move_to">
-        <property name="maximumSize">
-         <size>
-          <width>500</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Set</string>
+         <string>Get analyzer angle</string>
         </property>
        </widget>
       </item>
@@ -1159,32 +1173,6 @@ p, li { white-space: pre-wrap; }
      </property>
      <property name="text">
       <string>Analyzer</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="get_p_angle">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>150</y>
-       <width>111</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Get polarizer angle</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="get_a_angle">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>330</y>
-       <width>111</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Get analyzer angle</string>
      </property>
     </widget>
    </widget>

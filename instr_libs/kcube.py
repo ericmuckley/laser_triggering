@@ -78,13 +78,27 @@ def analyzer_on(kcube):
 
 def polarizer_move_to(kcube):
     """Move the polarizer to specified angle."""
-    kcube['pdev'].move_to()
+    angle = int(kcube['pangle'].value())
+    kcube['outbox'].append(
+            'Rotating polarizer to {} degrees...'.format(angle))
+    kcube['pdev'].move_to(int(kcube['pangle'].value()))
+    kcube['outbox'].append('Polarizer rotation complete.')
+    
+
+def analyzer_move_to(kcube):
+    """Move the analyzer to specified angle."""
+    angle = int(kcube['aangle'].value())
+    kcube['outbox'].append(
+            'Rotating analyzer to {} degrees...'.format(angle))
+    kcube['adev'].move_to(int(kcube['aangle'].value()))
+    kcube['outbox'].append('Analyzer rotation complete.')
 
 
 def get_p_angle(kcube):
     """Get the current angle of the polarizer."""
     kcube['outbox'].append(
             'Polarizer angle (deg): '+str(round(kcube['pdev'].position, 2)))
+
 
 def get_a_angle(kcube):
     """Get the current angle of the analyzer."""
