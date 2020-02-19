@@ -15,17 +15,22 @@ The application is started by running the ```app.py``` file.
 
 ## Description of files
 
-* Main repository
-    * _app.py_
-        * main file for starting the GUI application
-    * _README.md_
-        * this file, which describes instructuins for use
-    * _ui.ui_
-        * user interface file, created in QT Desginer, which is called by _app.py_ and provides thelayout of graphical user interface widgets for the application.
-    * RUN_LASER_TRIGGERING.bat_: Windows bat file. Make a shortbut of this file and place anywhere on the PC to run _app.py_ by clicking on the shortcut.
-* instru_libs
-    * _avacs.py_:
-    * _kcube.py_:
+* **Main repository**
+    * **_app.py_**: main file for starting the GUI application. Calls _ui.ui_ and files inside _instr_files_ directory to create the application.
+    * **_README.md_**: the file you are reading, which describes instructuins for use
+    * **_ui.ui_**: user interface file, created in QT Desginer, which is called by _app.py_ and provides thelayout of graphical user interface widgets for the application.
+    * **RUN_LASER_TRIGGERING.bat_**: Windows bat file. Make a shortcut of this file and place it anywhere on the PC to run _app.py_ by clicking on the shortcut.
+* **instr_libs**
+    * **_avacs.py_**: modules for controlling Laseroptik AVACS beam attenuator
+    * **_kcube.py_**: modules for controlling Thorlabs KDC101 brushed servo motor controllers
+    * **_lf.py_**: modules for controlling Princeton Instruments LightField software
+    * **_mso.py_**: modules for controlling Tektronix MSO64 oscilloscope
+    * **_ops.py_**: modules for controlling operations and file I/O of the main GUI
+    * **_srs.py_**: modules for controlling SRS DG645 digital delay pulse generator
+* **logs**: default directory for saving experiment configuration files and logging experimental data
+* **support_files**: directory for storing supporting files (_APT.dll_, _APTAPI.h_, _ATP.lib_) and other unused depreciated files
+
+
 
 
 
