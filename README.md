@@ -39,8 +39,8 @@ The application is started by running the ```app.py``` file.
 Prior to use, Python libraries and dependencies must be installed. To install dependencies, it is recommended to use Anaconda (https://www.anaconda.com/distribution/#download-section).
 
 To install all dependencies on a Windows 64-bit computer, create an Anaconda envinrment and populate it with the required dependencies by opening the Anaconda command prompt and running: 
-```conda create --name <env> --file requirements.txt```
-where <env> is the name of the new environment.
+```conda create --name env --file requirements.txt```
+where ```env``` is the name of the new environment.
 
 After installation of the _thorlabs_apt_ library, three files in the support_files directory must be copied to the thorlabs_apt directory and placed in the same folder as _core.py_:
 1. _APT.dll_
