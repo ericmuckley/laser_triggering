@@ -6,26 +6,33 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>907</width>
-    <height>980</height>
+    <width>906</width>
+    <height>934</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Laser triggering</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QMenu {
-border: 1px solid black;
-;}
+   <string notr="true">
+
+QMainWindow{background-color: rgb(60, 60, 60);}
+QLabel{color: white;}
+
+
+
 
 QGroupBox{
-color: black;
-border: 1px solid gray;
+/*
+border: 1px solid  rgb(85, 255, 125);
+color: rgb(85, 255, 125);
+*/
+border: 1px solid white;
+color: white;
 border-radius: 2px;
 margin-top: 0.5em;
-border-color: black;
 font-family: 'Arial';
-font-size: 14px;}
+font-size: 16px;}
 
 QGroupBox::title{
 subcontrol-position: top center;
@@ -34,15 +41,14 @@ padding: 0 3px 0 3px;}
 
 
 
-/*
-QMainWindow{background-color: rgb(60, 70, 80);}
-QLabel{color: white;}
-QStatusBar{background: rgb(50, 50, 50);}
+
+
+
 
 QMenu {
 border: 1px solid black;
 color: white;
-background: rgb(30, 40, 50);}
+background: rgb(50, 50, 50);}
 
 QMenu::item:hover { 
 background: black;}
@@ -51,7 +57,7 @@ QMenu::item:selected {
 background: black;}
 
 QMenuBar{
-background: rgb(30, 40, 50);
+background: rgb(50, 50, 50);
 spacing: 12px;
 color: white;
 font-size:16px;}
@@ -59,10 +65,20 @@ font-size:16px;}
 QMenuBar::item{
 spacing: 3px; 
 padding: 1px 4px;
-border-radius: 5px;
+border-radius: 2px;
 }
 
-QMenuBar::item:selected{background: black;}
+QMenuBar::item:selected{background: rgb(70, 70, 70);}
+
+
+
+
+QTextBrowser{
+border-radius: 2px;
+background-color: rgb(100, 100, 100);
+color: white;
+}
+
 
 
 QComboBox{
@@ -85,17 +101,16 @@ QComboBox::drop-down {}
 
 
 QPushButton{
-border: 1px solid black;
+border-radius: 2px;
 color: white;
-background-color: rgb(60, 70, 80);
+border: 1 px solid black;
+background-color: rgb(100, 100, 100);
 }
 QPushButton:hover{
-border: 1px solid white;
+background-color: rgb(120, 120, 120);
 }
 QPushButton:pressed{
-border: 1px solid white;
-background-color: rgb(200, 200, 200);
-color: black;
+background-color: rgb(150, 150, 150);
 }
 
 
@@ -103,196 +118,47 @@ color: black;
 
 
 QLineEdit, QSpinBox, QDoubleSpinBox {
-background-color:black;
-color: white;
-border: 1px solid black;}
+border-radius: 2px;
+background-color: rgb(75, 75, 75);
+border: 1px solid rgb(50, 50, 50);
+color: white;}
 
 QLineEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover{
-border: 1px solid white;
-background-color: black;}
+background-color: rgb(100, 100, 100);}
 
 
-QScrollArea{
-background: transparent;
-border: 1px solid black;
-}
-QScrollArea QWidget{
-background: transparent;
-}
-
-QScrollArea QLineEdit{
-background-color:black;
-color: white;
-border: 1px solid black;}
-
-QScrollArea QSpinBox{
-background-color:black;
-color: white;
-border: 1px solid black;}
-
-QScrollArea QDoubleSpinBox{
-background-color:black;
-color: white;
-border: 1px solid black;}
 
 
-QScrollArea QLineEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover{
-border: 1px solid white;
-background-color: black;}
 
 
-QTableWidget{
-background-color:rgb(30, 40, 50);
-font-size: 12px;
-color: white
-}
 
 
-QScrollBar:vertical {
-background: rgb(120, 120, 120);
-width: 12px;
-}
 
-QScrollBar::handle:vertical {
-background: rgb(60, 70, 80);
-min-height: 40px;
-margin: 1px;
-}
-
-QScrollBar::handle:hover{border: 1px solid white;}
-
-QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
-background: black;
-}
-
-QScrollBar::add-line:vertical {
-border: none;
-background: none;
-width: 0px;
-height: 0px;
-}
-QScrollBar::sub-line:vertical {
-border: none;
-background: none;
-width: 0px;
-height: 0px;
-}
-
-QTabWidget{border: 1px  rgb(200, 200, 200);}
-
-QWidget#bias_seq_tab{
-background-color: rgb(60, 70, 80);
-border: 1px solid black;
-}
-QWidget#rh_gen_tab{
-background-color: rgb(60, 70, 80);
-border: 1px solid black;
-}
-QWidget#rh_seq_tab{
-background-color: rgb(60, 70, 80);
-border: 1px solid black;
-}
-QWidget#vac_tab{
-background-color: rgb(60, 70, 80);
-border: 1px solid black;
-}
-QWidget#press_seq_tab{
-background-color: rgb(60, 70, 80);
-border: 1px solid black;
-}
-QWidget#electrical_settings_tab{
-background-color: rgb(60, 70, 80);
-border: 1px solid black;
-}
-
-
-QTabWidget::pane {
-top: 0px; 
-background-color: rgb(60, 70, 80); } 
-
-QTabBar::tab {
-border: 1px solid rgb(60, 70, 80);
-background: black; 
-color: rgb(200, 200, 200);
-padding: 6px;} 
-
-QTabBar::tab:selected { 
-background-color: rgb(200, 200, 200);
-color: black;
-margin-bottom: -2px; }
-
-QTabBar::tab:hover {
-border: 1px solid white;
-color: white;}
-
-QTextBrowser
-{border: 1px solid black;
-color: black;
-background-color: rgb(200, 200, 200);}
-
-QHeaderView{
-spacing: 10px;
-background-color: white;
-color: black;
-text-align: right;
-font-family: arial;
-font-size: 12px;}
-
-
-QGroupBox{
-color: white;
-border: 1px solid gray;
-border-radius: 2px;
-margin-top: 0.5em;
-border-color: white;
-font-family: 'Arial';
-font-size: 18px;}
-
-QGroupBox::title{
-subcontrol-position: top center;
-subcontrol-origin: margin;
-padding: 0 3px 0 3px;}
-
-
-QGroupBox#vac_seq_groupbox{
-color: white;
-border: 1px solid black;
-border-radius: 2px;
-margin-top: 0.5em;
-font-family: 'Arial';
-font-size: 12px;
-}
-
-QGroupBox#rh_seq_groupbox{
-color: white;
-border: 1px solid black;
-border-radius: 2px;
-margin-top: 0.5em;
-font-family: 'Arial';
-font-size: 12px;
-}
 
 QRadioButton, QCheckBox {
+border-radius: 2px;
 color: white;}
 
+
 QRadioButton::indicator, QCheckBox::indicator {
+border: 1px solid rgb(60, 60, 60);
 width: 13px;
 height: 13px;}
 
 QRadioButton::indicator::unchecked, QCheckBox::indicator::unchecked {
-border: 1px solid black;
-background:  black;}
+background: rgb(100, 100, 100);}
+
 
 QRadioButton::indicator::checked, QCheckBox::indicator::checked {
-border: rgb(200, 200, 200);;
-background: rgb(200, 200, 200);}
+background: rgb(85, 255, 125);}
+
+
 
 QRadioButton::indicator:unchecked:hover, QCheckBox::indicator:unchecked:hover {
-border: 1px solid white;
-background: black;}
+background: rgb(150, 150, 150);}
 
 QRadioButton::indicator:checked:hover, QCheckBox::indicator:checked:hover {
-border: 1px solid black;
+background: rgb(220, 220, 220);
 }
 </string>
   </property>
@@ -303,7 +169,7 @@ border: 1px solid black;
       <x>20</x>
       <y>20</y>
       <width>231</width>
-      <height>191</height>
+      <height>211</height>
      </rect>
     </property>
     <property name="font">
@@ -321,51 +187,14 @@ border: 1px solid black;
     <widget class="QWidget" name="gridLayoutWidget_5">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>30</x>
        <y>30</y>
-       <width>181</width>
-       <height>151</height>
+       <width>182</width>
+       <height>131</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout_5">
-      <item row="4" column="1">
-       <widget class="QSpinBox" name="pulse_number">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>1000000000</number>
-        </property>
-        <property name="value">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>SRS DG645</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_pulsewidth">
-        <property name="text">
-         <string>Width (ms)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_pulsedelay">
-        <property name="text">
-         <string>Delay (ms)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
+      <item row="0" column="2">
        <widget class="QLineEdit" name="pulsegen_address">
         <property name="maximumSize">
          <size>
@@ -381,36 +210,14 @@ border: 1px solid black;
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QDoubleSpinBox" name="pulse_width">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="decimals">
-         <number>3</number>
-        </property>
-        <property name="minimum">
-         <double>0.001000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>1000.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>0.001000000000000</double>
-        </property>
-        <property name="value">
-         <double>1.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_pulsenumber">
+      <item row="0" column="1">
+       <widget class="QLabel" name="label">
         <property name="text">
-         <string>Number</string>
+         <string>SRS DG645</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="3" column="2">
        <widget class="QDoubleSpinBox" name="pulse_amplitude">
         <property name="enabled">
          <bool>true</bool>
@@ -432,7 +239,7 @@ border: 1px solid black;
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="2" column="2">
        <widget class="QDoubleSpinBox" name="pulse_delay">
         <property name="enabled">
          <bool>true</bool>
@@ -454,31 +261,96 @@ border: 1px solid black;
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <widget class="QCheckBox" name="pulsegen_on">
-        <property name="text">
-         <string/>
+      <item row="1" column="2">
+       <widget class="QDoubleSpinBox" name="pulse_width">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="decimals">
+         <number>3</number>
+        </property>
+        <property name="minimum">
+         <double>0.001000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>1000.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.001000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="1" column="1">
+       <widget class="QLabel" name="label_pulsewidth">
+        <property name="text">
+         <string>Width (ms)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
        <widget class="QLabel" name="label_pulseamplitude">
         <property name="text">
          <string>Amplitude (V)</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="1">
-       <widget class="QPushButton" name="trigger_pulses">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
+      <item row="2" column="1">
+       <widget class="QLabel" name="label_pulsedelay">
         <property name="text">
-         <string>Trigger pulses</string>
+         <string>Delay (ms)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLabel" name="label_pulsenumber">
+        <property name="text">
+         <string>Number</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QSpinBox" name="pulse_number">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>1000000000</number>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QCheckBox" name="pulsegen_on">
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </item>
      </layout>
+    </widget>
+    <widget class="QPushButton" name="trigger_pulses">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>170</y>
+       <width>94</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Trigger pulses</string>
+     </property>
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_output">
@@ -888,7 +760,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>181</width>
+       <width>199</width>
        <height>75</height>
       </rect>
      </property>
@@ -966,14 +838,14 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="title">
-     <string>Thorlabs motor controllers</string>
+     <string>Thorlabs controllers</string>
     </property>
     <widget class="QWidget" name="gridLayoutWidget_4">
      <property name="geometry">
       <rect>
        <x>20</x>
        <y>60</y>
-       <width>191</width>
+       <width>216</width>
        <height>109</height>
       </rect>
      </property>
@@ -1012,7 +884,7 @@ p, li { white-space: pre-wrap; }
        <widget class="QPushButton" name="polarizer_move_to">
         <property name="maximumSize">
          <size>
-          <width>500</width>
+          <width>50</width>
           <height>16777215</height>
          </size>
         </property>
@@ -1052,7 +924,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>240</y>
-       <width>201</width>
+       <width>241</width>
        <height>109</height>
       </rect>
      </property>
@@ -1082,7 +954,7 @@ p, li { white-space: pre-wrap; }
        <widget class="QPushButton" name="analyzer_move_to">
         <property name="maximumSize">
          <size>
-          <width>500</width>
+          <width>50</width>
           <height>16777215</height>
          </size>
         </property>
@@ -1336,8 +1208,8 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>907</width>
-     <height>21</height>
+     <width>906</width>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
