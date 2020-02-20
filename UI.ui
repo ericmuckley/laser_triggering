@@ -14,22 +14,42 @@
    <string>Laser triggering</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">
-QMainWindow{background-color: rgb(60, 60, 60);}
-QLabel{color: white;}
+   <string notr="true">/*
+QMainWindow{
+background-color: rgb(60, 60, 60);}
+QLabel{
+color: white;}
 
+
+QMenu {
+border: 2px solid black;
+color: white;
+background: rgb(50, 50, 50);}
+QMenu::item:hover { 
+background: rgb(90, 120, 90);}
+QMenu::item:selected { 
+background: rgb(90, 120, 90);}
+QMenuBar{
+background: rgb(50, 50, 50);
+spacing: 12px;
+color: white;
+font-size:16px;}
+QMenuBar::item{
+spacing: 3px; 
+padding: 1px 4px;
+border-radius: 2px;}
+QMenuBar::item:selected{
+background: rgb(90, 120, 90);}
 
 
 
 QGroupBox{
-
-border: 1px solid white;
+border: 1px solid rgb(90, 120, 90);
 color: white;
 border-radius: 2px;
 margin-top: 0.5em;
 font-family: 'Arial';
 font-size: 16px;}
-
 QGroupBox::title{
 subcontrol-position: top center;
 subcontrol-origin: margin;
@@ -38,42 +58,36 @@ padding: 0 3px 0 3px;}
 
 
 
-
-
-
-QMenu {
-border: 1px solid black;
-color: white;
-background: rgb(50, 50, 50);}
-
-QMenu::item:hover { 
-background: black;}
-
-QMenu::item:selected { 
-background: black;}
-
-QMenuBar{
-background: rgb(50, 50, 50);
-spacing: 12px;
-color: white;
-font-size:16px;}
-
-QMenuBar::item{
-spacing: 3px; 
-padding: 1px 4px;
+QPushButton{
 border-radius: 2px;
-}
+color: white;
+border: 1px solid black;
+background-color: rgb(90, 90, 90);}
+QPushButton:hover{
+background-color: rgb(90, 120, 90);}
+QPushButton:pressed{
+color: black;
+background-color: rgb(85, 255, 125);}
 
-QMenuBar::item:selected{background: rgb(70, 70, 70);}
+
+
+
+QLineEdit, QSpinBox, QDoubleSpinBox {
+border-radius: 2px;
+background-color: rgb(90, 90, 90);
+border: 1px solid black;
+color: white;}
+QLineEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover{
+background-color: rgb(90, 120, 90);}
 
 
 
 
 QTextBrowser{
 border-radius: 2px;
-background-color: rgb(100, 100, 100);
+background-color: rgb(90, 90, 90);
 color: white;
-}
+border: 1px solid black;}
 
 
 
@@ -81,83 +95,44 @@ QComboBox{
 border: 1px solid black;
 background-color: black;
 color: white;}
-
 QComboBox:hover{
 border: 1px solid white;}
-
 QComboBox QAbstractItemView {
 border: 1px solid black;
 selection-background-color: rgb(0, 0, 0);
 }
-
 QComboBox::drop-down {}
 
 
 
 
 
-QPushButton{
-border-radius: 2px;
-color: white;
-border: 1 px solid black;
-background-color: rgb(100, 100, 100);
-}
-QPushButton:hover{
-background-color: rgb(120, 120, 120);
-}
-QPushButton:pressed{
-background-color: rgb(150, 150, 150);
-}
-
-
-
-
-
-QLineEdit, QSpinBox, QDoubleSpinBox {
-border-radius: 2px;
-background-color: rgb(100, 100, 100);
-border: 1px solid rgb(60, 60, 60);
-color: white;}
-
-QLineEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover{
-background-color: rgb(100, 100, 100);
-border: 1px solid rgb(125, 125, 125);}
-
-
-
-
-
-
-
-
-
-
-
-QRadioButton, QCheckBox {
-border-radius: 2px;
-color: white;}
 
 
 QRadioButton::indicator, QCheckBox::indicator {
-border: 1px solid rgb(60, 60, 60);
 width: 13px;
-height: 13px;}
+height: 13px;
+border-radius: 2px;
+border:1px solid black;
+background: rgb(90, 90, 90);}
 
-QRadioButton::indicator::unchecked, QCheckBox::indicator::unchecked {
-background: rgb(100, 100, 100);}
+QRadioButton::indicator:unchecked:hover, QCheckBox::indicator:unchecked:hover {
+background: rgb(90, 120, 90);}
 
+QRadioButton::indicator:unchecked:pressed, QCheckBox::indicator:unchecked:pressed {
+background: rgb(85, 255, 125);
+border: 1px solid white;}
 
 QRadioButton::indicator::checked, QCheckBox::indicator::checked {
 background: rgb(85, 255, 125);}
 
+QRadioButton::indicator::checked:hover, QCheckBox::indicator::checked:hover {
+background: rgb(85, 255, 125);
+border-color: black;}
 
-
-QRadioButton::indicator:unchecked:hover, QCheckBox::indicator:unchecked:hover {
-background: rgb(150, 150, 150);}
-
-QRadioButton::indicator:checked:hover, QCheckBox::indicator:checked:hover {
-background: rgb(220, 220, 220);
-}
+QRadioButton::indicator:checked:pressed, QCheckBox::indicator:checked:pressed {
+background: rgb(85, 255, 125);
+border: 1px solid white;}
 </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -173,7 +148,6 @@ background: rgb(220, 220, 220);
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>-1</pointsize>
      </font>
     </property>
     <property name="title">
@@ -186,9 +160,9 @@ background: rgb(220, 220, 220);
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>30</y>
+       <y>20</y>
        <width>182</width>
-       <height>137</height>
+       <height>151</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout_5">
@@ -348,13 +322,13 @@ background: rgb(220, 220, 220);
      <property name="geometry">
       <rect>
        <x>70</x>
-       <y>170</y>
+       <y>180</y>
        <width>94</width>
        <height>23</height>
       </rect>
      </property>
      <property name="text">
-      <string>Trigger pulses</string>
+      <string>Send pulses</string>
      </property>
     </widget>
    </widget>
@@ -370,7 +344,6 @@ background: rgb(220, 220, 220);
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>-1</pointsize>
      </font>
     </property>
     <property name="title">
@@ -418,7 +391,6 @@ p, li { white-space: pre-wrap; }
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>-1</pointsize>
      </font>
     </property>
     <property name="title">
@@ -492,7 +464,6 @@ p, li { white-space: pre-wrap; }
     <property name="font">
      <font>
       <family>Arial</family>
-      <pointsize>-1</pointsize>
      </font>
     </property>
     <property name="title">
@@ -542,7 +513,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>183</width>
-       <height>91</height>
+       <height>94</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="formLayout">
@@ -647,7 +618,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>181</width>
-       <height>65</height>
+       <height>69</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout">
@@ -1057,12 +1028,12 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>170</y>
-       <width>98</width>
+       <width>101</width>
        <height>23</height>
       </rect>
      </property>
      <property name="text">
-      <string>Get polarizer angle</string>
+      <string>Get current angle</string>
      </property>
     </widget>
     <widget class="QPushButton" name="analyzer_home">
@@ -1088,7 +1059,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Get analyzer angle</string>
+      <string>Get current angle</string>
      </property>
     </widget>
     <widget class="QPushButton" name="analyzer_move_to">
@@ -1118,7 +1089,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>840</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

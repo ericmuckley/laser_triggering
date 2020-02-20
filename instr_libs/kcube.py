@@ -119,7 +119,9 @@ if __name__ == '__main__':
     #print(dev.is_in_motion)
     #dev.set_velocity_parameters(0, 25, 25)
     # max velocity and aceleration = 25.0
-    #motor.move_home(True)
-    dev.move_to(90)
-    #dev.move_by(15)
+    #dev.set_move_home_parameters(direction, lim_switch, velocity,zero_offset)
+    #print(dev.get_move_home_parameters())
+    #dev.move_home()
+    #dev.move_to(20)
+    #dev.move_by(5)
     print(dev.position)
