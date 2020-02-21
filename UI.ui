@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>840</width>
-    <height>702</height>
+    <width>911</width>
+    <height>738</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,6 +19,11 @@ QMainWindow{
 background-color: rgb(60, 60, 60);}
 QLabel{
 color: white;}
+
+.QFrame{
+border-radius: 2px;
+border: 1px solid rgb(90, 120, 90);
+}
 
 
 QMenu {
@@ -335,8 +340,8 @@ border: 1px solid white;}
    <widget class="QGroupBox" name="groupBox_output">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>400</y>
+      <x>350</x>
+      <y>370</y>
       <width>451</width>
       <height>251</height>
      </rect>
@@ -455,8 +460,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>150</y>
+      <x>580</x>
+      <y>190</y>
       <width>221</width>
       <height>171</height>
      </rect>
@@ -512,7 +517,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>183</width>
+       <width>191</width>
        <height>94</height>
       </rect>
      </property>
@@ -603,8 +608,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_scope">
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>180</y>
+      <x>330</x>
+      <y>160</y>
       <width>221</width>
       <height>191</height>
      </rect>
@@ -816,270 +821,203 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>240</y>
-      <width>231</width>
-      <height>411</height>
+      <y>250</y>
+      <width>261</width>
+      <height>371</height>
      </rect>
     </property>
     <property name="title">
      <string>Thorlabs controllers</string>
     </property>
-    <widget class="QWidget" name="gridLayoutWidget_4">
+    <widget class="QFrame" name="p_frame">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>60</y>
-       <width>191</width>
-       <height>81</height>
+       <y>30</y>
+       <width>221</width>
+       <height>151</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="gridLayout_4">
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="polarizer_address">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>27255762</string>
-        </property>
-        <property name="placeholderText">
-         <string>27255762</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="polarizer_label">
-        <property name="text">
-         <string>Address</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QDoubleSpinBox" name="polarizer_angle"/>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="polarizer_label_2">
-        <property name="text">
-         <string>Polarizer controller</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="polarizer_on">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Angle (deg)</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="gridLayoutWidget_7">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>237</y>
-       <width>191</width>
-       <height>81</height>
-      </rect>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
      </property>
-     <layout class="QGridLayout" name="gridLayout_7">
-      <item row="2" column="1">
-       <widget class="QDoubleSpinBox" name="analyzer_angle"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="analyzer_label">
-        <property name="text">
-         <string>Address</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="analyzer_address">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>27255929</string>
-        </property>
-        <property name="placeholderText">
-         <string>27255929</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="analyzer_on">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="polarizer_label_3">
-        <property name="text">
-         <string>Analyzer controller</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Angle (deg)</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <widget class="QWidget" name="gridLayoutWidget_4">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>196</width>
+        <height>84</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="polarizer_address">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>27255762</string>
+         </property>
+         <property name="placeholderText">
+          <string>27255762</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="polarizer_label">
+         <property name="text">
+          <string>Address</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QDoubleSpinBox" name="polarizer_angle"/>
+       </item>
+       <item row="2" column="2">
+        <widget class="QLabel" name="current_p_angle">
+         <property name="text">
+          <string>---       </string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="polarizer_label_2">
+         <property name="text">
+          <string>Polarizer controller</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QCheckBox" name="polarizer_on">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Angle (deg)</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QPushButton" name="polarizer_home">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>110</y>
+        <width>98</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Go home</string>
+      </property>
+     </widget>
     </widget>
-    <widget class="Line" name="line">
+    <widget class="QFrame" name="a_frame">
      <property name="geometry">
       <rect>
        <x>20</x>
        <y>200</y>
-       <width>181</width>
-       <height>20</height>
+       <width>221</width>
+       <height>151</height>
       </rect>
      </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
      </property>
-    </widget>
-    <widget class="QLabel" name="label_3">
-     <property name="geometry">
-      <rect>
-       <x>80</x>
-       <y>30</y>
-       <width>61</width>
-       <height>16</height>
-      </rect>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Polarizer</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_4">
-     <property name="geometry">
-      <rect>
-       <x>80</x>
-       <y>210</y>
-       <width>61</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Analyzer</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="polarizer_move_to">
-     <property name="geometry">
-      <rect>
-       <x>70</x>
-       <y>140</y>
-       <width>98</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Set angle (deg)</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="polarizer_home">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>170</y>
-       <width>98</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Go home</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="get_p_angle">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>170</y>
-       <width>101</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Get current angle</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="analyzer_home">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>380</y>
-       <width>98</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Go home</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="get_a_angle">
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>380</y>
-       <width>98</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Get current angle</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="analyzer_move_to">
-     <property name="geometry">
-      <rect>
-       <x>60</x>
-       <y>340</y>
-       <width>98</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Set angle (deg)</string>
-     </property>
+     <widget class="QWidget" name="gridLayoutWidget_7">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>202</width>
+        <height>87</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_7">
+       <item row="2" column="1">
+        <widget class="QDoubleSpinBox" name="analyzer_angle"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="analyzer_label">
+         <property name="text">
+          <string>Address</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="analyzer_address">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>27255929</string>
+         </property>
+         <property name="placeholderText">
+          <string>27255929</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QCheckBox" name="analyzer_on">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="polarizer_label_3">
+         <property name="text">
+          <string>Analyzer controller</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QLabel" name="current_a_angle">
+         <property name="text">
+          <string>---       </string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Angle (deg)</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QPushButton" name="analyzer_home">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>110</y>
+        <width>98</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Go home</string>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
@@ -1088,7 +1026,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>840</width>
+     <width>911</width>
      <height>21</height>
     </rect>
    </property>

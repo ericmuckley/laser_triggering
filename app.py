@@ -81,6 +81,13 @@ class App(QMainWindow):
         # initialize multithreading
         self.threadpool = QtCore.QThreadPool()
 
+
+        # create timer which updates fields on GUI (set interval in ms)
+        self.timer = QtCore.QTimer(self)
+        self.timer.timeout.connect(self.main_loop)
+        self.timer.start(1500)#int(self.ui.set_main_loop_delay.value()))
+
+
         # assign functions to top menu items
         # example: self.ui.menu_item_name.triggered.connect(self.func_name)
         self.ui.quit_app.triggered.connect(self.quitapp)
@@ -105,10 +112,8 @@ class App(QMainWindow):
         self.ui.avacs_set_now.clicked.connect(self.avacs_set_now)
         self.ui.polarizer_on.clicked.connect(self.polarizer_on)
         self.ui.analyzer_on.clicked.connect(self.analyzer_on)
-        self.ui.analyzer_move_to.clicked.connect(self.analyzer_move_to)
-        self.ui.polarizer_move_to.clicked.connect(self.polarizer_move_to)
-        self.ui.get_p_angle.clicked.connect(self.get_p_angle)
-        self.ui.get_a_angle.clicked.connect(self.get_a_angle)
+        self.ui.polarizer_home.clicked.connect(self.polarizer_home)
+        self.ui.analyzer_home.clicked.connect(self.analyzer_home)
         
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
@@ -180,14 +185,12 @@ class App(QMainWindow):
                 'p_on': self.ui.polarizer_on,
                 'ahome': self.ui.analyzer_home,
                 'phome': self.ui.polarizer_home,
-                'aset': self.ui.analyzer_move_to,
-                'pset': self.ui.polarizer_move_to,
                 'aangle': self.ui.analyzer_angle,
                 'pangle': self.ui.polarizer_angle,
-                'get_p_angle': self.ui.get_p_angle,
-                'get_a_angle': self.ui.get_a_angle,
                 'aaddress': self.ui.analyzer_address,
-                'paddress': self.ui.polarizer_address}
+                'paddress': self.ui.polarizer_address,
+                'curr_pangle_label': self.ui.current_p_angle,
+                'curr_aangle_label': self.ui.current_a_angle}
         
 
         # kill the process which opens LightField if its already running
@@ -209,8 +212,26 @@ class App(QMainWindow):
         self.ui.avacs_set_now.setEnabled(False)
 
 
+    # %% ======= define main loop which repeats continuously =============
+
+    def main_loop(self):
+        """Function to execute on a regularly based on timer. Use this
+        for continuously updating GUI objects."""
+        
+        # update current polarizer and analyzer angles on GUI
+        if self.kcube['p_on'].isChecked():
+            kcube.polarizer_move_to(self.kcube)
+        if self.kcube['a_on'].isChecked():
+            kcube.analyzer_move_to(self.kcube)
+ 
+                
+                
+
 
     # %% ======= experimental sequence control functions =================
+
+
+
 
     def abort_seq(self):
         """Abort the expreimental sequence."""
@@ -274,15 +295,13 @@ class App(QMainWindow):
         """Move the polarizer to specified angle."""
         kcube.polarizer_move_to(self.kcube)
 
-    def get_a_angle(self):
-        """Get current angle of the analyzer."""
-        kcube.get_a_angle(self.kcube)
-    
-    def get_p_angle(self):
-        """Get current angle of the polarizer."""
-        kcube.get_p_angle(self.kcube)
+    def polarizer_home(self):
+        """Move the polarizer to its home position."""
+        kcube.polarizer_home(self.kcube)
 
-        
+    def analyzer_home(self):
+        """Move the analizer to its home position."""
+        kcube.analyzer_home(self.kcube)
 
 
 
@@ -400,6 +419,8 @@ class App(QMainWindow):
             self.avacs['dev'].close()
         # kill the process which opens LightField if its already running
         #os.system("taskkill /f /im AddInProcess.exe")
+        # stop timer
+        self.timer.stop()  
         # close app window and kill python kernel
         self.deleteLater()
         self.close()  
