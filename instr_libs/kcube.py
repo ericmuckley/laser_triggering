@@ -82,7 +82,7 @@ def polarizer_move_to(kcube):
     angle = int(kcube['pangle'].value())
     kcube['pdev'].move_to(angle)
     kcube['curr_pangle_label'].setText(
-            str(round(kcube['pdev'].position, 1)))
+            str(round(kcube['pdev'].position)))
     
 
 def analyzer_move_to(kcube):
@@ -90,7 +90,7 @@ def analyzer_move_to(kcube):
     angle = int(kcube['aangle'].value())
     kcube['adev'].move_to(angle)
     kcube['curr_aangle_label'].setText(
-            str(round(kcube['adev'].position, 1)))  
+            str(round(kcube['adev'].position)))  
 
 
 def polarizer_home(kcube):

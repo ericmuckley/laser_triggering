@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>911</width>
-    <height>738</height>
+    <width>845</width>
+    <height>659</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -138,7 +138,7 @@ border-color: black;}
 QRadioButton::indicator:checked:pressed, QCheckBox::indicator:checked:pressed {
 background: rgb(85, 255, 125);
 border: 1px solid white;}
-</string>
+                                                         </string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBox_configurepulses">
@@ -849,7 +849,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>196</width>
+        <width>201</width>
         <height>84</height>
        </rect>
       </property>
@@ -876,9 +876,6 @@ p, li { white-space: pre-wrap; }
           <string>Address</string>
          </property>
         </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="polarizer_angle"/>
        </item>
        <item row="2" column="2">
         <widget class="QLabel" name="current_p_angle">
@@ -907,6 +904,9 @@ p, li { white-space: pre-wrap; }
           <string>Angle (deg)</string>
          </property>
         </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QSpinBox" name="polarizer_angle"/>
        </item>
       </layout>
      </widget>
@@ -944,14 +944,11 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>202</width>
+        <width>201</width>
         <height>87</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_7">
-       <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="analyzer_angle"/>
-       </item>
        <item row="1" column="0">
         <widget class="QLabel" name="analyzer_label">
          <property name="text">
@@ -1003,6 +1000,9 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
+       <item row="2" column="1">
+        <widget class="QSpinBox" name="analyzer_angle"/>
+       </item>
       </layout>
      </widget>
      <widget class="QPushButton" name="analyzer_home">
@@ -1026,7 +1026,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>911</width>
+     <width>845</width>
      <height>21</height>
     </rect>
    </property>
