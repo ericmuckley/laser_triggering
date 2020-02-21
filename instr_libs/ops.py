@@ -28,14 +28,16 @@ def show_help():
     """Show help popup window. First, generate the HTML using the markdown
     README.md file. Then show the HTML page in the default browser."""
     # get parent directory
-    parent_folder = os.path.normpath(os.getcwd() + os.sep + os.pardir)
+    #parent_folder = os.path.normpath(os.getcwd() + os.sep + os.pardir)
     # generate html page from markdown README.md file
     md_filename = os.path.join(os.getcwd(), 'README.md')
     #md_filename = os.path.join(parent_folder, 'README.md')
-    html_filename = os.path.join(parent_folder, 'README.html')
+    html_filename = os.path.join(os.getcwd(), 'README.html')
     markdown.markdownFromFile(input=md_filename, output=html_filename)                            
     # open help in web browser
     webbrowser.open(html_filename)
+
+
 
 
 
