@@ -81,18 +81,16 @@ class App(QMainWindow):
         # initialize multithreading
         self.threadpool = QtCore.QThreadPool()
 
-
         # create timer which updates fields on GUI (set interval in ms)
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.main_loop)
         self.timer.start(1500)#int(self.ui.set_main_loop_delay.value()))
 
-
         # assign functions to top menu items
         # example: self.ui.menu_item_name.triggered.connect(self.func_name)
         self.ui.quit_app.triggered.connect(self.quitapp)
         self.ui.print_ports.triggered.connect(self.print_ports)
-        self.ui.show_help.triggered.connect(self.show_help_popup)
+        self.ui.show_help.triggered.connect(ops.show_help)
         self.ui.show_log_path.triggered.connect(self.show_log_path)
         self.ui.show_file_list.triggered.connect(self.show_file_list)
         self.ui.plot_spectra.triggered.connect(self.plot_file_list)
@@ -121,24 +119,26 @@ class App(QMainWindow):
         self.ui.mso_on.stateChanged.connect(self.mso_on)
         self.ui.avacs_on.stateChanged.connect(self.avacs_on)
 
-        
-        
-        
+
         # intialize log file for logging experimental settings
-        self.filedir = os.getcwd()+'\\logs'
-        if not os.path.exists(self.filedir):
-            os.makedirs(self.filedir)
+        self.filedir = os.getcwd()
+        self.logdir = self.filedir + '\\logs\\'
+        if not os.path.exists(self.logdir):
+            os.makedirs(self.logdir)
         self.starttime = time.strftime('%Y-%m-%d_%H-%M-%S')
+
 
         # intialize dictionaries for transporting GUI data to other modules
         self.ops = {
                 'app': self.ui,
                 'row_counter': 0,
+                'logdir': self.logdir,
                 'filedir': self.filedir,
                 'outbox': self.ui.outbox,
                 'starttime': self.starttime,
                 'data': np.full((1000, 7), '', dtype=object),
-                'path': self.filedir+'\\'+self.starttime+'.csv'}
+                'logpath': self.logdir+self.starttime+'.csv'}
+
         self.avacs = {
                 'dev': None,
                 'on': self.ui.avacs_on,
@@ -161,7 +161,7 @@ class App(QMainWindow):
         self.mso = {
                 'dev': None,
                 'on': self.ui.mso_on,
-                'filedir': self.filedir,
+                'logdir': self.logdir,
                 'outbox': self.ui.outbox,
                 'address': self.ui.mso_address,
                 'acquire': self.ui.scope_acquire,
@@ -377,10 +377,10 @@ class App(QMainWindow):
 
     def set_filedir(self):
         # set the directory for saving data files
-        self.ops['filedir'] = str(QFileDialog.getExistingDirectory(
+        self.ops['logdir'] = str(QFileDialog.getExistingDirectory(
                 self, 'Create or select directory for data files.'))
         self.ui.outbox.append('Save file directory set to:')
-        self.ui.outbox.append(self.ops['filedir'])
+        self.ui.outbox.append(self.ops['logdir'])
 
     def export_settings(self):
         """Export all GUI settings to file."""
@@ -392,9 +392,9 @@ class App(QMainWindow):
                 self, 'Select experiment settings file', '.ini')[0]
         ops.import_settings(self.ops, import_settings_filepath)
 
-    def show_help_popup(self):
-        """Show the help popup message."""
-        ops.show_help_popup(self.ops)
+    #def show_help():
+    #    """Show the help popup message."""
+    #    ops.show_help()
 
     def show_log_path(self):
         """Show the path to the log file."""

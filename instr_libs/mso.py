@@ -87,7 +87,7 @@ def export_scope_trace(mso):
     """Export most recent oscilloscope trace to file."""
     df = pd.DataFrame(data=mso['last_sig'],
                       columns=['time', 'signal'])
-    path = mso['filedir']+'\\'+mso['last_sig_ts']+'__scope_trace.csv'
+    path = mso['logdir']+'\\'+mso['last_sig_ts']+'__scope_trace.csv'
     df.to_csv(path, index=False)
     mso['outbox'].append('Oscilloscope trace exported.')
     

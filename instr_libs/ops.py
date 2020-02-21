@@ -24,52 +24,20 @@ import webbrowser
 
 
 
-def show_help_popup():
+def show_help():
     """Show help popup window. First, generate the HTML using the markdown
     README.md file. Then show the HTML page in the default browser."""
     # get parent directory
     parent_folder = os.path.normpath(os.getcwd() + os.sep + os.pardir)
     # generate html page from markdown README.md file
-    md_filename = os.path.join(parent_folder, 'README.md')
+    md_filename = os.path.join(os.getcwd(), 'README.md')
+    #md_filename = os.path.join(parent_folder, 'README.md')
     html_filename = os.path.join(parent_folder, 'README.html')
-    markdown.markdownFromFile(input=md_filename,
-                                     output=html_filename)
+    markdown.markdownFromFile(input=md_filename, output=html_filename)                            
     # open help in web browser
     webbrowser.open(html_filename)
 
 
-
-'''
-def show_help_popup(ops):
-    """Show the help popup message."""
-    help_message = (
-        "HELP"
-        "\n=========================================================\n"
-        "Click 'Menu --> Show available serial ports' to check "
-        "available ports. "
-        "To communicate with the SRS DG645 pulse generator, "
-        "enter the serial port address (e.g. COM6) in the address "
-        "field and use the checkbox to connect to the device. "
-        "Adjust the pulse "
-        "width, pulse delay, pulse maplitude, and number of "
-        "pulses in the edit boxes. Then click 'Trigger pulses' "
-        "to send pulses from the SRS. "
-        "Uncheck the box to disconnect from the device."
-        "\n=========================================================\n"
-        "To configure LightField, first open LightField by "
-        "clicking 'Launch LightField.' Then configure all desired "
-        "settings inside LightField. To acquire, click 'Acquire'. "
-        "\n=========================================================\n"
-        "To run the experimental sequence, check boxes for the "
-        "pulse triggering and acquisition. Then click 'Run sequence'. "
-        "Click 'Abort sequence' to stop the sequence prematurely."
-        "\n=========================================================\n"
-        )
-    help_popup = QtWidgets.QMessageBox()
-    help_popup.setWindowTitle('Help')
-    help_popup.setText(help_message)
-    help_popup.exec_()
-'''
 
 def show_log_path(ops):
     """Show the path to the log file."""

@@ -1,8 +1,24 @@
 <h1>Laser triggering</h1>
-<h2><strong>This repo is currently under construction</strong></h2>
 <p>This respository contains code for an application which allows automated laser processing, including triggering of laser pulses, acquisition of Raman spectra, acquisition of traces from an oscilloscope, and motorized control of halfwave plates and polarizers.</p>
 <h2>Use</h2>
 <p>The application is started by running the <code>app.py</code> file.</p>
+<h3>Connecting to instruments</h3>
+<p>To view the avilable instrument ports, navigate to <strong>Menu -&gt; Show avilable instrument ports</strong>. Addresses of each avilable VISA, serial, and FTID USB port will be printed in the output box. To connect with a particular instrument, navigate to the box for that instrument on the front panel of the GUI. Enter the appropriate address for the instrument in the <strong>Address</strong> field, and click the checkbox adjacent to the address field to connect to the instrument. For example: to communicate with the SRS DG645 pulse generator, enter the serial port address (e.g. COM6) in the address field and select the checkbox to connect to the device. The output box will indicate if connection to the instrument was successful. If the connection failed, check the instument address and connection to the PC. The user may also determine whether the instument can be identified by the PC using Windows Device Manager or National Instruments Measurement &amp; Automation Explorer (NI MAX).</p>
+<h3>Connecting to LightField</h3>
+<p>To acquire Raman spectra using Princeton Instruments LightField software, LightField must be opened from the GUI by clicking <strong>Launch LightField*<em>.' Once LightField loads, the user should load the LightField experiment called <strong>Default Python Experiment</strong>. After the experiment is loaded, settings can be modified in LightField. Raman spectra can be acquired by clicking the **Acquuire Raman spectrum</em></strong> button the the GUI.</p>
+<h3>Running an experimental Sequence</h3>
+<pre><code>    "Adjust the pulse "
+    "width, pulse delay, pulse maplitude, and number of "
+    "pulses in the edit boxes. Then click **Trigger pulses** to send pulses from the SRS. "
+    "Uncheck the box to disconnect from the device."
+    "\n=========================================================\n"
+
+    "\n=========================================================\n"
+    "To run the experimental sequence, check boxes for the "
+    "pulse triggering and acquisition. Then click 'Run sequence'. "
+    "Click 'Abort sequence' to stop the sequence prematurely."
+    "\n=========================================================\n"
+</code></pre>
 <h2>Description of files</h2>
 <ul>
 <li><strong>Main repository</strong><ul>

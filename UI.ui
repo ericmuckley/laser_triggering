@@ -16,9 +16,12 @@
   <property name="styleSheet">
    <string notr="true">/*
 QMainWindow{
-background-color: rgb(60, 60, 60);}
+background-color: rgb(40, 40, 40);}
+
 QLabel{
-color: white;}
+color: white;
+font-size: 12px;
+font-family: 'Ubuntu';}
 
 .QFrame{
 border-radius: 2px;
@@ -26,16 +29,18 @@ border: 1px solid rgb(90, 120, 90);
 }
 
 
+
 QMenu {
 border: 2px solid black;
+font-size: 12px;
 color: white;
-background: rgb(50, 50, 50);}
+background: rgb(20, 20, 20);}
 QMenu::item:hover { 
 background: rgb(90, 120, 90);}
 QMenu::item:selected { 
 background: rgb(90, 120, 90);}
 QMenuBar{
-background: rgb(50, 50, 50);
+background: rgb(20, 20, 20);
 spacing: 12px;
 color: white;
 font-size:16px;}
@@ -53,7 +58,6 @@ border: 1px solid rgb(90, 120, 90);
 color: white;
 border-radius: 2px;
 margin-top: 0.5em;
-font-family: 'Arial';
 font-size: 16px;}
 QGroupBox::title{
 subcontrol-position: top center;
@@ -61,11 +65,10 @@ subcontrol-origin: margin;
 padding: 0 3px 0 3px;}
 
 
-
-
 QPushButton{
 border-radius: 2px;
 color: white;
+font-size: 12px;
 border: 1px solid black;
 background-color: rgb(90, 90, 90);}
 QPushButton:hover{
@@ -79,6 +82,7 @@ background-color: rgb(85, 255, 125);}
 
 QLineEdit, QSpinBox, QDoubleSpinBox {
 border-radius: 2px;
+font-size: 12px;
 background-color: rgb(90, 90, 90);
 border: 1px solid black;
 color: white;}
@@ -90,6 +94,7 @@ background-color: rgb(90, 120, 90);}
 
 QTextBrowser{
 border-radius: 2px;
+font-size: 12px;
 background-color: rgb(90, 90, 90);
 color: white;
 border: 1px solid black;}
@@ -99,6 +104,7 @@ border: 1px solid black;}
 QComboBox{
 border: 1px solid black;
 background-color: black;
+font-size: 12px;
 color: white;}
 QComboBox:hover{
 border: 1px solid white;}
@@ -138,7 +144,7 @@ border-color: black;}
 QRadioButton::indicator:checked:pressed, QCheckBox::indicator:checked:pressed {
 background: rgb(85, 255, 125);
 border: 1px solid white;}
-                                                         </string>
+</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBox_configurepulses">
@@ -166,7 +172,7 @@ border: 1px solid white;}
       <rect>
        <x>30</x>
        <y>20</y>
-       <width>182</width>
+       <width>202</width>
        <height>151</height>
       </rect>
      </property>
@@ -517,8 +523,8 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>191</width>
-       <height>94</height>
+       <width>244</width>
+       <height>96</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="formLayout">
@@ -622,8 +628,8 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>181</width>
-       <height>69</height>
+       <width>210</width>
+       <height>71</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout">
@@ -849,7 +855,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>207</width>
+        <width>232</width>
         <height>84</height>
        </rect>
       </property>
@@ -930,7 +936,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Go home</string>
+       <string>Home</string>
       </property>
      </widget>
     </widget>
@@ -954,7 +960,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>201</width>
+        <width>232</width>
         <height>87</height>
        </rect>
       </property>
@@ -1059,7 +1065,6 @@ p, li { white-space: pre-wrap; }
     <addaction name="print_ports"/>
     <addaction name="show_file_list"/>
     <addaction name="show_log_path"/>
-    <addaction name="show_help"/>
     <addaction name="separator"/>
     <addaction name="set_filedir"/>
     <addaction name="separator"/>
@@ -1068,7 +1073,14 @@ p, li { white-space: pre-wrap; }
     <addaction name="separator"/>
     <addaction name="quit_app"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="show_help"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuHelp"/>
   </widget>
   <action name="print_ports">
    <property name="text">
