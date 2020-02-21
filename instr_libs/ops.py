@@ -16,13 +16,30 @@ import pandas as pd
 import inspect
 import thorlabs_apt as apt
 from serial.tools import list_ports
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QLabel, QComboBox, QLineEdit, QSlider, QFileDialog
+from PyQt5.QtWidgets import QLabel, QComboBox, QLineEdit, QSlider
 from PyQt5.QtWidgets import QSpinBox, QDoubleSpinBox, QCheckBox, QRadioButton
 from PyQt5.QtCore import QSettings
+import markdown
+import webbrowser
 
 
 
+def show_help_popup():
+    """Show help popup window. First, generate the HTML using the markdown
+    README.md file. Then show the HTML page in the default browser."""
+    # get parent directory
+    parent_folder = os.path.normpath(os.getcwd() + os.sep + os.pardir)
+    # generate html page from markdown README.md file
+    md_filename = os.path.join(parent_folder, 'README.md')
+    html_filename = os.path.join(parent_folder, 'README.html')
+    markdown.markdownFromFile(input=md_filename,
+                                     output=html_filename)
+    # open help in web browser
+    webbrowser.open(html_filename)
+
+
+
+'''
 def show_help_popup(ops):
     """Show the help popup message."""
     help_message = (
@@ -52,7 +69,7 @@ def show_help_popup(ops):
     help_popup.setWindowTitle('Help')
     help_popup.setText(help_message)
     help_popup.exec_()
-
+'''
 
 def show_log_path(ops):
     """Show the path to the log file."""

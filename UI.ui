@@ -849,7 +849,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>201</width>
+        <width>207</width>
         <height>84</height>
        </rect>
       </property>
@@ -879,6 +879,12 @@ p, li { white-space: pre-wrap; }
        </item>
        <item row="2" column="2">
         <widget class="QLabel" name="current_p_angle">
+         <property name="minimumSize">
+          <size>
+           <width>40</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="text">
           <string>---       </string>
          </property>
@@ -906,7 +912,11 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QSpinBox" name="polarizer_angle"/>
+        <widget class="QSpinBox" name="polarizer_angle">
+         <property name="maximum">
+          <number>359</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -988,6 +998,12 @@ p, li { white-space: pre-wrap; }
        </item>
        <item row="2" column="2">
         <widget class="QLabel" name="current_a_angle">
+         <property name="minimumSize">
+          <size>
+           <width>40</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="text">
           <string>---       </string>
          </property>
@@ -1001,7 +1017,11 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QSpinBox" name="analyzer_angle"/>
+        <widget class="QSpinBox" name="analyzer_angle">
+         <property name="maximum">
+          <number>359</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

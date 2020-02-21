@@ -305,7 +305,6 @@ class App(QMainWindow):
 
 
 
-
     # %% ========= Princeton Instruments LightField control ==============
 
     def launch_lf_thread(self):

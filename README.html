@@ -1,0 +1,37 @@
+<h1>Laser triggering</h1>
+<h2><strong>This repo is currently under construction</strong></h2>
+<p>This respository contains code for an application which allows automated laser processing, including triggering of laser pulses, acquisition of Raman spectra, acquisition of traces from an oscilloscope, and motorized control of halfwave plates and polarizers.</p>
+<h2>Use</h2>
+<p>The application is started by running the <code>app.py</code> file.</p>
+<h2>Description of files</h2>
+<ul>
+<li><strong>Main repository</strong><ul>
+<li><strong>app.py</strong>: main file for starting the GUI application. Calls <em>ui.ui</em> and files inside <em>instr_files</em> directory to create the application.</li>
+<li><strong>README.md</strong>: the file you are reading, which describes instructuins for use</li>
+<li><strong>ui.ui</strong>: user interface file, created in QT Desginer, which is called by <em>app.py</em> and provides thelayout of graphical user interface widgets for the application.</li>
+<li><strong>RUN_LASER_TRIGGERING.bat</strong>: Windows bat file. Make a shortcut of this file and place it anywhere on the PC to run <em>app.py</em> by clicking on the shortcut.</li>
+<li><strong>requirements.txt</strong>: text file containing list of all dependencies. These can be installed using Anaconda as described in the <em>Installation</em> section below.</li>
+</ul>
+</li>
+<li><strong>instr_libs</strong><ul>
+<li><strong>avacs.py</strong>: modules for controlling Laseroptik AVACS beam attenuator</li>
+<li><strong>kcube.py</strong>: modules for controlling Thorlabs KDC101 brushed servo motor controllers</li>
+<li><strong>lf.py</strong>: modules for controlling Princeton Instruments LightField software</li>
+<li><strong>mso.py</strong>: modules for controlling Tektronix MSO64 oscilloscope</li>
+<li><strong>ops.py</strong>: modules for controlling operations and file I/O of the main GUI</li>
+<li><strong>srs.py</strong>: modules for controlling SRS DG645 digital delay pulse generator</li>
+</ul>
+</li>
+<li><strong>logs</strong>: default directory for saving experiment configuration files and logging experimental data</li>
+<li><strong>support_files</strong>: directory for storing supporting files (<em>APT.dll</em>, <em>APTAPI.h</em>, <em>ATP.lib</em>) and other unused depreciated files</li>
+</ul>
+<h2>Installation of dependencies</h2>
+<p>Prior to use, Python libraries and dependencies must be installed. To install dependencies, it is recommended to use Anaconda (https://www.anaconda.com/distribution/#download-section).</p>
+<p>To install all dependencies on a Windows 64-bit computer, create an Anaconda envinrment and populate it with the required dependencies by opening the Anaconda command prompt and running: 
+<code>conda create --name env --file requirements.txt</code>
+where <code>env</code> is the name of the new environment.</p>
+<p>After installation of the <em>thorlabs_apt</em> library, three files in the support_files directory must be copied to the thorlabs_apt directory and placed in the same folder as <em>core.py</em>:
+1. <em>APT.dll</em>
+2. <em>ATP.lib</em>
+3. <em>ATPAPI.h</em></p>
+<p>This allows communication between Thorlabs instruments, Windows, and Python.</p>
