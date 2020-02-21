@@ -2,15 +2,37 @@
 # Laser triggering
 
 
-## **This repo is currently under construction**
-
-
 This respository contains code for an application which allows automated laser processing, including triggering of laser pulses, acquisition of Raman spectra, acquisition of traces from an oscilloscope, and motorized control of halfwave plates and polarizers.
-
 
 
 ## Use
 The application is started by running the ```app.py``` file.
+
+### Connecting to instruments
+
+To view the avilable instrument ports, navigate to **Menu -> Show avilable instrument ports**. Addresses of each avilable VISA, serial, and FTID USB port will be printed in the output box. To connect with a particular instrument, navigate to the box for that instrument on the front panel of the GUI. Enter the appropriate address for the instrument in the **Address** field, and click the checkbox adjacent to the address field to connect to the instrument. For example: to communicate with the SRS DG645 pulse generator, enter the serial port address (e.g. COM6) in the address field and select the checkbox to connect to the device. The output box will indicate if connection to the instrument was successful. If the connection failed, check the instument address and connection to the PC. The user may also determine whether the instument can be identified by the PC using Windows Device Manager or National Instruments Measurement & Automation Explorer (NI MAX).
+
+### Connecting to LightField
+To acquire Raman spectra using Princeton Instruments LightField software, LightField must be opened from the GUI by clicking **Launch LightField**.' Once LightField loads, the user should load the LightField experiment called **Default Python Experiment**. After the experiment is loaded, settings can be modified in LightField. Raman spectra can be acquired by clicking the **Acquuire Raman spectrum*** button the the GUI.
+
+
+
+### Running an experimental Sequence
+
+
+   
+        "Adjust the pulse "
+        "width, pulse delay, pulse maplitude, and number of "
+        "pulses in the edit boxes. Then click **Trigger pulses** to send pulses from the SRS. "
+        "Uncheck the box to disconnect from the device."
+        "\n=========================================================\n"
+        
+        "\n=========================================================\n"
+        "To run the experimental sequence, check boxes for the "
+        "pulse triggering and acquisition. Then click 'Run sequence'. "
+        "Click 'Abort sequence' to stop the sequence prematurely."
+        "\n=========================================================\n"
+
 
 
 ## Description of files
@@ -30,8 +52,6 @@ The application is started by running the ```app.py``` file.
     * **srs.py**: modules for controlling SRS DG645 digital delay pulse generator
 * **logs**: default directory for saving experiment configuration files and logging experimental data
 * **support_files**: directory for storing supporting files (_APT.dll_, _APTAPI.h_, _ATP.lib_) and other unused depreciated files
-
-
 
 
 
