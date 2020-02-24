@@ -133,7 +133,7 @@ class App(QMainWindow):
                 'filedir': self.filedir,
                 'outbox': self.ui.outbox,
                 'starttime': self.starttime,
-                'data': np.full((1000, 7), '', dtype=object),
+                'data': np.full((1000, 8), '', dtype=object),
                 'logpath': self.logdir+self.starttime+'.csv'}
         self.avacs = {
                 'dev': None,
@@ -208,18 +208,6 @@ class App(QMainWindow):
                 self.ui.export_scope_trace,
                 self.ui.seq_raman_acquisition]
         [i.setEnabled(False) for i in self.items_to_deactivate]
-
-    # %% ======= define main loop which repeats continuously =============
-
-    def main_loop(self):
-        """Function to execute on a regularly based on timer. Use this
-        for continuously updating GUI objects."""
-
-        # update current polarizer and analyzer angles on GUI
-        if self.kcube['p_on'].isChecked():
-            kcube.polarizer_move_to(self.kcube)
-        if self.kcube['a_on'].isChecked():
-            kcube.analyzer_move_to(self.kcube)
 
     # %% ======= experimental sequence control functions =================
 
@@ -406,6 +394,16 @@ class App(QMainWindow):
 
     # %% ============ system control functions =============================
 
+    def main_loop(self):
+        """Function to execute on a regularly based on timer. Use this
+        for continuously updating GUI objects."""
+
+        # update current polarizer and analyzer angles on GUI
+        if self.kcube['p_on'].isChecked():
+            kcube.polarizer_move_to(self.kcube)
+        if self.kcube['a_on'].isChecked():
+            kcube.analyzer_move_to(self.kcube)
+
     def set_filedir(self):
         # set the directory for saving data files
         self.ops['logdir'] = str(QFileDialog.getExistingDirectory(
@@ -429,7 +427,7 @@ class App(QMainWindow):
 
     def log_to_file(self):
         """Create log file."""
-        ops.log_to_file(self.ops, self.srs, self.lf)
+        ops.log_to_file(self.ops, self.srs, self.lf, self.kcube)
 
     def print_ports(self):
         """Print a list of available serial and VISA ports."""
