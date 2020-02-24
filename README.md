@@ -20,10 +20,10 @@ To acquire Raman spectra using Princeton Instruments LightField software, LightF
 
 ## Running an experimental Sequence
 The *Experimental sequence* box contains options for running an automated experimental sequence. The sequence is started by selecting the *Run* button. Clicking *Abort sequence* will stop the sequence before it is complete. The sequence will initiate a procedure which runs *Number of cycles* times, with each cycle separated by *Cycle delay* number of seconds. Each checkbox that is checked in the *Experimental sequence* box will repeat during each cycle. For example, when *Laser triggering*, *Raman acquisition*, and *Polarizer rotation* checkboxes are all selected, the sequence will proceed as follows:
-1. a list of polarizer angles is generated based on the *Start angle*, *End angle*, and *Steps* in the *Thorlabs controllers* box.
-1. a Raman spectrum is acquired at each of the polarizer angles
-1. the pulse generator is used to trigger laser pulses for smaple processing. The pulses are controlled by the *pulse width*, *pulse delay*, *pulse maplitude*, and *number of pulses* in the *Pulse generator* box.
-1. Raman spectra are acquired at each polarizer angle, and the procedure repeats based on the *Number of cycles* user input.
+1. a list of polarizer angles is generated based on values in the *Start angle*, *End angle*, and *Steps* fields in the *Thorlabs controllers* box.
+2. a Raman spectrum is acquired at each of the polarizer angles
+3. the pulse generator is used to trigger laser pulses for material processing. The pulses are controlled by the *pulse width*, *pulse delay*, *pulse maplitude*, and *number of pulses* in the *Pulse generator* box.
+4. Steps (2) and (3) are repeated *Number of cycles* times.
 
 ## File output
 Each time a Raman spectrum is acquired, the spectrum is saved to a *.csv* file, and the application log file is appended. The log file contains the list of experimental parameters that were active during each Raman acquisition, as well as the filename of the Raman spectrum. The log file can be found by selecting *Menu* -> *Show path to log file*, and the location of Raman spectra can be viewed by selecting *Menu* -> *Show acquisition file list*.
