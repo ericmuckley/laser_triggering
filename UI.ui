@@ -7,14 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>807</width>
-    <height>735</height>
+    <height>723</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Laser triggering</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">
+   <string notr="true">/*
 QMainWindow{
 background-color: rgb(40, 40, 40);}
 
@@ -155,9 +155,7 @@ border: 1px solid white;}
      </rect>
     </property>
     <property name="font">
-     <font>
-      <pointsize>-1</pointsize>
-     </font>
+     <font/>
     </property>
     <property name="title">
      <string>Pulse generator</string>
@@ -345,15 +343,13 @@ border: 1px solid white;}
     <property name="geometry">
      <rect>
       <x>300</x>
-      <y>440</y>
+      <y>400</y>
       <width>491</width>
-      <height>251</height>
+      <height>291</height>
      </rect>
     </property>
     <property name="font">
-     <font>
-      <pointsize>-1</pointsize>
-     </font>
+     <font/>
     </property>
     <property name="title">
      <string>Output</string>
@@ -364,13 +360,11 @@ border: 1px solid white;}
        <x>10</x>
        <y>30</y>
        <width>471</width>
-       <height>211</height>
+       <height>251</height>
       </rect>
      </property>
      <property name="font">
-      <font>
-       <pointsize>-1</pointsize>
-      </font>
+      <font/>
      </property>
      <property name="verticalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOn</enum>
@@ -382,7 +376,7 @@ border: 1px solid white;}
       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:15pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
@@ -397,9 +391,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="font">
-     <font>
-      <pointsize>-1</pointsize>
-     </font>
+     <font/>
     </property>
     <property name="title">
      <string>Configure LightField</string>
@@ -464,15 +456,13 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>300</x>
-      <y>180</y>
+      <y>150</y>
       <width>221</width>
-      <height>211</height>
+      <height>231</height>
      </rect>
     </property>
     <property name="font">
-     <font>
-      <pointsize>-1</pointsize>
-     </font>
+     <font/>
     </property>
     <property name="title">
      <string>Experimental sequence</string>
@@ -629,7 +619,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>540</x>
-      <y>200</y>
+      <y>190</y>
       <width>251</width>
       <height>191</height>
      </rect>
@@ -1156,7 +1146,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>807</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
