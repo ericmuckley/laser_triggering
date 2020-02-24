@@ -215,49 +215,55 @@ class App(QMainWindow):
         """Run an experimental sequence."""
         self.initialize_sequence()
         
+        #  get polarizer angles or use current angle
         if self.ui.seq_polarizer_rot.isChecked():
             polarizer_angles = kcube.get_angle_steps(self.kcube)
-            
         else:
-            polarizer_angles = [0]
+            polarizer_angles = [self.ui.polarizer_angle.value()]
 
-        # loop over each polarizer angle
+        # loop over each polarizer angle and acquire initial Raman spectra
+        for a in polarizer_angles:
+            if self.abort_seq is True:
+                self.ui.outbox.append('Sequence aborted.')
+                break
+            if self.ui.seq_polarizer_rot.isChecked():
+                self.ui.outbox.append('polarizer angle: {}'.format(a))
+                self.ui.polarizer_angle.setValue(a)
+                time.sleep(2)
+                while kcube.p_in_motion(self.kcube):
+                    time.sleep(1)
+            if self.ui.seq_raman_acquisition.isChecked():
+                self.acquire_raman()
+            self.log_to_file()
+            time.sleep(self.ui.pause_between_cycles.value())
 
 
-        
-        
+
         # loop over each experimental cycle
         tot_cycles = self.ui.set_seq_cycles.value()
-        for c in range(tot_cycles):
+        for c in range(tot_cycles):  
             self.ui.outbox.append('cycle {}/{}'.format(c+1, tot_cycles))
-            
-            # loop over each polarizer angle
+            if self.abort_seq is True:
+                break
+
+            # trigger laser pulses from pulse generator
+            if self.ui.seq_laser_trigger.isChecked():
+                self.trigger_pulses()
+                time.sleep(0.1)
+
+            # loop over each polarizer angle and acquire Raman spectrum
             for a in polarizer_angles:
+                if self.abort_seq is True:
+                    self.ui.outbox.append('Sequence aborted.')
+                    break
                 if self.ui.seq_polarizer_rot.isChecked():
                     self.ui.outbox.append('polarizer angle: {}'.format(a))
                     self.ui.polarizer_angle.setValue(a)
                     time.sleep(2)
                     while kcube.p_in_motion(self.kcube):
                         time.sleep(1)
-                    
-                    
-
-
-                if self.abort_seq is True:
-                    self.ui.outbox.append('Sequence aborted.')
-                    break
-                
-                
-                # trigger laser pulses from pulse generator
-                if self.ui.seq_laser_trigger.isChecked():
-                    self.trigger_pulses()
-                    time.sleep(0.1)
-    
-                # acquire Raman spectrum
                 if self.ui.seq_raman_acquisition.isChecked():
                     self.acquire_raman()
-    
-                # save results to file
                 self.log_to_file()
                 time.sleep(self.ui.pause_between_cycles.value())
 
@@ -337,6 +343,7 @@ class App(QMainWindow):
 
     def launch_lf(self):
         """Launch LightField software."""
+        self.ui.outbox.append('Opening LightField...')
         lf.launch_lf(self.lf)
 
     def show_file_list(self):
