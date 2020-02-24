@@ -6,11 +6,14 @@ This respository contains code for an application which allows automated laser p
 
 
 ## Use
-The application is started by running the ```app.py``` file.
+The application is started by opening a Python code editor running the ```app.py``` file. Alternatively, one may open the ```RUN_LASER_TRIGGERING.bat``` Windows BAT file to run the software.
 
 ### Connecting to instruments
 
 To view the avilable instrument ports, navigate to **Menu -> Show avilable instrument ports**. Addresses of each avilable VISA, serial, and FTID USB port will be printed in the output box. To connect with a particular instrument, navigate to the box for that instrument on the front panel of the GUI. Enter the appropriate address for the instrument in the **Address** field, and click the checkbox adjacent to the address field to connect to the instrument. For example: to communicate with the SRS DG645 pulse generator, enter the serial port address (e.g. COM6) in the address field and select the checkbox to connect to the device. The output box will indicate if connection to the instrument was successful. If the connection failed, check the instument address and connection to the PC. The user may also determine whether the instument can be identified by the PC using Windows Device Manager or National Instruments Measurement & Automation Explorer (NI MAX).
+
+#### Connecting to Thorlabs KCube KDC101 controllers
+These controllers cannot be found by the computer if the ```import thorlabs_apt as apt``` import has been run before the contorllers were connected to the PC. After connection, make sure the Python kernel has been restarted to allow initialization of ```APT.DLL``` while the controllers are connected and powered. 
 
 ### Connecting to LightField
 To acquire Raman spectra using Princeton Instruments LightField software, LightField must be opened from the GUI by clicking **Launch LightField**.' Once LightField loads, the user should load the LightField experiment called **Default Python Experiment**. After the experiment is loaded, settings can be modified in LightField. Raman spectra can be acquired by clicking the **Acquuire Raman spectrum*** button the the GUI.
