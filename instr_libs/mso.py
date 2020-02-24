@@ -26,12 +26,13 @@ def mso_on(mso):
             mso['acquire'].setEnabled(True)
             mso['address'].setEnabled(False)
             mso['downsample'].setEnabled(True)
-        except visa.VISAIOERROR:
+        except:
             mso['outbox'].append('Oscilloscope could not connect.')
             mso['address'].setEnabled(True)
             mso['acquire'].setEnabled(False)
             mso['downsample'].setEnabled(False)
             mso['dev'] = None
+            mso['on'].setChecked(False)
     if not mso['on'].isChecked():
         try:
             mso['dev'].close()

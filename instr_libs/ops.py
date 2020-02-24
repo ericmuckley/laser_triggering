@@ -43,7 +43,7 @@ def show_help():
 
 def show_log_path(ops):
     """Show the path to the log file."""
-    ops['outbox'].append('Log file path: %s' %(ops['path']))
+    ops['outbox'].append('Log file path: %s' %(ops['logpath']))
 
 
 def get_log_row_data(srs, lf):
@@ -71,7 +71,7 @@ def log_to_file(ops, srs, lf):
     df.replace('', np.nan, inplace=True)
     df.dropna(how='all', inplace=True)
     # save dataframe as csv file
-    df.to_csv(ops['path'], index=False)
+    df.to_csv(ops['logpath'], index=False)
     ops['outbox'].append('Log file appended.')
     ops['row_counter'] += 1
 

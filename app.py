@@ -16,9 +16,8 @@ Created on Feb 3 2020
 """
 
 # --------------------- core GUI libraries --------------------------------
-from PyQt5 import QtWidgets, uic, QtCore#, QtGui
+from PyQt5 import QtWidgets, uic, QtCore  # , QtGui
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
-#from PyQtCore import QRunnable, QThreadPool, pyqtSlot
 import os
 import sys
 import time
@@ -29,11 +28,10 @@ import matplotlib.pyplot as plt
 # -------- import custom modules for contorlling instruments ---------------
 from instr_libs import avacs  # Laseroptik AVACS beam attenuator
 from instr_libs import srs  # SRS DG645 digital delay pulse generator
-from instr_libs import mso  #  Tektronix MSO64 oscilloscope
+from instr_libs import mso  # Tektronix MSO64 oscilloscope
 from instr_libs import kcube  # Thorlabs KDC101 stepper motor controllers
 from instr_libs import ops  # for controlling operations of main GUI
 from instr_libs import lf  # for controlling LightField Raman software
-
 
 
 # ------- change matplotlib settings to make plots look nicer --------------
@@ -59,12 +57,13 @@ class Worker(QtCore.QRunnable):
         self.fn = fn
         self.args = args
         self.kwargs = kwargs
+
     @QtCore.pyqtSlot()
     def run(self):
         """Take a function and its args which were passed to the Worker
         class and execute it in a new thread."""
         self.fn(*self.args, **self.kwargs)
-  
+
 
 class App(QMainWindow):
     """Class which creates the main window of the application."""
@@ -84,7 +83,7 @@ class App(QMainWindow):
         # create timer which updates fields on GUI (set interval in ms)
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.main_loop)
-        self.timer.start(1500)#int(self.ui.set_main_loop_delay.value()))
+        self.timer.start(1500)  # int(self.ui.set_main_loop_delay.value()))
 
         # assign functions to top menu items
         # example: self.ui.menu_item_name.triggered.connect(self.func_name)
@@ -97,7 +96,7 @@ class App(QMainWindow):
         self.ui.export_settings.triggered.connect(self.export_settings)
         self.ui.import_settings.triggered.connect(self.import_settings)
         self.ui.set_filedir.triggered.connect(self.set_filedir)
-        
+
         # assign actions to GUI buttons
         # example: self.ui.BUTTON_NAME.clicked.connect(self.FUNCTION_NAME)
         self.ui.trigger_pulses.clicked.connect(self.trigger_pulses_thread)
@@ -112,13 +111,12 @@ class App(QMainWindow):
         self.ui.analyzer_on.clicked.connect(self.analyzer_on)
         self.ui.polarizer_home.clicked.connect(self.polarizer_home)
         self.ui.analyzer_home.clicked.connect(self.analyzer_home)
-        
+
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
         self.ui.pulsegen_on.stateChanged.connect(self.pulsegen_on)
         self.ui.mso_on.stateChanged.connect(self.mso_on)
         self.ui.avacs_on.stateChanged.connect(self.avacs_on)
-
 
         # intialize log file for logging experimental settings
         self.filedir = os.getcwd()
@@ -126,7 +124,6 @@ class App(QMainWindow):
         if not os.path.exists(self.logdir):
             os.makedirs(self.logdir)
         self.starttime = time.strftime('%Y-%m-%d_%H-%M-%S')
-
 
         # intialize dictionaries for transporting GUI data to other modules
         self.ops = {
@@ -138,7 +135,6 @@ class App(QMainWindow):
                 'starttime': self.starttime,
                 'data': np.full((1000, 7), '', dtype=object),
                 'logpath': self.logdir+self.starttime+'.csv'}
-
         self.avacs = {
                 'dev': None,
                 'on': self.ui.avacs_on,
@@ -167,7 +163,6 @@ class App(QMainWindow):
                 'acquire': self.ui.scope_acquire,
                 'downsample': self.ui.mso_downsample,
                 'export': self.ui.export_scope_trace}
-        
         self.lf = {
                 'app': None,
                 'recent_file': None,
@@ -187,95 +182,137 @@ class App(QMainWindow):
                 'phome': self.ui.polarizer_home,
                 'aangle': self.ui.analyzer_angle,
                 'pangle': self.ui.polarizer_angle,
+                'rotation_end': self.ui.rotation_end,
                 'aaddress': self.ui.analyzer_address,
                 'paddress': self.ui.polarizer_address,
+                'rotation_start': self.ui.rotation_start,
+                'rotation_steps': self.ui.rotation_steps,
                 'curr_pangle_label': self.ui.current_p_angle,
-                'curr_aangle_label': self.ui.current_a_angle}
-        
+                'curr_aangle_label': self.ui.current_a_angle,
+                'seq_polarizer_rot': self.ui.seq_polarizer_rot}
 
         # kill the process which opens LightField if its already running
         os.system("taskkill /f /im AddInProcess.exe")
-        
+
         # initialize GUI settings by disabling buttons
         srs.enable_pulse_gen_buttons(self.srs, False)
         kcube.enable_polarizer(self.kcube, False)
         kcube.enable_analyzer(self.kcube, False)
-        
-        
-        self.ui.abort_seq.setEnabled(False)
-        self.ui.acquire_raman.setEnabled(False)
-        self.ui.seq_raman_acquisition.setEnabled(False)
-        self.ui.scope_acquire.setEnabled(False)
-        self.ui.mso_downsample.setEnabled(False)
-        self.ui.export_scope_trace.setEnabled(False)
-        self.ui.avacs_angle.setEnabled(False)
-        self.ui.avacs_set_now.setEnabled(False)
-
+        self.items_to_deactivate = [
+                self.ui.abort_seq,
+                self.ui.avacs_angle,
+                self.ui.avacs_set_now,
+                self.ui.acquire_raman,
+                self.ui.scope_acquire,
+                self.ui.mso_downsample,
+                self.ui.export_scope_trace,
+                self.ui.seq_raman_acquisition]
+        [i.setEnabled(False) for i in self.items_to_deactivate]
 
     # %% ======= define main loop which repeats continuously =============
 
     def main_loop(self):
         """Function to execute on a regularly based on timer. Use this
         for continuously updating GUI objects."""
-        
+
         # update current polarizer and analyzer angles on GUI
         if self.kcube['p_on'].isChecked():
             kcube.polarizer_move_to(self.kcube)
         if self.kcube['a_on'].isChecked():
             kcube.analyzer_move_to(self.kcube)
- 
-                
-                
-
 
     # %% ======= experimental sequence control functions =================
 
-
-
-
-    def abort_seq(self):
-        """Abort the expreimental sequence."""
-        self.abort_seq = True
-
     def run_seq(self):
         """Run an experimental sequence."""
+        self.initialize_sequence()
+        
+        if self.ui.seq_polarizer_rot.isChecked():
+            polarizer_angles = kcube.get_angle_steps(self.kcube)
+            
+        else:
+            polarizer_angles = [0]
+
+        # loop over each polarizer angle
+
+
+        
+        
+        # loop over each experimental cycle
+        tot_cycles = self.ui.set_seq_cycles.value()
+        for c in range(tot_cycles):
+            self.ui.outbox.append('cycle {}/{}'.format(c+1, tot_cycles))
+            
+            # loop over each polarizer angle
+            for a in polarizer_angles:
+                if self.ui.seq_polarizer_rot.isChecked():
+                    self.ui.outbox.append('polarizer angle: {}'.format(a))
+                    self.ui.polarizer_angle.setValue(a)
+                    time.sleep(2)
+                    while kcube.p_in_motion(self.kcube):
+                        time.sleep(1)
+                    
+                    
+
+
+                if self.abort_seq is True:
+                    self.ui.outbox.append('Sequence aborted.')
+                    break
+                
+                
+                # trigger laser pulses from pulse generator
+                if self.ui.seq_laser_trigger.isChecked():
+                    self.trigger_pulses()
+                    time.sleep(0.1)
+    
+                # acquire Raman spectrum
+                if self.ui.seq_raman_acquisition.isChecked():
+                    self.acquire_raman()
+    
+                # save results to file
+                self.log_to_file()
+                time.sleep(self.ui.pause_between_cycles.value())
+
+        self.finalize_sequence()
+
+
+    def initialize_sequence(self):
+        """Initialize settings when an experimental sequence starts."""
         self.ui.run_seq.setEnabled(False)
         self.ui.abort_seq.setEnabled(True)
         self.ui.set_seq_cycles.setEnabled(False)
+        self.ui.pause_between_cycles.setEnabled(False)
+        self.ui.seq_laser_trigger.setEnabled(False)
+        self.ui.seq_polarizer_rot.setEnabled(False)
+        self.ui.seq_raman_acquisition.setEnabled(False)
+        self.ui.rotation_end.setEnabled(False)
+        self.ui.rotation_start.setEnabled(False)
+        self.ui.rotation_steps.setEnabled(False)
         self.ui.outbox.append('Sequence initiated')
-        
-        tot_cycles = self.ui.set_seq_cycles.value()
-        for c in range(tot_cycles):
-            self.ui.outbox.append(
-                    'running cycle {}/{}...'.format(c+1, tot_cycles))
-            if self.abort_seq == True:
-                self.ui.outbox.append('Sequence aborted.')
-                break
-            if self.ui.seq_laser_trigger.isChecked():
-                self.trigger_pulses()
-                time.sleep(0.1)
-                
-            if self.ui.seq_raman_acquisition.isChecked():
-                self.acquire_raman()
 
-            self.log_to_file()
-            time.sleep(self.ui.pause_between_cycles.value())
-
+    def finalize_sequence(self):
+        """Finalize settings when an experimental sequence ends."""
         self.abort_seq = False
         self.ui.run_seq.setEnabled(True)
         self.ui.abort_seq.setEnabled(False)
         self.ui.set_seq_cycles.setEnabled(True)
+        self.ui.pause_between_cycles.setEnabled(True)
+        self.ui.seq_laser_trigger.setEnabled(True)
+        self.ui.seq_polarizer_rot.setEnabled(True)
+        self.ui.seq_raman_acquisition.setEnabled(True)
+        self.ui.rotation_end.setEnabled(True)
+        self.ui.rotation_start.setEnabled(True)
+        self.ui.rotation_steps.setEnabled(True)
         self.ui.outbox.append('Sequence complete.')
-
 
     def run_seq_thread(self):
         """Run sequence in a new thread."""
         worker = Worker(self.run_seq)  # pass other args here
         self.threadpool.start(worker)
 
-
-
-
+    def abort_seq(self):
+        """Abort the expreimental sequence."""
+        self.abort_seq = True
 
     # %% ========= Thorlabs KDC101 servo motor controllers= ==============
 
@@ -303,8 +340,6 @@ class App(QMainWindow):
         """Move the analizer to its home position."""
         kcube.analyzer_home(self.kcube)
 
-
-
     # %% ========= Princeton Instruments LightField control ==============
 
     def launch_lf_thread(self):
@@ -330,13 +365,12 @@ class App(QMainWindow):
         in LightField."""
         lf.plot_file_list(self.lf)
 
-
-  # %% ========= Tektronix MSO64 mixed signal oscilloscope ==============
+    # %% ========= Tektronix MSO64 mixed signal oscilloscope ==============
 
     def mso_on(self):
         "Run this function when MSO64 oscilloscope checkbox is checked."""
         mso.mso_on(self.mso)
-    
+
     def scope_acquire(self):
         """Acquire and plot signal from oscilloscope."""
         mso.acquire(self.mso)
@@ -345,13 +379,12 @@ class App(QMainWindow):
         """Export most recent oscilloscope trace to file."""
         mso.export(self.mso)
 
-
     # %% ============ SRS DG645 pulse generator control =================
-    
+
     def pulsegen_on(self):
         "Run this function when pulse generator checkbox is checked."""
         srs.pulsegen_on(self.srs)
-  
+
     def trigger_pulses(self):
         """Fire a single burst of n pulses with spacing in seconds."""
         srs.trigger_pulses(self.srs)
@@ -361,9 +394,8 @@ class App(QMainWindow):
         worker = Worker(self.trigger_pulses)  # pass other args here
         self.threadpool.start(worker)
 
-
     # %% ============ Laseroptik AVACS beam attenuator ===================
-    
+
     def avacs_on(self):
         """Laseroptik beam attenuator checkbox is checked/unchecked."""
         avacs.avacs_on(self.avacs)
@@ -371,7 +403,6 @@ class App(QMainWindow):
     def avacs_set_now(self):
         """Set angle of the beam attenuator."""
         avacs.set_now(self.avacs)
-
 
     # %% ============ system control functions =============================
 
@@ -392,13 +423,9 @@ class App(QMainWindow):
                 self, 'Select experiment settings file', '.ini')[0]
         ops.import_settings(self.ops, import_settings_filepath)
 
-    #def show_help():
-    #    """Show the help popup message."""
-    #    ops.show_help()
-
     def show_log_path(self):
         """Show the path to the log file."""
-        self.ui.outbox.append('Log file path: %s' %(self.ops['path']))
+        self.ui.outbox.append('Log file path: %s' % (self.ops['logpath']))
 
     def log_to_file(self):
         """Create log file."""
@@ -417,15 +444,14 @@ class App(QMainWindow):
         if self.avacs['dev']:
             self.avacs['dev'].close()
         # kill the process which opens LightField if its already running
-        #os.system("taskkill /f /im AddInProcess.exe")
+        # os.system("taskkill /f /im AddInProcess.exe")
         # stop timer
-        self.timer.stop()  
+        self.timer.stop()
         # close app window and kill python kernel
         self.deleteLater()
-        self.close()  
+        self.close()
         sys.exit()
- 
-    
+
 # %% ====================== run application ===============================
 
 if __name__ == "__main__":

@@ -31,6 +31,7 @@ def avacs_on(avacs):
             avacs['set_now'].setEnabled(False)
             avacs['address'].setEnabled(True)
             avacs['dev'] = None
+            avacs['on'].setChecked(False)
     if not avacs['on'].isChecked():
         try:
             avacs['dev'].close()
@@ -41,6 +42,7 @@ def avacs_on(avacs):
         avacs['angle'].setEnabled(False)
         avacs['set_now'].setEnabled(False)
         avacs['address'].setEnabled(True)
+        avacs['on'].setChecked(False)
 
 
 def set_now(avacs):

@@ -10,13 +10,18 @@ Created on Wed Feb 19 10:07:30 2020
 """
 
 import thorlabs_apt as apt
-
+import numpy as np
 
 def enable_polarizer(kcube, enable):
     """Enable/disable buttons related to polarizer controller."""
     kcube['phome'].setEnabled(enable)
     kcube['pangle'].setEnabled(enable)
     kcube['curr_pangle_label'].setEnabled(enable)
+    kcube['seq_polarizer_rot'].setEnabled(enable)
+    kcube['rotation_end'].setEnabled(enable)
+    kcube['rotation_start'].setEnabled(enable)
+    kcube['rotation_steps'].setEnabled(enable)
+    kcube['seq_polarizer_rot'].setEnabled(enable)
     kcube['paddress'].setEnabled(not enable)
     
 
@@ -26,6 +31,11 @@ def enable_analyzer(kcube, enable):
     kcube['ahome'].setEnabled(enable)
     kcube['aangle'].setEnabled(enable)
     kcube['curr_aangle_label'].setEnabled(enable)
+    kcube['seq_polarizer_rot'].setEnabled(enable)
+    kcube['rotation_end'].setEnabled(enable)
+    kcube['rotation_start'].setEnabled(enable)
+    kcube['rotation_steps'].setEnabled(enable)
+    kcube['seq_polarizer_rot'].setEnabled(enable)
     kcube['aaddress'].setEnabled(not enable)
 
 
@@ -85,6 +95,23 @@ def analyzer_on(kcube):
         kcube['outbox'].append('Analyzer controller closed.')
 
 
+def get_angle_steps(kcube):
+    """Get angle steps from the GUI."""
+    return np.linspace(kcube['rotation_start'].value(),
+                       kcube['rotation_end'].value(),
+                       num=1+kcube['rotation_steps'].value()).astype(int)
+
+
+def p_in_motion(kcube):
+    """Check if polarizer is still moving."""
+    return kcube['pdev'].is_in_motion
+
+
+def a_in_motion(kcube):
+    """Check if polarizer is still moving."""
+    return kcube['adev'].is_in_motion
+
+
 def polarizer_move_to(kcube):
     """Move the polarizer to specified angle."""
     angle = int(kcube['pangle'].value())
@@ -127,20 +154,25 @@ if __name__ == '__main__':
     print(apt.list_available_devices())
 
     dev = apt.Motor(27255762)
-
+    
     #print(dev.hardware_info)
     #print(dev.is_in_motion)
     #dev.set_velocity_parameters(0, 25, 25)
     # max velocity and aceleration = 25.0
     #dev.set_move_home_parameters(direction, lim_switch, velocity,zero_offset)
-    dev.set_move_home_parameters(1, 4, 20, 0)
-    dev.set_velocity_parameters(0, 20, 25)
-    dev.set_hardware_limit_switches(1,1)
+
     #print(dev.get_move_home_parameters())
     #dev.move_home()
     #dev.move_to(20)
     #dev.move_by(5)
     #dev.move_velocity(0)
     #dev.move_by(5)
-    #dev.move_to(25)
+    
+    #print(dev.is_in_motion)
+    dev.move_to(75)
+    #dev.set_move_home_parameters(1, 4, 20, 0)
+    #dev.set_velocity_parameters(0, 20, 25)
+    #dev.set_hardware_limit_switches(1,1)
+
     print(dev.position)
+    print(dev.is_in_motion)
