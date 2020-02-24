@@ -1,35 +1,32 @@
-<h1>Laser triggering</h1>
-<p>This respository contains code for an application which allows automated laser processing, including triggering of laser pulses, acquisition of Raman spectra, acquisition of traces from an oscilloscope, and motorized control of halfwave plates and polarizers.</p>
-<h2>Use</h2>
-<p>The application is started by running the <code>app.py</code> file.</p>
-<h3>Connecting to instruments</h3>
+<h1>Laser triggering: an application for high-throughput laser processing and characterization</h1>
+<p>This respository contains code for an application which allows in situ spectroscopic characterization of materials during automated laser processing. The application controls triggering of laser pulses, acquisition of Raman spectra, acquisition of traces from an oscilloscope, and motorized control of optical polarizer/analyzer systems.</p>
+<h1>Use</h1>
+<p>The application can be started by opening a Python code editor running the <code>app.py</code> file. Alternatively, the software can be started using the <code>RUN_LASER_TRIGGERING.bat</code> Windows BAT file.</p>
+<h2>Connecting to instruments</h2>
 <p>To view the avilable instrument ports, navigate to <strong>Menu -&gt; Show avilable instrument ports</strong>. Addresses of each avilable VISA, serial, and FTID USB port will be printed in the output box. To connect with a particular instrument, navigate to the box for that instrument on the front panel of the GUI. Enter the appropriate address for the instrument in the <strong>Address</strong> field, and click the checkbox adjacent to the address field to connect to the instrument. For example: to communicate with the SRS DG645 pulse generator, enter the serial port address (e.g. COM6) in the address field and select the checkbox to connect to the device. The output box will indicate if connection to the instrument was successful. If the connection failed, check the instument address and connection to the PC. The user may also determine whether the instument can be identified by the PC using Windows Device Manager or National Instruments Measurement &amp; Automation Explorer (NI MAX).</p>
-<h3>Connecting to LightField</h3>
-<p>To acquire Raman spectra using Princeton Instruments LightField software, LightField must be opened from the GUI by clicking <strong>Launch LightField*<em>.' Once LightField loads, the user should load the LightField experiment called <strong>Default Python Experiment</strong>. After the experiment is loaded, settings can be modified in LightField. Raman spectra can be acquired by clicking the **Acquuire Raman spectrum</em></strong> button the the GUI.</p>
-<h3>Running an experimental Sequence</h3>
-<pre><code>    "Adjust the pulse "
-    "width, pulse delay, pulse maplitude, and number of "
-    "pulses in the edit boxes. Then click **Trigger pulses** to send pulses from the SRS. "
-    "Uncheck the box to disconnect from the device."
-    "\n=========================================================\n"
-
-    "\n=========================================================\n"
-    "To run the experimental sequence, check boxes for the "
-    "pulse triggering and acquisition. Then click 'Run sequence'. "
-    "Click 'Abort sequence' to stop the sequence prematurely."
-    "\n=========================================================\n"
-</code></pre>
-<h2>Description of files</h2>
+<h3>Connecting to Thorlabs K-Cube KDC101 controllers</h3>
+<p>These controllers cannot be found by the computer if the <code>import thorlabs_apt as apt</code> command has been run before the controllers were connected to the PC. After they are connected, make sure the Python kernel has been restarted to allow initialization of <code>APT.DLL</code> while the controllers are connected and powered. </p>
+<h2>Connecting to LightField</h2>
+<p>To acquire Raman spectra using Princeton Instruments LightField software, LightField must be opened from the GUI by clicking <strong>Launch LightField*<em>.' Once LightField loads, the user should load the LightField experiment called <strong>Default Python Experiment</strong>. After the experiment is loaded, settings can be modified in LightField. Raman spectra can be acquired by clicking the **Acquire Raman spectrum</em></strong> button the the GUI.</p>
+<h2>Running an experimental Sequence</h2>
+<p>The <em>Experimental sequence</em> box contains options for running an automated experimental sequence. The sequence is started by selecting the <em>Run</em> button. Clicking <em>Abort sequence</em> will stop the sequence before it is complete. The sequence will initiate a procedure which runs <em>Number of cycles</em> times, with each cycle separated by <em>Cycle delay</em> number of seconds. Each checkbox that is checked in the <em>Experimental sequence</em> box will repeat during each cycle. For example, when <em>Laser triggering</em>, <em>Raman acquisition</em>, and <em>Polarizer rotation</em> checkboxes are all selected, the sequence will proceed as follows:
+1. a list of polarizer angles is generated based on the <em>Start angle</em>, <em>End angle</em>, and <em>Steps</em> in the <em>Thorlabs controllers</em> box.
+1. a Raman spectrum is acquired at each of the polarizer angles
+1. the pulse generator is used to trigger laser pulses for smaple processing. The pulses are controlled by the <em>pulse width</em>, <em>pulse delay</em>, <em>pulse maplitude</em>, and <em>number of pulses</em> in the <em>Pulse generator</em> box.
+1. Raman spectra are acquired at each polarizer angle, and the procedure repeats based on the <em>Number of cycles</em> user input.</p>
+<h2>File output</h2>
+<p>Each time a Raman spectrum is acquired, the spectrum is saved to a <em>.csv</em> file, and the application log file is appended. The log file contains the list of experimental parameters that were active during each Raman acquisition, as well as the filename of the Raman spectrum. The log file can be found by selecting <em>Menu</em> -&gt; <em>Show path to log file</em>, and the location of Raman spectra can be viewed by selecting <em>Menu</em> -&gt; <em>Show acquisition file list</em>.</p>
+<h1>Description of files</h1>
 <ul>
-<li><strong>Main repository</strong><ul>
-<li><strong>app.py</strong>: main file for starting the GUI application. Calls <em>ui.ui</em> and files inside <em>instr_files</em> directory to create the application.</li>
+<li><strong>laser_triggering</strong>: main directory which holds files and supporting directories <ul>
+<li><strong>app.py</strong>: main file for starting the GUI application. Calls <em>ui.ui</em> and files inside <em>instr_files</em> directory to create the application. Controls logic of the application and links GUI widgets to their actions.</li>
 <li><strong>README.md</strong>: the file you are reading, which describes instructuins for use</li>
 <li><strong>ui.ui</strong>: user interface file, created in QT Desginer, which is called by <em>app.py</em> and provides thelayout of graphical user interface widgets for the application.</li>
 <li><strong>RUN_LASER_TRIGGERING.bat</strong>: Windows bat file. Make a shortcut of this file and place it anywhere on the PC to run <em>app.py</em> by clicking on the shortcut.</li>
 <li><strong>requirements.txt</strong>: text file containing list of all dependencies. These can be installed using Anaconda as described in the <em>Installation</em> section below.</li>
 </ul>
 </li>
-<li><strong>instr_libs</strong><ul>
+<li><strong>instr_libs</strong>: directory which contains Python scripts for controlling instruments and operation of the GUI<ul>
 <li><strong>avacs.py</strong>: modules for controlling Laseroptik AVACS beam attenuator</li>
 <li><strong>kcube.py</strong>: modules for controlling Thorlabs KDC101 brushed servo motor controllers</li>
 <li><strong>lf.py</strong>: modules for controlling Princeton Instruments LightField software</li>
@@ -41,7 +38,7 @@
 <li><strong>logs</strong>: default directory for saving experiment configuration files and logging experimental data</li>
 <li><strong>support_files</strong>: directory for storing supporting files (<em>APT.dll</em>, <em>APTAPI.h</em>, <em>ATP.lib</em>) and other unused depreciated files</li>
 </ul>
-<h2>Installation of dependencies</h2>
+<h1>Installation of dependencies</h1>
 <p>Prior to use, Python libraries and dependencies must be installed. To install dependencies, it is recommended to use Anaconda (https://www.anaconda.com/distribution/#download-section).</p>
 <p>To install all dependencies on a Windows 64-bit computer, create an Anaconda envinrment and populate it with the required dependencies by opening the Anaconda command prompt and running: 
 <code>conda create --name env --file requirements.txt</code>
