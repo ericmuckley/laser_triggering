@@ -142,10 +142,21 @@ border-color: black;}
 QRadioButton::indicator:checked:pressed, QCheckBox::indicator:checked:pressed {
 background: rgb(85, 255, 125);
 border: 1px solid white;}
-</string>
+
+
+
+
+QLineEdit::disabled, QSpinBox::disabled, QDoubleSpinBox::disabled, QPushButton::disabled, QRadioButton::disabled, QCheckBox::indicator::disabled{
+background: rgb(60, 60, 60);
+color: rgb(120, 120, 120)}
+QLabel::disabled{
+color: rgb(120, 120, 120);}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBox_configurepulses">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -637,6 +648,19 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <item row="2" column="1">
+       <widget class="QSpinBox" name="mso_downsample">
+        <property name="minimum">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="1">
        <widget class="QCheckBox" name="mso_on">
         <property name="text">
@@ -678,19 +702,6 @@ p, li { white-space: pre-wrap; }
        <widget class="QLabel" name="downsample_label">
         <property name="text">
          <string>Downsampling factor</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QSpinBox" name="mso_downsample">
-        <property name="minimum">
-         <number>2</number>
-        </property>
-        <property name="maximum">
-         <number>1000</number>
-        </property>
-        <property name="value">
-         <number>10</number>
         </property>
        </widget>
       </item>
