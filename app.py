@@ -81,9 +81,9 @@ class App(QMainWindow):
         self.threadpool = QtCore.QThreadPool()
 
         # create timer which updates fields on GUI (set interval in ms)
-        self.timer = QtCore.QTimer(self)
-        self.timer.timeout.connect(self.main_loop)
-        self.timer.start(1500)  # int(self.ui.set_main_loop_delay.value()))
+        #self.timer = QtCore.QTimer(self)
+        #self.timer.timeout.connect(self.main_loop)
+        #self.timer.start(1500)  # int(self.ui.set_main_loop_delay.value()))
 
         # assign functions to top menu items
         # example: self.ui.menu_item_name.triggered.connect(self.func_name)
@@ -111,6 +111,8 @@ class App(QMainWindow):
         self.ui.analyzer_on.clicked.connect(self.analyzer_on)
         self.ui.polarizer_home.clicked.connect(self.polarizer_home)
         self.ui.analyzer_home.clicked.connect(self.analyzer_home)
+        self.ui.polarizer_move_to.clicked.connect(self.polarizer_move_to)
+        self.ui.analyzer_move_to.clicked.connect(self.analyzer_move_to)
 
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
@@ -189,6 +191,8 @@ class App(QMainWindow):
                 'rotation_steps': self.ui.rotation_steps,
                 'curr_pangle_label': self.ui.current_p_angle,
                 'curr_aangle_label': self.ui.current_a_angle,
+                'analyzer_move_to': self.ui.analyzer_move_to,
+                'polarizer_move_to': self.ui.polarizer_move_to,
                 'seq_polarizer_rot': self.ui.seq_polarizer_rot}
 
         # kill the process which opens LightField if its already running
@@ -334,6 +338,8 @@ class App(QMainWindow):
         """Move the analizer to its home position."""
         kcube.analyzer_home(self.kcube)
 
+
+
     # %% ========= Princeton Instruments LightField control ==============
 
     def launch_lf_thread(self):
@@ -401,6 +407,7 @@ class App(QMainWindow):
 
     # %% ============ system control functions =============================
 
+    '''
     def main_loop(self):
         """Function to execute on a regularly based on timer. Use this
         for continuously updating GUI objects."""
@@ -410,6 +417,7 @@ class App(QMainWindow):
             kcube.polarizer_move_to(self.kcube)
         if self.kcube['a_on'].isChecked():
             kcube.analyzer_move_to(self.kcube)
+    '''
 
     def set_filedir(self):
         # set the directory for saving data files
@@ -451,7 +459,7 @@ class App(QMainWindow):
         # kill the process which opens LightField if its already running
         # os.system("taskkill /f /im AddInProcess.exe")
         # stop timer
-        self.timer.stop()
+        #self.timer.stop()
         # close app window and kill python kernel
         self.deleteLater()
         self.close()

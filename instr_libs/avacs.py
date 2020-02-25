@@ -25,7 +25,12 @@ def avacs_on(avacs):
             avacs['set_now'].setEnabled(True)
             avacs['address'].setEnabled(False)
             avacs['dev'].write('MR\r'.encode())
-        except serial.SerialException:
+            message = dev.readline().decode()
+            if len(message) < 1:
+                raise ValueError('Non communication from AVACS')
+            else:
+                avacs['outbox'].append(message)
+        except:  # serial.SerialException:
             avacs['outbox'].append('Attenuator could not connect.')
             avacs['angle'].setEnabled(False)
             avacs['set_now'].setEnabled(False)
@@ -67,20 +72,32 @@ def print_ports():
 if __name__ == '__main__':
     
     print_ports()
-    address = 'COM5'
-    position = 40.0
+    address = 'COM21'
+    position = 36.0
 
     dev = serial.Serial(port=address,
                         baudrate=19200,
                         parity=serial.PARITY_NONE,
                         stopbits=serial.STOPBITS_ONE,
                         timeout=2)
-    
-    #dev.write('MM\r'.encode())  # manual mode
-    #dev.write('MA\r'.encode())  # analog mode
+
     
     pos_str = str(position).replace('.', '')
-    dev.write('MR\r'.encode())  # remote mode
+        
+    # set in manual mode
+    # dev.write('MM\r'.encode()) 
+    # set in analog mode
+    # dev.write('MA\r'.encode())  
+    # set in remote mode
+    dev.write('MR\r'.encode()) 
+    # set the angle
     dev.write(('A'+pos_str+'\r').encode())
+
+    # dev.write('I\r'.encode())
+    # print(dev.readline())
+    
+    #dev.write('R\r'.encode())
+    message = dev.readline().decode()
+    print(message)
 
     dev.close()    

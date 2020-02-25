@@ -95,7 +95,7 @@ background-color: rgb(90, 120, 90);}
 QTextBrowser{
 border-radius: 0px;
 border: 1px solid black;
-font-size: 12px;
+font-size: 14px;
 background-color: rgb(120, 120, 120);
 color: black;}
 
@@ -187,7 +187,7 @@ color: rgb(120, 120, 120);}</string>
        <height>151</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="gridLayout_5">
+     <layout class="QGridLayout" name="srs_grid">
       <item row="1" column="2">
        <widget class="QLineEdit" name="pulsegen_address">
         <property name="maximumSize">
@@ -322,14 +322,14 @@ color: rgb(120, 120, 120);}</string>
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="srs_label">
         <property name="text">
          <string>SRS DG645</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLabel" name="label_5">
+       <widget class="QLabel" name="srs_address_label">
         <property name="text">
          <string>Address</string>
         </property>
@@ -338,14 +338,11 @@ color: rgb(120, 120, 120);}</string>
      </layout>
     </widget>
     <widget class="QPushButton" name="trigger_pulses">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
      <property name="geometry">
       <rect>
-       <x>70</x>
+       <x>80</x>
        <y>190</y>
-       <width>94</width>
+       <width>75</width>
        <height>23</height>
       </rect>
      </property>
@@ -395,8 +392,13 @@ color: rgb(120, 120, 120);}</string>
       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12px; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Welcome to the laser triggering application. To connect to an instrument, input the instrument's address and select the square checkbox next to that instrument's name. Naviagte to Help -&amp;gt; Show help for more information.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:14px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Welcome to the laser triggering application.To connect to an instrument, input the instrument's address and select the square checkbox next to that instrument's name. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;To acquire Raman spectra, first launch LightField software using the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Launch LF&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; button. Once LightField has loaded, open the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Default_Python_Experiment&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; in LightField. Then acquire spectra using the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Acquire&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; button above.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;For more information, naviagte to Help -&amp;gt; Show help.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;--------------------------------------------------------------------&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </widget>
@@ -417,35 +419,6 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Configure LightField</string>
     </property>
-    <widget class="QPushButton" name="launch_lf">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>30</y>
-       <width>111</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Launch LightField</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="acquire_raman">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>140</x>
-       <y>30</y>
-       <width>151</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Acquire Raman spectrum</string>
-     </property>
-    </widget>
     <widget class="QWidget" name="formLayoutWidget_3">
      <property name="geometry">
       <rect>
@@ -455,9 +428,9 @@ p, li { white-space: pre-wrap; }
        <height>22</height>
       </rect>
      </property>
-     <layout class="QFormLayout" name="formLayout_2">
+     <layout class="QFormLayout" name="lf_form">
       <item row="0" column="0">
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="lf_notes_label">
         <property name="text">
          <string>File notes</string>
         </property>
@@ -472,8 +445,34 @@ p, li { white-space: pre-wrap; }
       </item>
      </layout>
     </widget>
+    <widget class="QPushButton" name="launch_lf">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>30</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Launch LF</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="acquire_raman">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>30</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Acquire</string>
+     </property>
+    </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox">
+   <widget class="QGroupBox" name="groupBox_seq">
     <property name="geometry">
      <rect>
       <x>290</x>
@@ -490,44 +489,6 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Experimental sequence</string>
     </property>
-    <widget class="QPushButton" name="run_seq">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>170</y>
-       <width>71</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Run</string>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="abort_seq">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>120</x>
-       <y>170</y>
-       <width>71</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Abort</string>
-     </property>
-    </widget>
     <widget class="QWidget" name="formLayoutWidget_2">
      <property name="geometry">
       <rect>
@@ -537,7 +498,7 @@ p, li { white-space: pre-wrap; }
        <height>111</height>
       </rect>
      </property>
-     <layout class="QFormLayout" name="formLayout">
+     <layout class="QFormLayout" name="seq_form">
       <item row="0" column="0">
        <widget class="QLabel" name="set_seq_cycles_label">
         <property name="text">
@@ -619,7 +580,7 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item row="4" column="0">
-       <widget class="QLabel" name="label_10">
+       <widget class="QLabel" name="p_rotation_label">
         <property name="text">
          <string>Polarizer rotation</string>
         </property>
@@ -636,6 +597,32 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
      </layout>
+    </widget>
+    <widget class="QPushButton" name="run_seq">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>170</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Run</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="abort_seq">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>170</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Abort</string>
+     </property>
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_scope">
@@ -659,7 +646,7 @@ p, li { white-space: pre-wrap; }
        <height>71</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
+     <layout class="QGridLayout" name="scope_grid">
       <item row="2" column="1">
        <widget class="QSpinBox" name="mso_downsample">
         <property name="minimum">
@@ -688,7 +675,7 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="mso_label_2">
+       <widget class="QLabel" name="mso_address_label">
         <property name="text">
          <string>Address</string>
         </property>
@@ -720,35 +707,29 @@ p, li { white-space: pre-wrap; }
      </layout>
     </widget>
     <widget class="QPushButton" name="scope_acquire">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
      <property name="geometry">
       <rect>
-       <x>70</x>
+       <x>90</x>
        <y>120</y>
-       <width>121</width>
+       <width>75</width>
        <height>23</height>
       </rect>
      </property>
      <property name="text">
-      <string>Acquire signal</string>
+      <string>Acquire</string>
      </property>
     </widget>
     <widget class="QPushButton" name="export_scope_trace">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
      <property name="geometry">
       <rect>
-       <x>70</x>
+       <x>90</x>
        <y>150</y>
-       <width>121</width>
-       <height>23</height>
+       <width>75</width>
+       <height>21</height>
       </rect>
      </property>
      <property name="text">
-      <string>Export last trace</string>
+      <string>Export</string>
      </property>
     </widget>
    </widget>
@@ -773,9 +754,9 @@ p, li { white-space: pre-wrap; }
        <height>81</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
+     <layout class="QGridLayout" name="avacs_grid">
       <item row="0" column="0">
-       <widget class="QLabel" name="avacs_address_label">
+       <widget class="QLabel" name="avacs_label">
         <property name="text">
          <string>AVACS</string>
         </property>
@@ -820,7 +801,7 @@ p, li { white-space: pre-wrap; }
          </size>
         </property>
         <property name="text">
-         <string>COM5</string>
+         <string>COM21</string>
         </property>
         <property name="placeholderText">
          <string>COM5</string>
@@ -828,7 +809,7 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="avacs_address_label_2">
+       <widget class="QLabel" name="avacs_address_label">
         <property name="text">
          <string>Address</string>
         </property>
@@ -841,8 +822,8 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>50</x>
        <y>120</y>
-       <width>81</width>
-       <height>20</height>
+       <width>75</width>
+       <height>23</height>
       </rect>
      </property>
      <property name="text">
@@ -886,9 +867,9 @@ p, li { white-space: pre-wrap; }
         <height>71</height>
        </rect>
       </property>
-      <layout class="QGridLayout" name="gridLayout_4">
+      <layout class="QGridLayout" name="polarizer_grid">
        <item row="0" column="0">
-        <widget class="QLabel" name="polarizer_label_2">
+        <widget class="QLabel" name="polarizer_checkbox_label">
          <property name="text">
           <string>Polarizer</string>
          </property>
@@ -925,7 +906,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="label_6">
+        <widget class="QLabel" name="p_angle_label">
          <property name="text">
           <string>Angle (deg)</string>
          </property>
@@ -953,13 +934,26 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </widget>
+     <widget class="QPushButton" name="polarizer_move_to">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>90</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Set</string>
+      </property>
+     </widget>
      <widget class="QPushButton" name="polarizer_home">
       <property name="geometry">
        <rect>
-        <x>82</x>
+        <x>20</x>
         <y>90</y>
-        <width>81</width>
-        <height>20</height>
+        <width>75</width>
+        <height>23</height>
        </rect>
       </property>
       <property name="text">
@@ -991,7 +985,7 @@ p, li { white-space: pre-wrap; }
         <height>71</height>
        </rect>
       </property>
-      <layout class="QGridLayout" name="gridLayout_7">
+      <layout class="QGridLayout" name="a_grid">
        <item row="1" column="0">
         <widget class="QLabel" name="analyzer_label">
          <property name="text">
@@ -1000,7 +994,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QLabel" name="polarizer_label_3">
+        <widget class="QLabel" name="a_checkbox_label">
          <property name="text">
           <string>Analyzer</string>
          </property>
@@ -1050,7 +1044,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="a_angle_label">
          <property name="text">
           <string>Angle (deg)</string>
          </property>
@@ -1058,13 +1052,26 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </widget>
+     <widget class="QPushButton" name="analyzer_move_to">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>90</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Set</string>
+      </property>
+     </widget>
      <widget class="QPushButton" name="analyzer_home">
       <property name="geometry">
        <rect>
-        <x>82</x>
+        <x>20</x>
         <y>90</y>
-        <width>81</width>
-        <height>21</height>
+        <width>75</width>
+        <height>23</height>
        </rect>
       </property>
       <property name="text">
@@ -1072,7 +1079,7 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </widget>
-    <widget class="QFrame" name="a_frame_2">
+    <widget class="QFrame" name="rotation_frame">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -1096,9 +1103,9 @@ p, li { white-space: pre-wrap; }
         <height>81</height>
        </rect>
       </property>
-      <layout class="QFormLayout" name="formLayout_3">
+      <layout class="QFormLayout" name="rotation_grid">
        <item row="0" column="0">
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="rot_start_label">
          <property name="text">
           <string>Start (deg)</string>
          </property>
@@ -1112,7 +1119,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="rot_end_label">
          <property name="text">
           <string>End (deg)</string>
          </property>
@@ -1129,7 +1136,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="label_8">
+        <widget class="QLabel" name="rot_steps_label">
          <property name="text">
           <string>Steps</string>
          </property>
@@ -1147,7 +1154,7 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </widget>
-     <widget class="QLabel" name="label_9">
+     <widget class="QLabel" name="rotation_label">
       <property name="geometry">
        <rect>
         <x>10</x>

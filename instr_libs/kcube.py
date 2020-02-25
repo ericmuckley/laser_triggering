@@ -22,6 +22,7 @@ def enable_polarizer(kcube, enable):
     kcube['rotation_start'].setEnabled(enable)
     kcube['rotation_steps'].setEnabled(enable)
     kcube['seq_polarizer_rot'].setEnabled(enable)
+    kcube['polarizer_move_to'].setEnabled(enable)
     kcube['paddress'].setEnabled(not enable)
     
 
@@ -36,6 +37,7 @@ def enable_analyzer(kcube, enable):
     kcube['rotation_start'].setEnabled(enable)
     kcube['rotation_steps'].setEnabled(enable)
     kcube['seq_polarizer_rot'].setEnabled(enable)
+    kcube['analyzer_move_to'].setEnabled(enable)
     kcube['aaddress'].setEnabled(not enable)
 
 
@@ -116,16 +118,16 @@ def polarizer_move_to(kcube):
     """Move the polarizer to specified angle."""
     angle = int(kcube['pangle'].value())
     kcube['pdev'].move_to(angle)
-    kcube['curr_pangle_label'].setText(
-            str(round(kcube['pdev'].position)))
+    kcube['curr_pangle_label'].setText(str(angle))
+    #str(round(kcube['pdev'].position)))
+            
     
-
 def analyzer_move_to(kcube):
     """Move the analyzer to specified angle."""
     angle = int(kcube['aangle'].value())
     kcube['adev'].move_to(angle)
-    kcube['curr_aangle_label'].setText(
-            str(round(kcube['adev'].position)))  
+    kcube['curr_aangle_label'].setText(str(angle))
+    #str(round(kcube['adev'].position)))  
 
 
 def polarizer_home(kcube):
