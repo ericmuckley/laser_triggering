@@ -133,7 +133,7 @@ class App(QMainWindow):
                 'filedir': self.filedir,
                 'outbox': self.ui.outbox,
                 'starttime': self.starttime,
-                'data': np.full((1000, 8), '', dtype=object),
+                'data': np.full((1000, 9), '', dtype=object),
                 'logpath': self.logdir+self.starttime+'.csv'}
         self.avacs = {
                 'dev': None,

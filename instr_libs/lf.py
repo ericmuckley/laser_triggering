@@ -60,6 +60,7 @@ def device_found(experiment):
         if (device.Type == DeviceType.Camera):
             return True
 
+
 def save_file(filename, experiment):    
     """Save a Raman acquisition file using LightField."""
     # Set the base file name
@@ -76,12 +77,14 @@ def save_file(filename, experiment):
     experiment.SetValue(
         ExperimentSettings.FileNameGenerationAttachTime, False)
 
+
 def show_file_list(lf):
     """Show the list of acquired Raman spe files."""
     lf['outbox'].append(
             '{} Raman acquisition files'.format(len(lf['file_list'])))
     for f in lf['file_list']:
         lf['outbox'].append(f)
+
 
 def acquire_raman(lf):
     """Acquire Raman spectra using an opened instance of LightField."""
@@ -90,8 +93,8 @@ def acquire_raman(lf):
     # check for device and inform user if one is needed
     if (device_found(experiment)==True):        
         # check this location for saved spe after running
-        notes = lf['notes'].text().replace(',','__')
-        file_name = time.strftime('%Y-%m-%d_%H-%M-%S')+'_'+notes
+        #notes = lf['notes'].text().replace(',','__').replace('\t', '__')
+        file_name = time.strftime('%Y-%m-%d_%H-%M-%S')#+'___'+notes
         lf['recent_file'] = file_name
         lf['file_list'].append(file_name+'.csv')
         # pass location of saved file
