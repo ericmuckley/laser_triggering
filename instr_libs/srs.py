@@ -19,8 +19,12 @@ def pulsegen_on(srs):
             dev.write('*IDN?\r'.encode())
             srs['dev'] = dev
             srs['outbox'].append('Pulse generator connected.')
-            srs['outbox'].append(dev.readline().decode("utf-8"))
-            enable_pulse_gen_buttons(srs, True)
+            message = dev.readline().decode("utf-8")
+            if len(message) > 0:
+                srs['outbox'].append(message)
+                enable_pulse_gen_buttons(srs, True)
+            else:
+                raise ValueError('Non communication from SRS')
         except serial.SerialException:
             srs['outbox'].append('Pulse generator could not connect.')
             srs['on'].setChecked(False)

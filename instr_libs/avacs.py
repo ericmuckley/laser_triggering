@@ -26,10 +26,10 @@ def avacs_on(avacs):
             avacs['address'].setEnabled(False)
             avacs['dev'].write('MR\r'.encode())
             message = dev.readline().decode()
-            if len(message) < 1:
-                raise ValueError('Non communication from AVACS')
-            else:
+            if len(message) > 0:
                 avacs['outbox'].append(message)
+            else:
+                raise ValueError('Non communication from AVACS')
         except:  # serial.SerialException:
             avacs['outbox'].append('Attenuator could not connect.')
             avacs['angle'].setEnabled(False)
