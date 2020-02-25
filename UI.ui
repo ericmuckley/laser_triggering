@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>807</width>
+    <width>818</width>
     <height>723</height>
    </rect>
   </property>
@@ -197,10 +197,10 @@ color: rgb(120, 120, 120);}</string>
          </size>
         </property>
         <property name="text">
-         <string>COM13</string>
+         <string>COM16</string>
         </property>
         <property name="placeholderText">
-         <string>COM5</string>
+         <string>COM16</string>
         </property>
        </widget>
       </item>
@@ -397,7 +397,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;To acquire Raman spectra, first launch LightField software using the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Launch LF&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; button. Once LightField has loaded, open the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Default_Python_Experiment&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; in LightField. Then acquire spectra using the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Acquire&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; button above.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;For more information, naviagte to Help -&amp;gt; Show help.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;For more information, navigate to Help -&amp;gt; Show help.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;--------------------------------------------------------------------&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
@@ -738,8 +738,8 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>610</x>
       <y>20</y>
-      <width>181</width>
-      <height>151</height>
+      <width>191</width>
+      <height>121</height>
      </rect>
     </property>
     <property name="title">
@@ -748,9 +748,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QWidget" name="gridLayoutWidget_3">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>10</x>
        <y>30</y>
-       <width>141</width>
+       <width>169</width>
        <height>81</height>
       </rect>
      </property>
@@ -801,10 +801,10 @@ p, li { white-space: pre-wrap; }
          </size>
         </property>
         <property name="text">
-         <string>COM21</string>
+         <string>COM17</string>
         </property>
         <property name="placeholderText">
-         <string>COM5</string>
+         <string>COM17</string>
         </property>
        </widget>
       </item>
@@ -815,20 +815,20 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
+      <item row="2" column="2">
+       <widget class="QLabel" name="current_avacs_angle">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>---       </string>
+        </property>
+       </widget>
+      </item>
      </layout>
-    </widget>
-    <widget class="QPushButton" name="avacs_set_now">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>120</y>
-       <width>75</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Set</string>
-     </property>
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_thorlabs">
@@ -934,25 +934,12 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </widget>
-     <widget class="QPushButton" name="polarizer_move_to">
-      <property name="geometry">
-       <rect>
-        <x>120</x>
-        <y>90</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Set</string>
-      </property>
-     </widget>
      <widget class="QPushButton" name="polarizer_home">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>80</x>
         <y>90</y>
-        <width>75</width>
+        <width>81</width>
         <height>23</height>
        </rect>
       </property>
@@ -1052,25 +1039,12 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </widget>
-     <widget class="QPushButton" name="analyzer_move_to">
-      <property name="geometry">
-       <rect>
-        <x>120</x>
-        <y>90</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Set</string>
-      </property>
-     </widget>
      <widget class="QPushButton" name="analyzer_home">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>80</x>
         <y>90</y>
-        <width>75</width>
+        <width>81</width>
         <height>23</height>
        </rect>
       </property>
@@ -1175,7 +1149,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>807</width>
+     <width>818</width>
      <height>24</height>
     </rect>
    </property>

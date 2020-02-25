@@ -9,7 +9,9 @@ Created on Mon Feb 17 14:08:13 2020
 
 import time
 import serial
-
+import visa
+import thorlabs_apt as apt
+from serial.tools import list_ports
 
 def pulsegen_on(srs):
     "Run this function when pulse generator checkbox is checked."""
@@ -20,11 +22,12 @@ def pulsegen_on(srs):
             srs['dev'] = dev
             srs['outbox'].append('Pulse generator connected.')
             message = dev.readline().decode("utf-8")
-            if len(message) > 0:
+            if 'Stanford Research Systems' not in message:
+                srs['outbox'].append('Pulse generator could not connect.')
+                raise Exception    
+            else:
                 srs['outbox'].append(message)
                 enable_pulse_gen_buttons(srs, True)
-            else:
-                raise ValueError('Non communication from SRS')
         except serial.SerialException:
             srs['outbox'].append('Pulse generator could not connect.')
             srs['on'].setChecked(False)
@@ -78,4 +81,23 @@ def trigger_pulses(srs):
 
 
 
+if __name__ == '__main__':
+    
+    rm = visa.ResourceManager()
+    
+    print('Available ports:')
+    print([p for p in rm.list_resources()])
+    print([p.device for p in list_ports.comports()])
+    print([p for p in apt.list_available_devices()])
+    
+    
+    address = 'COM16'
+
+    dev = serial.Serial(port=address, timeout=2)
+    dev.write('*IDN?\r'.encode())
+
+    message = dev.readline().decode("utf-8")
+    print(message)
+    
+    dev.close()
 

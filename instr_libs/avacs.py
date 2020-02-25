@@ -22,21 +22,17 @@ def avacs_on(avacs):
             avacs['dev'] = dev
             avacs['outbox'].append('Attenuator connected.')
             avacs['angle'].setEnabled(True)
-            avacs['set_now'].setEnabled(True)
             avacs['address'].setEnabled(False)
+            avacs['curr_angle'].setEnabled(True)
             avacs['dev'].write('MR\r'.encode())
-            message = dev.readline().decode()
-            if len(message) > 0:
-                avacs['outbox'].append(message)
-            else:
-                raise ValueError('Non communication from AVACS')
         except:  # serial.SerialException:
             avacs['outbox'].append('Attenuator could not connect.')
             avacs['angle'].setEnabled(False)
-            avacs['set_now'].setEnabled(False)
             avacs['address'].setEnabled(True)
             avacs['dev'] = None
             avacs['on'].setChecked(False)
+            avacs['curr_angle'].setEnabled(False)
+            avacs['curr_angle'].setText('---')
     if not avacs['on'].isChecked():
         try:
             avacs['dev'].close()
@@ -45,9 +41,10 @@ def avacs_on(avacs):
         avacs['dev'] = None
         avacs['outbox'].append('Attenuator closed.')
         avacs['angle'].setEnabled(False)
-        avacs['set_now'].setEnabled(False)
         avacs['address'].setEnabled(True)
         avacs['on'].setChecked(False)
+        avacs['curr_angle'].setEnabled(False)
+        avacs['curr_angle'].setText('---')
 
 
 def set_now(avacs):
@@ -69,11 +66,28 @@ def print_ports():
 
 
 
+def response_to_angle(dev):
+    """Get AVACS response and convert it to the current angle."""
+    message = dev.readline().decode()
+    angle = (int(float(message.split(';')[2])/10))
+    return angle
+
+
+def update_angle(avacs):
+    """Update the current angle on the GUI."""
+    position = round(avacs['angle'].value(), 1)
+    pos_str = str(position).replace('.', '')
+    avacs['dev'].write(('A'+pos_str+'\r').encode())
+    message = avacs['dev'].read(11).decode()
+    curr_angle = round(float(message.split(';')[2])/10, 1)
+    avacs['curr_angle'].setText(str(curr_angle))
+
+
 if __name__ == '__main__':
     
     print_ports()
-    address = 'COM21'
-    position = 36.0
+    address = 'COM17'
+    position = 38.0
 
     dev = serial.Serial(port=address,
                         baudrate=19200,
@@ -97,7 +111,7 @@ if __name__ == '__main__':
     # print(dev.readline())
     
     #dev.write('R\r'.encode())
-    message = dev.readline().decode()
-    print(message)
+    message = dev.read(11).decode()
+    print(int(float(message.split(';')[2])/10))
 
     dev.close()    

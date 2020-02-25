@@ -22,7 +22,6 @@ def enable_polarizer(kcube, enable):
     kcube['rotation_start'].setEnabled(enable)
     kcube['rotation_steps'].setEnabled(enable)
     kcube['seq_polarizer_rot'].setEnabled(enable)
-    kcube['polarizer_move_to'].setEnabled(enable)
     kcube['paddress'].setEnabled(not enable)
     
 
@@ -37,7 +36,6 @@ def enable_analyzer(kcube, enable):
     kcube['rotation_start'].setEnabled(enable)
     kcube['rotation_steps'].setEnabled(enable)
     kcube['seq_polarizer_rot'].setEnabled(enable)
-    kcube['analyzer_move_to'].setEnabled(enable)
     kcube['aaddress'].setEnabled(not enable)
 
 

@@ -81,9 +81,9 @@ class App(QMainWindow):
         self.threadpool = QtCore.QThreadPool()
 
         # create timer which updates fields on GUI (set interval in ms)
-        #self.timer = QtCore.QTimer(self)
-        #self.timer.timeout.connect(self.main_loop)
-        #self.timer.start(1500)  # int(self.ui.set_main_loop_delay.value()))
+        self.timer = QtCore.QTimer(self)
+        self.timer.timeout.connect(self.update_gui_thread)
+        self.timer.start(2000)  # int(self.ui.set_main_loop_delay.value()))
 
         # assign functions to top menu items
         # example: self.ui.menu_item_name.triggered.connect(self.func_name)
@@ -106,13 +106,10 @@ class App(QMainWindow):
         self.ui.launch_lf.clicked.connect(self.launch_lf_thread)
         self.ui.scope_acquire.clicked.connect(self.scope_acquire)
         self.ui.export_scope_trace.clicked.connect(self.export_scope_trace)
-        self.ui.avacs_set_now.clicked.connect(self.avacs_set_now)
         self.ui.polarizer_on.clicked.connect(self.polarizer_on)
         self.ui.analyzer_on.clicked.connect(self.analyzer_on)
         self.ui.polarizer_home.clicked.connect(self.polarizer_home)
         self.ui.analyzer_home.clicked.connect(self.analyzer_home)
-        self.ui.polarizer_move_to.clicked.connect(self.polarizer_move_to)
-        self.ui.analyzer_move_to.clicked.connect(self.analyzer_move_to)
 
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
@@ -143,7 +140,7 @@ class App(QMainWindow):
                 'outbox': self.ui.outbox,
                 'angle': self.ui.avacs_angle,
                 'address': self.ui.avacs_address,
-                'set_now': self.ui.avacs_set_now}
+                'curr_angle': self.ui.current_avacs_angle}
         self.srs = {
                 'dev': None,
                 'tot_pulses': 0,
@@ -191,8 +188,6 @@ class App(QMainWindow):
                 'rotation_steps': self.ui.rotation_steps,
                 'curr_pangle_label': self.ui.current_p_angle,
                 'curr_aangle_label': self.ui.current_a_angle,
-                'analyzer_move_to': self.ui.analyzer_move_to,
-                'polarizer_move_to': self.ui.polarizer_move_to,
                 'seq_polarizer_rot': self.ui.seq_polarizer_rot}
 
         # kill the process which opens LightField if its already running
@@ -205,7 +200,6 @@ class App(QMainWindow):
         self.items_to_deactivate = [
                 self.ui.abort_seq,
                 self.ui.avacs_angle,
-                self.ui.avacs_set_now,
                 self.ui.acquire_raman,
                 self.ui.scope_acquire,
                 self.ui.mso_downsample,
@@ -401,23 +395,23 @@ class App(QMainWindow):
         """Laseroptik beam attenuator checkbox is checked/unchecked."""
         avacs.avacs_on(self.avacs)
 
-    def avacs_set_now(self):
-        """Set angle of the beam attenuator."""
-        avacs.set_now(self.avacs)
-
     # %% ============ system control functions =============================
 
-    '''
-    def main_loop(self):
+    def update_gui_thread(self):
+        """Update the GUI objects in a new thread."""
+        worker = Worker(self.update_gui)  # pass other args here
+        self.threadpool.start(worker)
+
+    def update_gui(self):
         """Function to execute on a regularly based on timer. Use this
         for continuously updating GUI objects."""
-
         # update current polarizer and analyzer angles on GUI
-        if self.kcube['p_on'].isChecked():
+        if self.kcube['pdev'] is not None:
             kcube.polarizer_move_to(self.kcube)
-        if self.kcube['a_on'].isChecked():
+        if self.kcube['adev'] is not None:
             kcube.analyzer_move_to(self.kcube)
-    '''
+        if self.avacs['dev'] is not None:
+            avacs.update_angle(self.avacs)
 
     def set_filedir(self):
         # set the directory for saving data files
@@ -459,7 +453,7 @@ class App(QMainWindow):
         # kill the process which opens LightField if its already running
         # os.system("taskkill /f /im AddInProcess.exe")
         # stop timer
-        #self.timer.stop()
+        self.timer.stop()
         # close app window and kill python kernel
         self.deleteLater()
         self.close()
