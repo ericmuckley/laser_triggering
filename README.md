@@ -43,12 +43,13 @@ Each time a Raman spectrum is acquired, the spectrum is saved to a *.csv* file, 
     * **RUN_LASER_TRIGGERING.bat**: Windows bat file. Make a shortcut of this file and place it anywhere on the PC to run _app.py_ by clicking on the shortcut.
     * **requirements.txt**: text file containing list of all dependencies. These can be installed using Anaconda as described in the _Installation_ section below.
 * **instr_libs**: directory which contains Python scripts for controlling instruments and operation of the GUI
-    * **avacs.py**: modules for controlling Laseroptik AVACS beam attenuator
-    * **kcube.py**: modules for controlling Thorlabs KDC101 brushed servo motor controllers
+    * **avacs.py**: module for controlling Laseroptik AVACS beam attenuator
+    * **kcube.py**: module for controlling Thorlabs KDC101 brushed servo motor controllers
     * **lf.py**: modules for controlling Princeton Instruments LightField software
-    * **mso.py**: modules for controlling Tektronix MSO64 oscilloscope
-    * **ops.py**: modules for controlling operations and file I/O of the main GUI
-    * **srs.py**: modules for controlling SRS DG645 digital delay pulse generator
+    * **mcl.py**: module for controlling Marzhauser Wetzlar MCL-3 microscope stage controller
+    * **mso.py**: module for controlling Tektronix MSO64 oscilloscope
+    * **ops.py**: module for controlling operations and file I/O of the main GUI
+    * **srs.py**: module for controlling SRS DG645 digital delay pulse generator
 * **logs**: default directory for saving experiment configuration files and logging experimental data
 * **support_files**: directory for storing supporting files (_APT.dll_, _APTAPI.h_, _ATP.lib_) and other unused depreciated files
 
