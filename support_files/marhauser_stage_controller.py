@@ -1,15 +1,22 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Feb  3 15:39:10 2020
 
-@author: a6q
+MOdule for controlling the Marzhauser MCL-3 stage controller.
+Note: the Marzhauser ECO-STEP controller uses a different set of
+serial commands. For the ECO-STEP, test communication using:
+dev.write(('?ver\r\r').encode())
+print(dev.readline().decode())
+
+
+Created on Mon Feb  3 15:39:10 2020
+@author: ericmuckley@gmail.com
+
 """
 
 import serial
 import numpy as np
 from serial.tools import list_ports
 
-import io
 
 def print_ports():
     """Print a list of avilable serial ports."""
@@ -22,28 +29,40 @@ def print_ports():
 address = 'COM22'
 
 
-#stage = 'ECO-STEP'
-stage = 'MCL'
+
+def get_x_pos(dev):
+    """Get current X position of stage."""
+    dev.write(('UC\r\r').encode())
+    return int(dev.readline().decode())
+
+def get_y_pos(dev):
+    """Get current Y position of stage."""
+    dev.write(('UD\r\r').encode())
+    return int(dev.readline().decode())
+
+def get_z_pos(dev):
+    """Get current Z position of stage."""
+    dev.write(('UE\r\r').encode())
+    return int(dev.readline().decode())
+
+def get_abs_pos(dev):
+    """Get absolute position of stage."""
+    x = get_x_pos(dev)
+    y = get_y_pos(dev)
+    z = get_z_pos(dev)
+    return (x, y, z)
+
+
+
 
 dev = serial.Serial(port=address, timeout=2,
                     stopbits=serial.STOPBITS_TWO)
 
 
-if stage not in ['ECO-STEP', 'MCL']:
-    print('Incorrect stage name.')
-    dev = serial.Serial()
+print('abs. position: {}'.format(get_abs_pos(dev)))
 
-
-if stage == 'ECO-STEP':
-    dev.write(('?ver\r\r').encode())
-    print(dev.readline().decode())
-
-
-if stage == 'MCL':
-    dev.write(('UC\r\r').encode())
-    print(dev.readline().decode())
-
-
+dev.write(('UF\r\r').encode())
+print('Controller status: {}'.format(dev.readline().decode()))
 
 dev.close()
 
