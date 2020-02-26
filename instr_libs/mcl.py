@@ -59,10 +59,28 @@ dev = serial.Serial(port=address, timeout=2,
                     stopbits=serial.STOPBITS_TWO)
 
 
-print('abs. position: {}'.format(get_abs_pos(dev)))
+#print('abs. position: {}'.format(get_abs_pos(dev)))
+
+
+#dev.write(('U\07r\rU\000\rU\r\r').encode())
+#dev.write(('UB\r\r').encode())
+#print('reading: {}'.format(dev.readline().decode()))
+
+
+def move(dev):
+    """Move stage to absolute position."""
+    dev.write(('U\07r\rU\000\rU\r\r').encode())
+    dev.write(('U\000\r\r').encode())
+    
+    dev.write(('UP\r\r').encode())
+
+
+#move(dev)
 
 dev.write(('UF\r\r').encode())
 print('Controller status: {}'.format(dev.readline().decode()))
+
+print('abs. position: {}'.format(get_abs_pos(dev)))
 
 dev.close()
 
@@ -98,5 +116,5 @@ visa write lines:
 # x position
 UC\r
 # y position
-CD\r
+UD\r
 """
