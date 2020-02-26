@@ -17,35 +17,67 @@ def print_ports():
     print('Available serial ports:')
     [print(p.device) for p in ports]
 
-print_ports()
+#print_ports()
 
-address = 'COM5'
+address = 'COM22'
 
-dev = serial.Serial(port=address,
-                    baudrate=9600,
-                    timeout=2,
-                    write_timeout=1,
-                    bytesize=serial.EIGHTBITS,
-                    parity=serial.PARITY_NONE,
+
+#stage = 'ECO-STEP'
+stage = 'MCL'
+
+dev = serial.Serial(port=address, timeout=2,
                     stopbits=serial.STOPBITS_TWO)
 
-'''
-sio = io.TextIOWrapper(io.BufferedRWPair(dev, dev))
-sio.write('?ver\r\r')
-sio.flush()
-message = sio.readline()
-print(message)
 
-'''
-dev.write(('?ver\r\r').encode())
-
-#dev.flushOutput()
-#dev.flushInput()
-#dev.write((r'?ver\r').encode())
-print(dev.readline().decode())
+if stage not in ['ECO-STEP', 'MCL']:
+    print('Incorrect stage name.')
+    dev = serial.Serial()
 
 
-#print(dev.isOpen())
+if stage == 'ECO-STEP':
+    dev.write(('?ver\r\r').encode())
+    print(dev.readline().decode())
+
+
+if stage == 'MCL':
+    dev.write(('UC\r\r').encode())
+    print(dev.readline().decode())
+
+
 
 dev.close()
 
+
+
+
+"""
+From Alex Strasser's LabVIEW program for controlling the MCL
+visa open
+visa clear buffers
+
+visa write lines:
+U 0
+U\010\r
+U\07v\rU\000\r
+visa read
+
+visa write lines:
+U 0
+U\010\r
+U\07v\rU\011\r
+visa read
+
+# move absolute (home?)
+visa write lines:
+U\07r\rU\000\rU
+U\000\r
+U\07r\rU\010\rU
+U\010\r
+
+#read position
+visa write lines:
+# x position
+UC\r
+# y position
+CD\r
+"""
