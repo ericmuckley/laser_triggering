@@ -45,18 +45,20 @@ def get_z_pos(dev):
     dev.write(('UE\r\r').encode())
     return int(dev.readline().decode())
 
-def get_abs_pos(dev):
+def get_pos(dev):
     """Get absolute position of stage."""
     x = get_x_pos(dev)
     y = get_y_pos(dev)
     z = get_z_pos(dev)
+    print('abs. position: {}'.format((x,y,z)))
     return (x, y, z)
 
+def get_status(dev):
+    """Get device status."""
+    dev.write(('UF\r\r').encode())
+    print('Device status: {}'.format(dev.readline().decode()))
 
 
-
-dev = serial.Serial(port=address, timeout=2,
-                    stopbits=serial.STOPBITS_TWO)
 
 
 #print('abs. position: {}'.format(get_abs_pos(dev)))
@@ -69,18 +71,23 @@ dev = serial.Serial(port=address, timeout=2,
 
 def move(dev):
     """Move stage to absolute position."""
-    dev.write(('U\07r\rU\000\rU\r\r').encode())
-    dev.write(('U\000\r\r').encode())
+    #dev.write(('U\07r\rU\000\rU\r\r').encode())
+    #dev.write(('U\000\r\r').encode())
     
+    
+    dev.write(('UG\r\r').encode())
+    dev.write(('UI50\r\r').encode())
     dev.write(('UP\r\r').encode())
 
-
 #move(dev)
+    
 
-dev.write(('UF\r\r').encode())
-print('Controller status: {}'.format(dev.readline().decode()))
+dev = serial.Serial(port=address, timeout=2,
+                    stopbits=serial.STOPBITS_TWO)
 
-print('abs. position: {}'.format(get_abs_pos(dev)))
+get_pos(dev)
+get_status(dev)
+
 
 dev.close()
 
