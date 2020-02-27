@@ -18,6 +18,7 @@ import numpy as np
 from serial.tools import list_ports
 
 
+
 def print_ports():
     """Print a list of avilable serial ports."""
     ports = list(list_ports.comports())
@@ -25,20 +26,116 @@ def print_ports():
     [print(p.device) for p in ports]
 
 
-def get_x_pos(dev):
+def enable_stage(mcl, enabled):
+    """Enable/disable GUI objects related to the MCL stage."""
+    items = ['seq_mcl', 'set_x', 'set_y', 'grid_xf', 'show_x', 'show_y',
+             'grid_yf', 'grid_xi', 'grid_yi', 'grid_xsteps',
+             'grid_ysteps', 'move_to_zero']
+    [mcl[i].setEnabled(enabled) for i in items]
+    mcl['address'].setEnabled(not enabled)
+
+
+def stage_on(mcl):
+    "Run this function when MCL-3 stage checkbox is checked."""
+    if mcl['on'].isChecked():
+        try:
+            dev = serial.Serial(
+                    port=mcl['address'].text(),
+                    timeout=2,
+                    stopbits=serial.STOPBITS_TWO)
+            mcl['dev'] = dev
+            mcl['outbox'].append('Marzhauser MCL-3 stage connected.')
+            mcl['outbox'].append(
+                    'Device status: {}'.format(get_status(dev)))
+            enable_stage(mcl, True)
+            x, y = get_x_pos(mcl['dev']), get_y_pos(mcl['dev'])
+            mcl['show_x'].setText(str(x))
+            mcl['show_y'].setText(str(y))
+            mcl['set_x'].setValue(int(x))
+            mcl['set_y'].setValue(int(y))
+        except:
+            mcl['outbox'].append('Stage could not connect.')
+            enable_stage(mcl, False)
+            mcl['dev'] = None
+            mcl['on'].setChecked(False)
+            mcl['show_x'].setText('---')
+            mcl['show_y'].setText('---')
+    if not mcl['on'].isChecked():
+        try:
+            mcl['dev'].close()
+        except AttributeError:
+            pass
+        mcl['dev'] = None
+        mcl['outbox'].append('Stage closed.')
+        enable_stage(mcl, False)
+        mcl['on'].setChecked(False)
+        mcl['show_x'].setText('---')
+        mcl['show_y'].setText('---')
+
+
+def get_grid(mcl):
+    """Get grid coordinates from grid settings on GUI."""
+    x_cords = np.linspace(mcl['grid_xi'].value(),
+                          mcl['grid_xf'].value(),
+                          mcl['grid_xsteps'].value()+1)
+    y_cords = np.linspace(mcl['grid_yi'].value(),
+                          mcl['grid_yf'].value(),
+                          mcl['grid_ysteps'].value()+1)
+    grid_cords = np.array(np.meshgrid(x_cords, y_cords)).T.reshape(-1,2)
+    print(grid_cords)
+    return grid_cords
+
+
+def update_position(mcl):
+    """Update position on the main GUI."""
+    # flush buffer
+    #mcl['dev'].flushInput()
+    #mcl['dev'].flushOutput()
+    new_x = int(mcl['set_x'].value())
+    new_y = int(mcl['set_y'].value())
+    time.sleep(0.1)
+    # get current position and update GUI fields
+    current_x = int(get_x_pos(mcl['dev'], backup=int(mcl['show_x'].text())))
+    current_y = int(get_y_pos(mcl['dev'], backup=int(mcl['show_y'].text())))
+    mcl['show_x'].setText(str(current_x))
+    mcl['show_y'].setText(str(current_y))    
+    # move to new position 
+    dx, dy = new_x-current_x, new_y-current_y
+    if dx != 0 or dy != 0:
+        print('MOVE TIME')
+        mcl['outbox'].append(
+                'Moving to ({}, {})...'.format(new_x, new_y))
+        move_by(mcl['dev'], dx, dy)
+
+
+def get_x_pos(dev, backup=0):
     """Get current X position of stage."""
-    dev.write(('UC\r\r').encode())
-    return int(dev.readline().decode())
+    try:
+        
+        dev.write(('UC\r\r').encode())
+        x_pos = int(dev.readline().decode())
+    except:
+        x_pos = backup
+        time.sleep(0.2)
+        print('x failed')
+    return x_pos
 
 
-def get_y_pos(dev):
+def get_y_pos(dev, backup=0):
     """Get current Y position of stage."""
-    dev.write(('UD\r\r').encode())
-    return int(dev.readline().decode())
+    try:
+        dev.write(('UD\r\r').encode())
+        y_pos = int(dev.readline().decode())
+    except:
+        y_pos = backup
+        time.sleep(0.2)
+        print('y failed')
+    return y_pos
 
 
 def get_z_pos(dev):
     """Get current Z position of stage."""
+    dev.readline()  # clears buffer
     dev.write(('UE\r\r').encode())
     return int(dev.readline().decode())
 
@@ -63,9 +160,11 @@ def move_by(dev, dx, dy):
     dy = str(int(dy))
     dev.write(('U\07v\rU\00'+dx+'\rU\01'+dy+'\rUP\r').encode())
     # clear stage buffer
-    time.sleep(0.5)
+    time.sleep(0.1)
     dev.flushInput()
     dev.flushOutput()
+    time.sleep(0.1)
+    dev.readline()
 
 
 def move_to(dev, x, y):
@@ -76,76 +175,10 @@ def move_to(dev, x, y):
     dev.flushOutput()    
     # get current stage position
     x_current, y_current = get_pos(dev)
+    print(x_current, y_current)
     # determine delta x, y needed to move to new position
     dx, dy = x-x_current, y-y_current
     move_by(dev, dx, dy)
-
-
-   'dev': None,
-   'on': self.ui.mcl_on,
-   'seq_mcl': self.ui.seq_mcl,
-   'set_x': self.ui.mcl_set_x,
-   'set_y': self.ui.mcl_set_y,
-   'address': self.ui.mcl_address,
-   'grid_xf': self.ui.mcl_grid_x_end,
-   'grid_yf': self.ui.mcl_grid_y_end,
-   'grid_xi': self.ui.mcl_grid_x_start,
-   'grid_yi': self.ui.mcl_grid_y_start,
-   'grid_xsteps': self.ui.mcl_grid_x_steps,
-   'grid_ysteps': self.ui.mcl_grid_y_steps,
-   'move_to_zero': self.ui.mcl_move_to_zero}
-
-
-
-def enable_stage(mcl, enabled):
-    """Enable/disable GUI objects related to the MCL stage."""
-    items = ['seq_mcl', 'set_x', 'set_y', 'grid_xf',
-             'grid_yf', 'grid_xi', 'grid_yi', 'grid_xsteps',
-             'grid_ysteps', 'move_to_zero']
-    [mcl[i].setEnabled(enabled) for i in items]
-    mcl['address'].setEnabled(not enabled)
-
-
-def stage_on(mcl):
-    "Run this function when MCL-3 stage checkbox is checked."""
-    if mcl['on'].isChecked():
-        try:
-            dev = serial.Serial(port=mcl['address'].text()),
-                        timeout=2, stopbits=serial.STOPBITS_TWO)
-            mcl['dev'] = dev
-            mcl['outbox'].append('Marzhauser MCL-3 stage connected.')
-            mcl['outbox'].append(
-                    'Device status: {}'.format(get_status(dev)))
-            enable_stage(mcl, True)
-        except:
-            mcl['outbox'].append('Stage could not connect.')
-            enabe_stage(mcl, False)
-            mcl['dev'] = None
-            mcl['on'].setChecked(False)
-    if not mcl['on'].isChecked():
-        try:
-            mcl['dev'].close()
-        except AttributeError:
-            pass
-        mcl['dev'] = None
-        mcl['outbox'].append('Stage closed.')
-        enable_stage(mcl, False)
-        mcl['on'].setChecked(False)
-
-
-def get_grid(mcl):
-    """Get grid coordinates from grid settings on GUI."""
-    x_cords = np.linspace(mcl['grid_xi'].value(),
-                          mcl['grid_xf'].value(),
-                          mcl['grid_xsteps'].value()+1)
-    y_cords = np.linspace(mcl['grid_yi'].value(),
-                          mcl['grid_yf'].value(),
-                          mcl['grid_ysteps'].value()+1)
-    grid_cords = np.array(np.meshgrid(x_cords, y_cords)).T.reshape(-1,2)
-    print(grid_cords)
-    return grid_cords
-
-    
 
 
 if __name__ == '__main__':
@@ -158,13 +191,26 @@ if __name__ == '__main__':
                         stopbits=serial.STOPBITS_TWO)
     
     
+    mcl = {
+            'dev': dev,
+            'set_x': 31,
+            'set_y': -22}
+    
+    #update_position(mcl)
+    
+    for i in range(3):
+        
+        print('position: {}'.format((get_x_pos(dev), get_y_pos(dev))))
+        time.sleep(0.01)
+    
+    '''
     print('Device status: {}'.format(get_status(dev)))
 
     move_to(dev, 2, 4)
     
     print('position: {}'.format(get_pos(dev)))
     print('Device status: {}'.format(get_status(dev)))
-    
+    '''
     
     dev.close()
 

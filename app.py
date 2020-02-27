@@ -84,7 +84,7 @@ class App(QMainWindow):
         # create timer which updates fields on GUI (set interval in ms)
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.update_gui_thread)
-        self.timer.start(2000)  # int(self.ui.set_main_loop_delay.value()))
+        self.timer.start(1500)  # int(self.ui.set_main_loop_delay.value()))
 
         # assign functions to top menu items
         # example: self.ui.menu_item_name.triggered.connect(self.func_name)
@@ -119,7 +119,7 @@ class App(QMainWindow):
         self.ui.pulsegen_on.stateChanged.connect(self.pulsegen_on)
         self.ui.mso_on.stateChanged.connect(self.mso_on)
         self.ui.avacs_on.stateChanged.connect(self.avacs_on)
-        self.ui.stage_on.stateChanged.connect(self.stage_on)
+        self.ui.mcl_on.stateChanged.connect(self.stage_on)
 
 
         # intialize log file for logging experimental settings
@@ -137,6 +137,7 @@ class App(QMainWindow):
                 'filedir': self.filedir,
                 'outbox': self.ui.outbox,
                 'starttime': self.starttime,
+                'gui_update_finished': True,
                 'data': np.full((1000, 9), '', dtype=object),
                 'logpath': self.logdir+self.starttime+'.csv'}
         self.avacs = {
@@ -175,7 +176,6 @@ class App(QMainWindow):
                 'acquire': self.ui.acquire_raman,
                 'notes': self.ui.raman_filename_notes,
                 'seq': self.ui.seq_raman_acquisition}
-
         self.kcube = {
                 'pdev': None,
                 'adev': None,
@@ -194,15 +194,17 @@ class App(QMainWindow):
                 'curr_pangle_label': self.ui.current_p_angle,
                 'curr_aangle_label': self.ui.current_a_angle,
                 'seq_polarizer_rot': self.ui.seq_polarizer_rot}
-        
         self.mcl = {
                'dev': None,
                'on': self.ui.mcl_on,
+               'prev_position': None,
                'outbox': self.ui.outbox,
                'seq_mcl': self.ui.seq_mcl,
                'set_x': self.ui.mcl_set_x,
                'set_y': self.ui.mcl_set_y,
                'address': self.ui.mcl_address,
+               'show_x': self.ui.mcl_current_x,
+               'show_y': self.ui.mcl_current_y,               
                'grid_xf': self.ui.mcl_grid_x_end,
                'grid_yf': self.ui.mcl_grid_y_end,
                'grid_xi': self.ui.mcl_grid_x_start,
@@ -334,11 +336,15 @@ class App(QMainWindow):
     def stage_on(self):
         """Checkbox for MCL stage controller is checked/unchecked."""
         mcl.stage_on(self.mcl)
-
+    '''
+    def stage_on_thread(self):
+        """Connect to stage in a new thread."""
+        worker = Worker(self.stage_on)  # pass other args here
+        self.threadpool.start(worker)
+    '''
     def mcl_move_to_zero(self):
         """Move to stage to (0, 0) position."""
-        mcl.move_to_zero(self.mcl)
-
+        [self.mcl[i].setValue(0) for i in ['set_x', 'set_y']]
 
 
     # %% ========= Thorlabs KDC101 servo motor controllers= ==============
@@ -434,8 +440,10 @@ class App(QMainWindow):
 
     def update_gui_thread(self):
         """Update the GUI objects in a new thread."""
-        worker = Worker(self.update_gui)  # pass other args here
-        self.threadpool.start(worker)
+        if self.ops['gui_update_finished']:
+            self.ops['gui_update_finished'] = False
+            worker = Worker(self.update_gui)  # pass other args here
+            self.threadpool.start(worker)
 
     def update_gui(self):
         """Function to execute on a regularly based on timer. Use this
@@ -447,6 +455,10 @@ class App(QMainWindow):
             kcube.analyzer_move_to(self.kcube)
         if self.avacs['dev'] is not None:
             avacs.update_angle(self.avacs)
+        # update stage position on the GUI
+        if self.mcl['dev'] is not None:
+            mcl.update_position(self.mcl)
+        self.ops['gui_update_finished'] = True 
 
     def set_filedir(self):
         # set the directory for saving data files
@@ -485,6 +497,8 @@ class App(QMainWindow):
             self.mso['dev'].close()
         if self.avacs['dev']:
             self.avacs['dev'].close()
+        if self.mcl['dev']:
+            self.mcl['dev'].close()
         # kill the process which opens LightField if its already running
         # os.system("taskkill /f /im AddInProcess.exe")
         # stop timer

@@ -4,10 +4,13 @@
 <p>The application can be started by opening a Python code editor running the <code>app.py</code> file. Alternatively, the software can be started using the <code>RUN_LASER_TRIGGERING.bat</code> Windows BAT file.</p>
 <h2>Connecting to instruments</h2>
 <p>To view the avilable instrument ports, navigate to <strong>Menu -&gt; Show avilable instrument ports</strong>. Addresses of each avilable VISA, serial, and FTID USB port will be printed in the output box. To connect with a particular instrument, navigate to the box for that instrument on the front panel of the GUI. Enter the appropriate address for the instrument in the <strong>Address</strong> field, and click the checkbox adjacent to the address field to connect to the instrument. For example: to communicate with the SRS DG645 pulse generator, enter the serial port address (e.g. COM6) in the address field and select the checkbox to connect to the device. The output box will indicate if connection to the instrument was successful. If the connection failed, check the instument address and connection to the PC. The user may also determine whether the instument can be identified by the PC using Windows Device Manager or National Instruments Measurement &amp; Automation Explorer (NI MAX).</p>
+<p>Notes:
+* Instruments may not be communicating properly unless they return an identification message in the outout box when the are connected. If instruments will not connect, check that their addresses are correct.
+* The application is set up to trigger pulses from the SRS DG645 using the A-B output. So when using the SRS DG645 as an external trigger for an auxilary laser, connect the DG645 <em>A-B output</em> to the laser <em>external trigger</em> input.</p>
 <h2>Connecting to Thorlabs K-Cube KDC101 controllers</h2>
 <p>These controllers cannot be found by the computer if the <code>import thorlabs_apt as apt</code> command has been run before the controllers were connected to the PC. After they are connected, make sure the Python kernel has been restarted to allow initialization of <code>APT.DLL</code> while the controllers are connected and powered. </p>
 <h2>Connecting to LightField</h2>
-<p>To acquire Raman spectra using Princeton Instruments LightField software, LightField must be opened from the GUI by clicking <strong>Launch LightField*<em>.' Once LightField loads, the user should load the LightField experiment called <strong>Default Python Experiment</strong>. After the experiment is loaded, settings can be modified in LightField. Raman spectra can be acquired by clicking the **Acquire Raman spectrum</em></strong> button the the GUI.</p>
+<p>To acquire Raman spectra using Princeton Instruments LightField software, LightField must be opened from the GUI by clicking <strong>Launch LightField*<em>. Once LightField loads, the user should load the LightField experiment called <strong>Default Python Experiment</strong>. After the experiment is loaded, settings can be modified in LightField. Raman spectra can be acquired by clicking the **Acquire Raman spectrum</em></strong> button the the GUI.</p>
 <h2>Running an experimental Sequence</h2>
 <p>The <em>Experimental sequence</em> box contains options for running an automated experimental sequence. The sequence is started by selecting the <em>Run</em> button. Clicking <em>Abort sequence</em> will stop the sequence before it is complete. The sequence will initiate a procedure which runs <em>Number of cycles</em> times, with each cycle separated by <em>Cycle delay</em> number of seconds. Each checkbox that is checked in the <em>Experimental sequence</em> box will repeat during each cycle. For example, when <em>Laser triggering</em>, <em>Raman acquisition</em>, and <em>Polarizer rotation</em> checkboxes are all selected, the sequence will proceed as follows:
 1. a list of polarizer angles is generated based on values in the <em>Start angle</em>, <em>End angle</em>, and <em>Steps</em> fields in the <em>Thorlabs controllers</em> box.
@@ -27,12 +30,13 @@
 </ul>
 </li>
 <li><strong>instr_libs</strong>: directory which contains Python scripts for controlling instruments and operation of the GUI<ul>
-<li><strong>avacs.py</strong>: modules for controlling Laseroptik AVACS beam attenuator</li>
-<li><strong>kcube.py</strong>: modules for controlling Thorlabs KDC101 brushed servo motor controllers</li>
+<li><strong>avacs.py</strong>: module for controlling Laseroptik AVACS beam attenuator</li>
+<li><strong>kcube.py</strong>: module for controlling Thorlabs KDC101 brushed servo motor controllers</li>
 <li><strong>lf.py</strong>: modules for controlling Princeton Instruments LightField software</li>
-<li><strong>mso.py</strong>: modules for controlling Tektronix MSO64 oscilloscope</li>
-<li><strong>ops.py</strong>: modules for controlling operations and file I/O of the main GUI</li>
-<li><strong>srs.py</strong>: modules for controlling SRS DG645 digital delay pulse generator</li>
+<li><strong>mcl.py</strong>: module for controlling Marzhauser Wetzlar MCL-3 microscope stage controller</li>
+<li><strong>mso.py</strong>: module for controlling Tektronix MSO64 oscilloscope</li>
+<li><strong>ops.py</strong>: module for controlling operations and file I/O of the main GUI</li>
+<li><strong>srs.py</strong>: module for controlling SRS DG645 digital delay pulse generator</li>
 </ul>
 </li>
 <li><strong>logs</strong>: default directory for saving experiment configuration files and logging experimental data</li>
