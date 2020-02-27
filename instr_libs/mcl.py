@@ -50,13 +50,12 @@ def get_pos(dev):
     x = get_x_pos(dev)
     y = get_y_pos(dev)
     z = get_z_pos(dev)
-    print('abs. position: {}'.format((x,y,z)))
     return (x, y, z)
 
 def get_status(dev):
     """Get device status."""
     dev.write(('UF\r\r').encode())
-    print('Device status: {}'.format(dev.readline().decode()))
+    return dev.readline().decode()
 
 
 
@@ -82,11 +81,46 @@ def move(dev):
 #move(dev)
     
 
+
 dev = serial.Serial(port=address, timeout=2,
                     stopbits=serial.STOPBITS_TWO)
 
-get_pos(dev)
-get_status(dev)
+
+
+# clear stage
+#dev.write(('U\000\r\r').encode())
+#dev.write(('U\010\r\r').encode())
+
+
+
+'''
+#dev.write(('U\000\r\r').encode())
+#dev.write(('U\010\r\r').encode())
+dev.write(('U7v\r\r').encode())
+dev.write(('U00333\r\r').encode())
+dev.write(('U01222\r\r').encode())
+dev.write(('UP\r\r').encode())
+'''
+
+
+dev.write(('U\07v\r\r').encode())
+dev.write(('U02\r\r').encode())
+dev.write(('U14\r\r').encode())
+
+
+
+dev.write(('UC\r\r').encode())
+print('x pos '+dev.readline().decode())
+dev.write(('UD\r\r').encode())
+print('y pos '+dev.readline().decode())
+
+
+
+print('position: {}'.format(get_pos(dev)))
+
+
+print('Device status: {}'.format(get_status(dev)))
+
 
 
 dev.close()
