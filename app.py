@@ -32,6 +32,7 @@ from instr_libs import mso  # Tektronix MSO64 oscilloscope
 from instr_libs import kcube  # Thorlabs KDC101 stepper motor controllers
 from instr_libs import ops  # for controlling operations of main GUI
 from instr_libs import lf  # for controlling LightField Raman software
+from instr_libs import mcl  # for controlling Marzhauser MCL-3 stage
 
 
 # ------- change matplotlib settings to make plots look nicer --------------
@@ -110,12 +111,16 @@ class App(QMainWindow):
         self.ui.analyzer_on.clicked.connect(self.analyzer_on)
         self.ui.polarizer_home.clicked.connect(self.polarizer_home)
         self.ui.analyzer_home.clicked.connect(self.analyzer_home)
+        self.ui.mcl_move_to_zero.clicked.connect(self.mcl_move_to_zero)
+
 
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
         self.ui.pulsegen_on.stateChanged.connect(self.pulsegen_on)
         self.ui.mso_on.stateChanged.connect(self.mso_on)
         self.ui.avacs_on.stateChanged.connect(self.avacs_on)
+        self.ui.stage_on.stateChanged.connect(self.stage_on)
+
 
         # intialize log file for logging experimental settings
         self.filedir = os.getcwd()
@@ -189,6 +194,22 @@ class App(QMainWindow):
                 'curr_pangle_label': self.ui.current_p_angle,
                 'curr_aangle_label': self.ui.current_a_angle,
                 'seq_polarizer_rot': self.ui.seq_polarizer_rot}
+        
+        self.mcl = {
+               'dev': None,
+               'on': self.ui.mcl_on,
+               'outbox': self.ui.outbox,
+               'seq_mcl': self.ui.seq_mcl,
+               'set_x': self.ui.mcl_set_x,
+               'set_y': self.ui.mcl_set_y,
+               'address': self.ui.mcl_address,
+               'grid_xf': self.ui.mcl_grid_x_end,
+               'grid_yf': self.ui.mcl_grid_y_end,
+               'grid_xi': self.ui.mcl_grid_x_start,
+               'grid_yi': self.ui.mcl_grid_y_start,
+               'grid_xsteps': self.ui.mcl_grid_x_steps,
+               'grid_ysteps': self.ui.mcl_grid_y_steps,
+               'move_to_zero': self.ui.mcl_move_to_zero}
 
         # kill the process which opens LightField if its already running
         os.system("taskkill /f /im AddInProcess.exe")
@@ -197,6 +218,7 @@ class App(QMainWindow):
         srs.enable_pulse_gen_buttons(self.srs, False)
         kcube.enable_polarizer(self.kcube, False)
         kcube.enable_analyzer(self.kcube, False)
+        mcl.enable_stage(self.mcl, False)
         self.items_to_deactivate = [
                 self.ui.abort_seq,
                 self.ui.avacs_angle,
@@ -305,6 +327,19 @@ class App(QMainWindow):
     def abort_seq(self):
         """Abort the expreimental sequence."""
         self.abort_seq = True
+
+
+    # %% ========= Thorlabs KDC101 servo motor controllers= ==============    
+
+    def stage_on(self):
+        """Checkbox for MCL stage controller is checked/unchecked."""
+        mcl.stage_on(self.mcl)
+
+    def mcl_move_to_zero(self):
+        """Move to stage to (0, 0) position."""
+        mcl.move_to_zero(self.mcl)
+
+
 
     # %% ========= Thorlabs KDC101 servo motor controllers= ==============
 
