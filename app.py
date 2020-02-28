@@ -74,6 +74,7 @@ class App(QMainWindow):
 
     def __init__(self):
 
+        # create application instance
         super(App, self).__init__()
         self.ui = App.Ui_MainWindow()
         self.ui.setupUi(self)
@@ -84,42 +85,42 @@ class App(QMainWindow):
         # create timer which updates fields on GUI (set interval in ms)
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.update_gui_thread)
-        self.timer.start(1500)  # int(self.ui.set_main_loop_delay.value()))
+        self.timer.start(1500)
 
-        # assign functions to top menu items
+        # assign actions to top menu items
         # example: self.ui.menu_item_name.triggered.connect(self.func_name)
         self.ui.quit_app.triggered.connect(self.quitapp)
-        self.ui.print_ports.triggered.connect(self.print_ports)
         self.ui.show_help.triggered.connect(ops.show_help)
+        self.ui.set_filedir.triggered.connect(self.set_filedir)
+        self.ui.print_ports.triggered.connect(self.print_ports)
+        self.ui.plot_spectra.triggered.connect(self.plot_file_list)
         self.ui.show_log_path.triggered.connect(self.show_log_path)
         self.ui.show_file_list.triggered.connect(self.show_file_list)
-        self.ui.plot_spectra.triggered.connect(self.plot_file_list)
         self.ui.export_settings.triggered.connect(self.export_settings)
         self.ui.import_settings.triggered.connect(self.import_settings)
-        self.ui.set_filedir.triggered.connect(self.set_filedir)
-
+        
         # assign actions to GUI buttons
         # example: self.ui.BUTTON_NAME.clicked.connect(self.FUNCTION_NAME)
-        self.ui.trigger_pulses.clicked.connect(self.trigger_pulses_thread)
-        self.ui.acquire_raman.clicked.connect(self.acquire_raman)
-        self.ui.run_seq.clicked.connect(self.run_seq_thread)
         self.ui.abort_seq.clicked.connect(self.abort_seq)
+        self.ui.run_seq.clicked.connect(self.run_seq_thread)
+        self.ui.analyzer_on.clicked.connect(self.analyzer_on)
+        self.ui.polarizer_on.clicked.connect(self.polarizer_on)
         self.ui.launch_lf.clicked.connect(self.launch_lf_thread)
         self.ui.scope_acquire.clicked.connect(self.scope_acquire)
-        self.ui.export_scope_trace.clicked.connect(self.export_scope_trace)
-        self.ui.polarizer_on.clicked.connect(self.polarizer_on)
-        self.ui.analyzer_on.clicked.connect(self.analyzer_on)
-        self.ui.polarizer_home.clicked.connect(self.polarizer_home)
+        self.ui.acquire_raman.clicked.connect(self.acquire_raman)
         self.ui.analyzer_home.clicked.connect(self.analyzer_home)
+        self.ui.polarizer_home.clicked.connect(self.polarizer_home)
+        self.ui.trigger_pulses.clicked.connect(self.trigger_pulses_thread)
+        self.ui.export_scope_trace.clicked.connect(self.export_scope_trace)
         self.ui.preview_grid_cords.clicked.connect(self.preview_grid_cords)
 
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
-        self.ui.pulsegen_on.stateChanged.connect(self.pulsegen_on)
         self.ui.mso_on.stateChanged.connect(self.mso_on)
-        self.ui.avacs_on.stateChanged.connect(self.avacs_on)
         self.ui.mcl_on.stateChanged.connect(self.stage_on)
-
+        self.ui.avacs_on.stateChanged.connect(self.avacs_on)
+        self.ui.pulsegen_on.stateChanged.connect(self.pulsegen_on)
+        
 
         # intialize log file for logging experimental settings
         self.filedir = os.getcwd()
@@ -128,7 +129,7 @@ class App(QMainWindow):
             os.makedirs(self.logdir)
         self.starttime = time.strftime('%Y-%m-%d_%H-%M-%S')
 
-        # intialize dictionaries for transporting GUI data to other modules
+        # intialize dictionaries for transporting data to other modules
         self.ops = {
                 'app': self.ui,
                 'row_counter': 0,
@@ -215,13 +216,12 @@ class App(QMainWindow):
         # kill the process which opens LightField if its already running
         os.system("taskkill /f /im AddInProcess.exe")
 
-        # initialize GUI settings by disabling buttons
+        # disable GUI buttons for instruments which are not connected
         srs.enable_pulse_gen_buttons(self.srs, False)
         kcube.enable_polarizer(self.kcube, False)
         kcube.enable_analyzer(self.kcube, False)
         mcl.enable_stage(self.mcl, False)
         mso.enable_mso(self.mso, False)
-        
         self.items_to_deactivate = [
                 self.ui.abort_seq,
                 self.ui.avacs_angle,
@@ -315,36 +315,28 @@ class App(QMainWindow):
 
         self.finalize_sequence()
 
-
+    def enable_during_seq(self, enabled):
+        """Enable/disable GUI objects while a sequence is running."""
+        items = [
+            self.ui.run_seq, self.ui.set_seq_cycles,
+            self.ui.pause_between_cycles, self.ui.seq_laser_trigger,
+            self.ui.seq_polarizer_rot, self.ui.seq_raman_acquisition,
+            self.ui.rotation_end, self.ui.rotation_start,
+            self.ui.rotation_steps, self.ui.seq_mcl]
+        [i.setEnabled(enabled) for i in items]
+        
     def initialize_sequence(self):
         """Initialize settings when an experimental sequence starts."""
-        self.ui.run_seq.setEnabled(False)
+        self.export_settings()
         self.ui.abort_seq.setEnabled(True)
-        self.ui.set_seq_cycles.setEnabled(False)
-        self.ui.pause_between_cycles.setEnabled(False)
-        self.ui.seq_laser_trigger.setEnabled(False)
-        self.ui.seq_polarizer_rot.setEnabled(False)
-        self.ui.seq_raman_acquisition.setEnabled(False)
-        self.ui.rotation_end.setEnabled(False)
-        self.ui.rotation_start.setEnabled(False)
-        self.ui.rotation_steps.setEnabled(False)
-        self.ui.seq_mcl.setEnabled(False)
+        self.enable_during_seq(False)
         self.ui.outbox.append('Sequence initiated')
 
     def finalize_sequence(self):
         """Finalize settings when an experimental sequence ends."""
         self.abort_seq = False
-        self.ui.run_seq.setEnabled(True)
         self.ui.abort_seq.setEnabled(False)
-        self.ui.set_seq_cycles.setEnabled(True)
-        self.ui.pause_between_cycles.setEnabled(True)
-        self.ui.seq_laser_trigger.setEnabled(True)
-        self.ui.seq_polarizer_rot.setEnabled(True)
-        self.ui.seq_raman_acquisition.setEnabled(True)
-        self.ui.rotation_end.setEnabled(True)
-        self.ui.rotation_start.setEnabled(True)
-        self.ui.rotation_steps.setEnabled(True)
-        self.ui.seq_mcl.setEnabled(True)
+        self.enable_during_seq(True)
         self.ui.outbox.append('Sequence complete.')
 
     def run_seq_thread(self):
@@ -354,6 +346,7 @@ class App(QMainWindow):
 
     def abort_seq(self):
         """Abort the expreimental sequence."""
+        self.ui.['outbox'].append('Sequence aborted after current cycle.')
         self.abort_seq = True
 
 
@@ -366,13 +359,6 @@ class App(QMainWindow):
     def preview_grid_cords(self):
         """Preview the grid coordinates."""
         mcl.preview_grid_cords(self.mcl)
-
-    '''
-    def stage_on_thread(self):
-        """Connect to stage in a new thread."""
-        worker = Worker(self.stage_on)  # pass other args here
-        self.threadpool.start(worker)
-    '''
 
 
     # %% ========= Thorlabs KDC101 servo motor controllers= ==============
@@ -532,10 +518,11 @@ class App(QMainWindow):
         # os.system("taskkill /f /im AddInProcess.exe")
         # stop timer
         self.timer.stop()
-        # close app window and kill python kernel
+        # close app windowl
         self.deleteLater()
         self.close()
-        #sys.exit()
+        # this kills the python kernel upon quitting
+        sys.exit()
 
 # %% ====================== run application ===============================
 
