@@ -241,60 +241,77 @@ class App(QMainWindow):
         if self.ui.seq_mcl.isChecked():
             grid = mcl.get_grid(self.mcl)
             self.ui.outbox.append(str(grid))
+        else:
+            grid = np.array([[0,0]])
             
         
-        
-        #  get polarizer angles or use current angle
-        if self.ui.seq_polarizer_rot.isChecked():
-            polarizer_angles = kcube.get_angle_steps(self.kcube)
-        else:
-            polarizer_angles = [self.ui.polarizer_angle.value()]
-
-        # loop over each polarizer angle and acquire initial Raman spectra
-        for a in polarizer_angles:
-            if self.abort_seq is True:
-                self.ui.outbox.append('Sequence aborted.')
-                break
+        # loop over each location on the grid of stage positions
+        for gi, g in enumerate(grid):
+            self.ui.outbox.append(
+                'Setting grid position {}/{} ({})'.format(gi+1,len(grid),g))
+            
+            
+            # get x and y coordinates
+            x, y = g 
+            self.mcl['set_x'].setValue(x)
+            self.mcl['set_y'].setValue(y)
+            
+            time.sleep(10)
+            
+            
+            #  get polarizer angles or use current angle
             if self.ui.seq_polarizer_rot.isChecked():
-                self.ui.outbox.append('polarizer angle: {}'.format(a))
-                self.ui.polarizer_angle.setValue(a)
-                time.sleep(2)
-                while kcube.p_in_motion(self.kcube):
-                    time.sleep(1)
-            if self.ui.seq_raman_acquisition.isChecked():
-                self.acquire_raman()
-            self.log_to_file()
-            time.sleep(self.ui.pause_between_cycles.value())
+                polarizer_angles = kcube.get_angle_steps(self.kcube)
+            else:
+                polarizer_angles = [self.ui.polarizer_angle.value()]
+    
 
-
-
-        # loop over each experimental cycle
-        tot_cycles = self.ui.set_seq_cycles.value()
-        for c in range(tot_cycles):  
-            self.ui.outbox.append('cycle {}/{}'.format(c+1, tot_cycles))
-            if self.abort_seq is True:
-                break
-
-            # trigger laser pulses from pulse generator
-            if self.ui.seq_laser_trigger.isChecked():
-                self.trigger_pulses()
-                time.sleep(0.1)
-
-            # loop over each polarizer angle and acquire Raman spectrum
-            for a in polarizer_angles:
+            if self.ui.seq_raman_acquisition.isChecked(): 
+                # loop over each polarizer angle and acquire initial Raman spectra
+                for a in polarizer_angles:
+                    if self.abort_seq is True:
+                        self.ui.outbox.append('Sequence aborted.')
+                        break
+                    if self.ui.seq_polarizer_rot.isChecked():
+                        self.ui.outbox.append('polarizer angle: {}'.format(a))
+                        self.ui.polarizer_angle.setValue(a)
+                        time.sleep(2)
+                        while kcube.p_in_motion(self.kcube):
+                            time.sleep(1)
+                    if self.ui.seq_raman_acquisition.isChecked():
+                        self.acquire_raman()
+                    self.log_to_file()
+                    time.sleep(self.ui.pause_between_cycles.value())
+    
+    
+    
+            # loop over each experimental cycle
+            tot_cycles = self.ui.set_seq_cycles.value()
+            for c in range(tot_cycles):  
+                self.ui.outbox.append('cycle {}/{}'.format(c+1, tot_cycles))
                 if self.abort_seq is True:
-                    self.ui.outbox.append('Sequence aborted.')
                     break
-                if self.ui.seq_polarizer_rot.isChecked():
-                    self.ui.outbox.append('polarizer angle: {}'.format(a))
-                    self.ui.polarizer_angle.setValue(a)
-                    time.sleep(2)
-                    while kcube.p_in_motion(self.kcube):
-                        time.sleep(1)
-                if self.ui.seq_raman_acquisition.isChecked():
-                    self.acquire_raman()
-                self.log_to_file()
-                time.sleep(self.ui.pause_between_cycles.value())
+    
+                # trigger laser pulses from pulse generator
+                if self.ui.seq_laser_trigger.isChecked():
+                    self.trigger_pulses()
+                    time.sleep(0.1)
+    
+                # loop over each polarizer angle and acquire Raman spectrum
+                for a in polarizer_angles:
+                    if self.abort_seq is True:
+                        self.ui.outbox.append('Sequence aborted.')
+                        break
+                    if self.ui.seq_polarizer_rot.isChecked():
+                        self.ui.outbox.append('polarizer angle: {}'.format(a))
+                        self.ui.polarizer_angle.setValue(a)
+                        time.sleep(2)
+                        while kcube.p_in_motion(self.kcube):
+                            time.sleep(1)
+                    if self.ui.seq_raman_acquisition.isChecked():
+                        self.acquire_raman()
+                    self.log_to_file()
+                    time.sleep(self.ui.pause_between_cycles.value())
 
         self.finalize_sequence()
 
@@ -311,6 +328,7 @@ class App(QMainWindow):
         self.ui.rotation_end.setEnabled(False)
         self.ui.rotation_start.setEnabled(False)
         self.ui.rotation_steps.setEnabled(False)
+        self.ui.seq_mcl.setEnabled(False)
         self.ui.outbox.append('Sequence initiated')
 
     def finalize_sequence(self):
@@ -326,6 +344,7 @@ class App(QMainWindow):
         self.ui.rotation_end.setEnabled(True)
         self.ui.rotation_start.setEnabled(True)
         self.ui.rotation_steps.setEnabled(True)
+        self.ui.seq_mcl.setEnabled(True)
         self.ui.outbox.append('Sequence complete.')
 
     def run_seq_thread(self):
@@ -468,6 +487,7 @@ class App(QMainWindow):
         if self.mcl['dev'] is not None:
             mcl.update_position(self.mcl)
         self.ops['gui_update_finished'] = True 
+
 
     def set_filedir(self):
         # set the directory for saving data files

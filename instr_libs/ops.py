@@ -62,10 +62,10 @@ def get_log_row_data(srs, lf, kcube, mcl):
     return d
 
 
-def log_to_file(ops, srs, lf, kcube):
+def log_to_file(ops, srs, lf, kcube, mcl):
     """Create log file."""
     # get most recent row of data
-    d = get_log_row_data(srs, lf, kcube)
+    d = get_log_row_data(srs, lf, kcube, mcl)
     # assign most recent row to last row in log data
     ops['data'][ops['row_counter']] = list(d.values())
     # convert log dtaa to Pandas DataFrame
