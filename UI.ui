@@ -1474,7 +1474,7 @@ p, li { white-space: pre-wrap; }
         <widget class="QSpinBox" name="mcl_grid_x_steps"/>
        </item>
        <item row="2" column="3">
-        <widget class="QSpinBox" name="mcl_grid_x_steps_2"/>
+        <widget class="QSpinBox" name="mcl_grid_y_steps"/>
        </item>
       </layout>
      </widget>

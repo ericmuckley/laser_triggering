@@ -17,7 +17,7 @@ import time
 
 def enable_mso(mso, enabled):
     """Enable/disable GUI objects realted to the oscilloscope."""
-    items = ['acquire',  'downsample', 'export_scope_trace']
+    items = ['acquire',  'downsample', 'export']
     [mso[i].setEnabled(enabled) for i in items]
     mso['address'].setEnabled(not enabled)
 

@@ -130,11 +130,14 @@ def get_y_pos(dev, backup=0):
 
 def clear_stage_buffer(dev):
     """Clear the input/output buffers of the stage."""
-    time.sleep(0.1)
-    dev.flushInput()
-    dev.flushOutput()
-    time.sleep(0.1)
-    dev.readline()
+    try:
+        time.sleep(0.1)
+        dev.flushInput()
+        dev.flushOutput()
+        time.sleep(0.1)
+        dev.readline()
+    except:
+        time.sleep(0.1)
 
 
 
