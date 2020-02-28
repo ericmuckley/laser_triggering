@@ -29,8 +29,8 @@ def print_ports():
 def enable_stage(mcl, enabled):
     """Enable/disable GUI objects related to the MCL stage."""
     items = ['seq_mcl', 'set_x', 'set_y', 'grid_xf', 'show_x', 'show_y',
-             'grid_yf', 'grid_xi', 'grid_yi', 'grid_xsteps',
-             'grid_ysteps', 'move_to_zero']
+             'grid_yf', 'grid_xi', 'grid_yi', 'grid_xsteps', 'grid_ysteps',
+             'preview_grid_cords']
     [mcl[i].setEnabled(enabled) for i in items]
     mcl['address'].setEnabled(not enabled)
 
@@ -73,6 +73,12 @@ def stage_on(mcl):
         mcl['show_y'].setText('---')
         mcl['dev'] = None
 
+def preview_grid_cords(mcl):
+    """Preview the grid coordinates."""
+    grid = get_grid(mcl)
+    mcl['outbox'].append('Grid coordinates (X, Y):')
+    [mcl['outbox'].append(str(g)) for g in grid]
+
 
 def get_grid(mcl):
     """Get grid coordinates from grid settings on GUI."""
@@ -83,7 +89,6 @@ def get_grid(mcl):
                           mcl['grid_yf'].value(),
                           mcl['grid_ysteps'].value()+1)
     grid_cords = np.array(np.meshgrid(x_cords, y_cords)).T.reshape(-1,2)
-    print(grid_cords)
     return grid_cords
 
 

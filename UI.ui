@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1146</width>
+    <width>1083</width>
     <height>725</height>
    </rect>
   </property>
@@ -365,7 +365,7 @@ color: rgb(120, 120, 120);}</string>
    <widget class="QGroupBox" name="groupBox_output">
     <property name="geometry">
      <rect>
-      <x>290</x>
+      <x>580</x>
       <y>400</y>
       <width>491</width>
       <height>291</height>
@@ -414,9 +414,9 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_configurelightfield">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>20</y>
-      <width>311</width>
+      <x>290</x>
+      <y>30</y>
+      <width>251</width>
       <height>111</height>
      </rect>
     </property>
@@ -433,7 +433,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>70</y>
-       <width>271</width>
+       <width>211</width>
        <height>22</height>
       </rect>
      </property>
@@ -457,7 +457,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="launch_lf">
      <property name="geometry">
       <rect>
-       <x>70</x>
+       <x>40</x>
        <y>30</y>
        <width>75</width>
        <height>23</height>
@@ -470,7 +470,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="acquire_raman">
      <property name="geometry">
       <rect>
-       <x>170</x>
+       <x>140</x>
        <y>30</y>
        <width>75</width>
        <height>23</height>
@@ -484,8 +484,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_seq">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>160</y>
+      <x>580</x>
+      <y>20</y>
       <width>221</width>
       <height>221</height>
      </rect>
@@ -654,10 +654,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_scope">
     <property name="geometry">
      <rect>
-      <x>880</x>
-      <y>150</y>
-      <width>251</width>
-      <height>191</height>
+      <x>280</x>
+      <y>530</y>
+      <width>281</width>
+      <height>161</height>
      </rect>
     </property>
     <property name="title">
@@ -666,7 +666,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QWidget" name="gridLayoutWidget">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>30</x>
        <y>30</y>
        <width>211</width>
        <height>71</height>
@@ -735,7 +735,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="scope_acquire">
      <property name="geometry">
       <rect>
-       <x>90</x>
+       <x>30</x>
        <y>120</y>
        <width>75</width>
        <height>23</height>
@@ -748,8 +748,8 @@ p, li { white-space: pre-wrap; }
     <widget class="QPushButton" name="export_scope_trace">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>150</y>
+       <x>150</x>
+       <y>120</y>
        <width>75</width>
        <height>21</height>
       </rect>
@@ -762,9 +762,9 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_avacs">
     <property name="geometry">
      <rect>
-      <x>600</x>
+      <x>820</x>
       <y>20</y>
-      <width>191</width>
+      <width>221</width>
       <height>121</height>
      </rect>
     </property>
@@ -774,7 +774,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QWidget" name="gridLayoutWidget_3">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>20</x>
        <y>30</y>
        <width>169</width>
        <height>81</height>
@@ -1172,8 +1172,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_mcl">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>20</y>
+      <x>280</x>
+      <y>180</y>
       <width>281</width>
       <height>301</height>
      </rect>
@@ -1184,7 +1184,7 @@ p, li { white-space: pre-wrap; }
     <widget class="QWidget" name="gridLayoutWidget_6">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>20</x>
        <y>30</y>
        <width>169</width>
        <height>101</height>
@@ -1308,26 +1308,13 @@ p, li { white-space: pre-wrap; }
       </item>
      </layout>
     </widget>
-    <widget class="QPushButton" name="mcl_move_to_zero">
-     <property name="geometry">
-      <rect>
-       <x>40</x>
-       <y>140</y>
-       <width>101</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Move to (0, 0)</string>
-     </property>
-    </widget>
     <widget class="QFrame" name="mcl_frame">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>180</y>
+       <y>150</y>
        <width>261</width>
-       <height>111</height>
+       <height>131</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -1354,7 +1341,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>241</width>
+        <width>234</width>
         <height>63</height>
        </rect>
       </property>
@@ -1471,12 +1458,39 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="1" column="3">
-        <widget class="QSpinBox" name="mcl_grid_x_steps"/>
+        <widget class="QSpinBox" name="mcl_grid_x_steps">
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+        </widget>
        </item>
        <item row="2" column="3">
-        <widget class="QSpinBox" name="mcl_grid_y_steps"/>
+        <widget class="QSpinBox" name="mcl_grid_y_steps">
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+        </widget>
        </item>
       </layout>
+     </widget>
+     <widget class="QPushButton" name="preview_grid_cords">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>100</y>
+        <width>141</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Preview grid coordinates</string>
+      </property>
      </widget>
     </widget>
    </widget>
@@ -1486,7 +1500,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1146</width>
+     <width>1083</width>
      <height>21</height>
     </rect>
    </property>

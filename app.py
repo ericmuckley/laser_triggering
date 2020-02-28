@@ -111,8 +111,7 @@ class App(QMainWindow):
         self.ui.analyzer_on.clicked.connect(self.analyzer_on)
         self.ui.polarizer_home.clicked.connect(self.polarizer_home)
         self.ui.analyzer_home.clicked.connect(self.analyzer_home)
-        self.ui.mcl_move_to_zero.clicked.connect(self.mcl_move_to_zero)
-
+        self.ui.preview_grid_cords.clicked.connect(self.preview_grid_cords)
 
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
@@ -138,7 +137,7 @@ class App(QMainWindow):
                 'outbox': self.ui.outbox,
                 'starttime': self.starttime,
                 'gui_update_finished': True,
-                'data': np.full((1000, 9), '', dtype=object),
+                'data': np.full((1000, 11), '', dtype=object),
                 'logpath': self.logdir+self.starttime+'.csv'}
         self.avacs = {
                 'dev': None,
@@ -211,7 +210,7 @@ class App(QMainWindow):
                'grid_yi': self.ui.mcl_grid_y_start,
                'grid_xsteps': self.ui.mcl_grid_x_steps,
                'grid_ysteps': self.ui.mcl_grid_y_steps,
-               'move_to_zero': self.ui.mcl_move_to_zero}
+               'preview_grid_cords': self.ui.preview_grid_cords}
 
         # kill the process which opens LightField if its already running
         os.system("taskkill /f /im AddInProcess.exe")
@@ -235,6 +234,15 @@ class App(QMainWindow):
     def run_seq(self):
         """Run an experimental sequence."""
         self.initialize_sequence()
+        
+        
+        
+        # get MCL-3 stage grid coordinates
+        if self.ui.seq_mcl.isChecked():
+            grid = mcl.get_grid(self.mcl)
+            self.ui.outbox.append(str(grid))
+            
+        
         
         #  get polarizer angles or use current angle
         if self.ui.seq_polarizer_rot.isChecked():
@@ -335,15 +343,17 @@ class App(QMainWindow):
     def stage_on(self):
         """Checkbox for MCL stage controller is checked/unchecked."""
         mcl.stage_on(self.mcl)
+    
+    def preview_grid_cords(self):
+        """Preview the grid coordinates."""
+        mcl.preview_grid_cords(self.mcl)
+
     '''
     def stage_on_thread(self):
         """Connect to stage in a new thread."""
         worker = Worker(self.stage_on)  # pass other args here
         self.threadpool.start(worker)
     '''
-    def mcl_move_to_zero(self):
-        """Move to stage to (0, 0) position."""
-        [self.mcl[i].setValue(0) for i in ['set_x', 'set_y']]
 
 
     # %% ========= Thorlabs KDC101 servo motor controllers= ==============
@@ -482,7 +492,7 @@ class App(QMainWindow):
 
     def log_to_file(self):
         """Create log file."""
-        ops.log_to_file(self.ops, self.srs, self.lf, self.kcube)
+        ops.log_to_file(self.ops, self.srs, self.lf, self.kcube, self.mcl)
 
     def print_ports(self):
         """Print a list of available serial and VISA ports."""

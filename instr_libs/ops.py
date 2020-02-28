@@ -46,7 +46,7 @@ def show_log_path(ops):
     ops['outbox'].append('Log file path: %s' %(ops['logpath']))
 
 
-def get_log_row_data(srs, lf, kcube):
+def get_log_row_data(srs, lf, kcube, mcl):
     """Get data for the most recent row of the log file."""
     d = {'time': time.strftime('%Y-%m-%d_%H-%M-%S'),
          'total_pulses': srs['tot_pulses'],
@@ -54,6 +54,8 @@ def get_log_row_data(srs, lf, kcube):
          'pulse_amplitude_V': srs['amplitude'].value(),
          'pulse_delay_ms': srs['delay'].value()/1e3,
          'pulse_number': srs['number'].value(),
+         'x_position': mcl['show_x'].text(),
+         'y_position': mcl['show_y'].text(),
          'polarizer_angle_deg': kcube['pangle'].value(),
          'notes': lf['notes'].text().replace(',','__').replace('\t', '__'),
          'recent_raman_file': lf['recent_file']}
@@ -67,8 +69,7 @@ def log_to_file(ops, srs, lf, kcube):
     # assign most recent row to last row in log data
     ops['data'][ops['row_counter']] = list(d.values())
     # convert log dtaa to Pandas DataFrame
-    df = pd.DataFrame(columns=list(d.keys()),
-                          data=ops['data'])
+    df = pd.DataFrame(columns=list(d.keys()), data=ops['data'])
     # remove empty rows before saving
     df.replace('', np.nan, inplace=True)
     df.dropna(how='all', inplace=True)
