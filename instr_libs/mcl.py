@@ -45,8 +45,8 @@ def stage_on(mcl):
                     stopbits=serial.STOPBITS_TWO)
             mcl['dev'] = dev
             mcl['outbox'].append('Marzhauser MCL-3 stage connected.')
-            mcl['outbox'].append(
-                    'Device status: {}'.format(get_status(dev)))
+            clear_stage_buffer(dev)
+            mcl['outbox'].append('Stage status: {}'.format(get_status(dev)))
             enable_stage(mcl, True)
             x, y = get_x_pos(mcl['dev']), get_y_pos(mcl['dev'])
             mcl['show_x'].setText(str(x))
@@ -55,6 +55,7 @@ def stage_on(mcl):
             mcl['set_y'].setValue(int(y))
         except:
             mcl['outbox'].append('Stage could not connect.')
+            mcl['outbox'].append('Make sure it is "auto" mode.')
             enable_stage(mcl, False)
             mcl['dev'] = None
             mcl['on'].setChecked(False)
@@ -65,12 +66,12 @@ def stage_on(mcl):
             mcl['dev'].close()
         except AttributeError:
             pass
-        mcl['dev'] = None
         mcl['outbox'].append('Stage closed.')
         enable_stage(mcl, False)
         mcl['on'].setChecked(False)
         mcl['show_x'].setText('---')
         mcl['show_y'].setText('---')
+        mcl['dev'] = None
 
 
 def get_grid(mcl):
@@ -88,30 +89,62 @@ def get_grid(mcl):
 
 def update_position(mcl):
     """Update position on the main GUI."""
-    # flush buffer
-    #mcl['dev'].flushInput()
-    #mcl['dev'].flushOutput()
     new_x = int(mcl['set_x'].value())
     new_y = int(mcl['set_y'].value())
-    time.sleep(0.1)
     # get current position and update GUI fields
-    current_x = int(get_x_pos(mcl['dev'], backup=int(mcl['show_x'].text())))
-    current_y = int(get_y_pos(mcl['dev'], backup=int(mcl['show_y'].text())))
+    current_x = get_x_pos(mcl['dev'], backup=int(mcl['show_x'].text()))
+    current_y = get_y_pos(mcl['dev'], backup=int(mcl['show_y'].text()))
+    #current_x = get_x_pos(mcl['dev'])
+    #current_y = get_y_pos(mcl['dev'])    
+    
     mcl['show_x'].setText(str(current_x))
     mcl['show_y'].setText(str(current_y))    
     # move to new position 
     dx, dy = new_x-current_x, new_y-current_y
     if dx != 0 or dy != 0:
-        print('MOVE TIME')
         mcl['outbox'].append(
-                'Moving to ({}, {})...'.format(new_x, new_y))
+                'Moving stage to ({}, {})...'.format(new_x, new_y))
         move_by(mcl['dev'], dx, dy)
+        clear_stage_buffer(mcl['dev'])
 
 
 def get_x_pos(dev, backup=0):
     """Get current X position of stage."""
     try:
-        
+        dev.write(('UC\r\r').encode())
+        x_pos = dev.readline().decode()
+    except AttributeError:
+        x_pos = backup
+    return int(x_pos)
+
+
+def get_y_pos(dev, backup=0):
+    """Get current Y position of stage."""
+    try:
+        dev.write(('UD\r\r').encode())
+        y_pos = dev.readline().decode()
+    except AttributeError:
+        y_pos = backup
+    return int(y_pos)
+
+
+def clear_stage_buffer(dev):
+    """Clear the input/output buffers of the stage."""
+    time.sleep(0.1)
+    dev.flushInput()
+    dev.flushOutput()
+    time.sleep(0.1)
+    dev.readline()
+
+
+
+
+
+
+'''
+def get_x_pos(dev, backup=0):
+    """Get current X position of stage."""
+    try:
         dev.write(('UC\r\r').encode())
         x_pos = int(dev.readline().decode())
     except:
@@ -131,7 +164,7 @@ def get_y_pos(dev, backup=0):
         time.sleep(0.2)
         print('y failed')
     return y_pos
-
+'''
 
 def get_z_pos(dev):
     """Get current Z position of stage."""
@@ -159,12 +192,8 @@ def move_by(dev, dx, dy):
     dx = str(int(dx))
     dy = str(int(dy))
     dev.write(('U\07v\rU\00'+dx+'\rU\01'+dy+'\rUP\r').encode())
-    # clear stage buffer
-    time.sleep(0.1)
-    dev.flushInput()
-    dev.flushOutput()
-    time.sleep(0.1)
-    dev.readline()
+    clear_stage_buffer(dev)
+
 
 
 def move_to(dev, x, y):
@@ -190,27 +219,20 @@ if __name__ == '__main__':
                         timeout=2,
                         stopbits=serial.STOPBITS_TWO)
     
-    
     mcl = {
             'dev': dev,
             'set_x': 31,
             'set_y': -22}
     
-    #update_position(mcl)
-    
-    for i in range(3):
-        
-        print('position: {}'.format((get_x_pos(dev), get_y_pos(dev))))
-        time.sleep(0.01)
-    
-    '''
-    print('Device status: {}'.format(get_status(dev)))
 
-    move_to(dev, 2, 4)
-    
-    print('position: {}'.format(get_pos(dev)))
-    print('Device status: {}'.format(get_status(dev)))
-    '''
+    for i in range(10):
+        
+        current_x, current_y = get_x_pos(dev), get_y_pos(dev)
+        print('position: {}'.format((current_x, current_y)))
+        # move to new position
+        dx, dy = 2, 5
+        move_by(mcl['dev'], dx, dy)
+        print('Device status: {}'.format(get_status(dev)))
     
     dev.close()
 

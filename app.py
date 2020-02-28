@@ -506,7 +506,7 @@ class App(QMainWindow):
         # close app window and kill python kernel
         self.deleteLater()
         self.close()
-        sys.exit()
+        #sys.exit()
 
 # %% ====================== run application ===============================
 

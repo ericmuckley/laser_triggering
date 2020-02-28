@@ -14,6 +14,14 @@ import pandas as pd
 import time
 
 
+
+def enable_mso(mso, enabled):
+    """Enable/disable GUI objects realted to the oscilloscope."""
+    items = ['acquire',  'downsample']
+    [mso[i].setEnabled(enabled) for i in items]
+    mso['address'].setEnabled(not enabled)
+
+
 def mso_on(mso):
     "Run this function when MSO64 oscilloscope checkbox is checked."""
     if mso['on'].isChecked():
