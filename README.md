@@ -20,6 +20,9 @@ Notes:
 ## Connecting to Thorlabs K-Cube KDC101 controllers
 These controllers cannot be found by the computer if the ```import thorlabs_apt as apt``` command has been run before the controllers were connected to the PC. After they are connected, make sure the Python kernel has been restarted to allow initialization of ```APT.DLL``` while the controllers are connected and powered. 
 
+## Connecting to Marzhauser MCL-3 stage controler
+Make sure the "Joystick" knob on the front panel of the MCL-3 is in the "Auto" position. In the "Man" position, serial communication is disabled.
+
 ## Connecting to LightField
 To acquire Raman spectra using Princeton Instruments LightField software, LightField must be opened from the GUI by clicking **Launch LightField**. Once LightField loads, the user should load the LightField experiment called **Default Python Experiment**. After the experiment is loaded, settings can be modified in LightField. Raman spectra can be acquired by clicking the **Acquire Raman spectrum*** button the the GUI.
 
