@@ -1339,14 +1339,14 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="mcl_grid_label">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>70</x>
         <y>0</y>
-        <width>61</width>
+        <width>141</width>
         <height>20</height>
        </rect>
       </property>
       <property name="text">
-       <string>Create grid</string>
+       <string>Create grid points to sample</string>
       </property>
      </widget>
      <widget class="QWidget" name="gridLayoutWidget_2">
@@ -1416,25 +1416,6 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="1" column="3">
-        <widget class="QDoubleSpinBox" name="mcl_grid_x_steps">
-         <property name="decimals">
-          <number>1</number>
-         </property>
-         <property name="minimum">
-          <double>-1000.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>1000.000000000000000</double>
-         </property>
-         <property name="singleStep">
-          <double>1.000000000000000</double>
-         </property>
-         <property name="value">
-          <double>4.000000000000000</double>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
@@ -1446,25 +1427,6 @@ p, li { white-space: pre-wrap; }
         <widget class="QLabel" name="label">
          <property name="text">
           <string>X-axis</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="3">
-        <widget class="QDoubleSpinBox" name="mcl_grid_y_steps">
-         <property name="decimals">
-          <number>1</number>
-         </property>
-         <property name="minimum">
-          <double>-1000.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>1000.000000000000000</double>
-         </property>
-         <property name="singleStep">
-          <double>1.000000000000000</double>
-         </property>
-         <property name="value">
-          <double>2.000000000000000</double>
          </property>
         </widget>
        </item>
@@ -1507,6 +1469,12 @@ p, li { white-space: pre-wrap; }
           <string>Num of steps</string>
          </property>
         </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QSpinBox" name="mcl_grid_x_steps"/>
+       </item>
+       <item row="2" column="3">
+        <widget class="QSpinBox" name="mcl_grid_x_steps_2"/>
        </item>
       </layout>
      </widget>

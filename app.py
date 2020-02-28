@@ -221,13 +221,12 @@ class App(QMainWindow):
         kcube.enable_polarizer(self.kcube, False)
         kcube.enable_analyzer(self.kcube, False)
         mcl.enable_stage(self.mcl, False)
+        mso.enable_mso(self.mso, False)
+        
         self.items_to_deactivate = [
                 self.ui.abort_seq,
                 self.ui.avacs_angle,
                 self.ui.acquire_raman,
-                self.ui.scope_acquire,
-                self.ui.mso_downsample,
-                self.ui.export_scope_trace,
                 self.ui.seq_raman_acquisition]
         [i.setEnabled(False) for i in self.items_to_deactivate]
 

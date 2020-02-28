@@ -17,7 +17,7 @@ import time
 
 def enable_mso(mso, enabled):
     """Enable/disable GUI objects realted to the oscilloscope."""
-    items = ['acquire',  'downsample']
+    items = ['acquire',  'downsample', 'export_scope_trace']
     [mso[i].setEnabled(enabled) for i in items]
     mso['address'].setEnabled(not enabled)
 
@@ -31,14 +31,10 @@ def mso_on(mso):
             mso['dev'] = dev
             mso['outbox'].append('Oscilloscope connected.')
             mso['outbox'].append(dev.query('*IDN?'))
-            mso['acquire'].setEnabled(True)
-            mso['address'].setEnabled(False)
-            mso['downsample'].setEnabled(True)
+            enable_mso(mso, True)
         except:
             mso['outbox'].append('Oscilloscope could not connect.')
-            mso['address'].setEnabled(True)
-            mso['acquire'].setEnabled(False)
-            mso['downsample'].setEnabled(False)
+            enable_mso(mso, True)
             mso['dev'] = None
             mso['on'].setChecked(False)
     if not mso['on'].isChecked():
@@ -48,10 +44,9 @@ def mso_on(mso):
             pass
         mso['dev'] = None
         mso['outbox'].append('Oscilloscope closed.')
-        mso['address'].setEnabled(True)
         mso['on'].setChecked(False)
-        mso['acquire'].setEnabled(False)
-        mso['downsample'].setEnabled(False)
+        enable_mso(mso, True)
+
 
 
 
