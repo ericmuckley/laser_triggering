@@ -31,14 +31,16 @@ if __name__ == '__main__':
     
     address = 'COM25'
     dev = serial.Serial(port=address,
-                        baudrate=921600,
+                        baudrate=9600,#921600,#115200,#,
                         timeout=2)
-       
-    dev.flushInput()
-    dev.flushOutput()
-    dev.write(('*VER\r').encode())
+
+    dev.write(('*VER').encode())
     time.sleep(1)
-    print('response: '.format(dev.readline().decode()))
+    
+    print('response: '.format(dev.readline()))#.decode()))
+    print('response: '.format(dev.read(10)))#.decode()))
+    
+    
 
     
     
