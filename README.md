@@ -26,6 +26,7 @@ Make sure the "Joystick" knob on the front panel of the MCL-3 is in the "Auto" p
 ## Connecting to LightField
 To acquire Raman spectra using Princeton Instruments LightField software, LightField must be opened from the GUI by clicking **Launch LightField**. Once LightField loads, the user should load the LightField experiment called **Default Python Experiment**. After the experiment is loaded, settings can be modified in LightField. Raman spectra can be acquired by clicking the **Acquire Raman spectrum*** button the the GUI.
 
+
 ## Running an experimental Sequence
 The *Experimental sequence* box contains options for running an automated experimental sequence. The sequence is started by selecting the *Run* button. Clicking *Abort sequence* will stop the sequence before it is complete. The sequence will initiate a procedure which runs *Number of cycles* times, with each cycle separated by *Cycle delay* number of seconds. Each checkbox that is checked in the *Experimental sequence* box will repeat during each cycle. For example, when *Laser triggering*, *Raman acquisition*, and *Polarizer rotation* checkboxes are all selected, the sequence will proceed as follows:
 1. a list of polarizer angles is generated based on values in the *Start angle*, *End angle*, and *Steps* fields in the *Thorlabs controllers* box.
@@ -35,6 +36,7 @@ The *Experimental sequence* box contains options for running an automated experi
 
 ## File output
 Each time a Raman spectrum is acquired, the spectrum is saved to a *.csv* file, and the application log file is appended. The log file contains the list of experimental parameters that were active during each Raman acquisition, as well as the filename of the Raman spectrum. The log file can be found by selecting *Menu* -> *Show path to log file*, and the location of Raman spectra can be viewed by selecting *Menu* -> *Show acquisition file list*.
+
 
 
 # Description of files
@@ -53,8 +55,19 @@ Each time a Raman spectrum is acquired, the spectrum is saved to a *.csv* file, 
     * **mso.py**: module for controlling Tektronix MSO64 oscilloscope
     * **ops.py**: module for controlling operations and file I/O of the main GUI
     * **srs.py**: module for controlling SRS DG645 digital delay pulse generator
+    * **slink.py**: module for controlling Gentech S-link photometer
 * **logs**: default directory for saving experiment configuration files and logging experimental data
 * **support_files**: directory for storing supporting files (_APT.dll_, _APTAPI.h_, _ATP.lib_) and other unused depreciated files
+
+
+
+
+
+# Editing the software
+To edit the user interface, use *QT Designer*. This installed by default with *Anaconda*. After *Anaconda* is installed, open the *Anaconda prompt*. In the command prompt, type ```designer``` and hit *enter*. The program *QT Designer* will open. Next, open the file *ui.ui* which is the unser-interface design file in this directory. The user interface can now be edited. Each widget on the user-interface can be named with a custom name, and this name will be called by the *app.py* file to assign functionality to the widget.
+
+
+The main script which opens up the user-interface file is *app.py*. This script contains code for connecting each user-interface widget with associated functions to run when that widget is activated by the user. The script also calls other modules which control specific instruments. These are located inside the *instr_libs* directory. For example, the module *srs.py* inside the *instr_libs* directory contains code for controlling the SRS digital Delay Generator. In *app.py*, data is transferred between *app.py* and *srs.py* using the dictionary *self.srs*, which ocntains references to all SRS-related widgets on the user-interface.
 
 
 
