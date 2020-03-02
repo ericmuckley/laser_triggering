@@ -3,7 +3,10 @@
 
 MOdule for controlling the Marzhauser MCL-3 stage controller.
 Note: the Marzhauser ECO-STEP controller uses a different set of
-serial commands. For the ECO-STEP, test communication using:
+serial commands than the MCL-3. For the MCL-3, use commands in
+this module.
+
+For the ECO-STEP, test communication using:
 dev.write(('?ver\r\r').encode())
 print(dev.readline().decode())
 

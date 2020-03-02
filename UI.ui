@@ -1186,7 +1186,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>169</width>
+       <width>197</width>
        <height>101</height>
       </rect>
      </property>
@@ -1230,13 +1230,13 @@ p, li { white-space: pre-wrap; }
       <item row="2" column="1">
        <widget class="QDoubleSpinBox" name="mcl_set_x">
         <property name="decimals">
-         <number>1</number>
+         <number>2</number>
         </property>
         <property name="minimum">
-         <double>-1000.000000000000000</double>
+         <double>-5.000000000000000</double>
         </property>
         <property name="maximum">
-         <double>1000.000000000000000</double>
+         <double>5.000000000000000</double>
         </property>
         <property name="singleStep">
          <double>1.000000000000000</double>
@@ -1263,21 +1263,21 @@ p, li { white-space: pre-wrap; }
       <item row="2" column="0">
        <widget class="QLabel" name="mcl_x_label">
         <property name="text">
-         <string>Set X</string>
+         <string>X position (cm)</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="mcl_y_label">
         <property name="text">
-         <string>Set Y</string>
+         <string>Y position (cm)</string>
         </property>
        </widget>
       </item>
       <item row="3" column="1">
        <widget class="QDoubleSpinBox" name="mcl_set_y">
         <property name="decimals">
-         <number>1</number>
+         <number>2</number>
         </property>
         <property name="minimum">
          <double>-1000.000000000000000</double>
@@ -1493,6 +1493,19 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </widget>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>320</y>
+      <width>131</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>4000 units == 1  cm</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

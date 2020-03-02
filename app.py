@@ -346,7 +346,7 @@ class App(QMainWindow):
 
     def abort_seq(self):
         """Abort the expreimental sequence."""
-        self.ui.['outbox'].append('Sequence aborted after current cycle.')
+        self.ui.outbox.append('Sequence aborted after current cycle.')
         self.abort_seq = True
 
 

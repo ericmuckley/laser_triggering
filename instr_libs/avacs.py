@@ -79,7 +79,10 @@ def update_angle(avacs):
     pos_str = str(position).replace('.', '')
     avacs['dev'].write(('A'+pos_str+'\r').encode())
     message = avacs['dev'].read(11).decode()
-    curr_angle = round(float(message.split(';')[2])/10, 1)
+    try:
+        curr_angle = round(float(message.split(';')[2])/10, 1)
+    except IndexError:
+        curr_angle = '---'
     avacs['curr_angle'].setText(str(curr_angle))
 
 
