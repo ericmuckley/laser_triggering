@@ -16,6 +16,8 @@ Notes:
 * Instruments may not be communicating properly unless they return an identification message in the outout box when the are connected. If instruments will not connect, check that their addresses are correct.
 * The application is set up to trigger pulses from the SRS DG645 using the A-B output. So when using the SRS DG645 as an external trigger for an auxilary laser, connect the DG645 *A-B output* to the laser *external trigger* input.
 
+## Connecting to Gentec S-Link photometer
+The photometer will not communicate with the PC if it has been left in an inconsistent state. To reset connection to the PC, unplug the USB cable from the photometer for 5 seconds and then plug it back in. 
 
 ## Connecting to Thorlabs K-Cube KDC101 controllers
 These controllers cannot be found by the computer if the ```import thorlabs_apt as apt``` command has been run before the controllers were connected to the PC. After they are connected, make sure the Python kernel has been restarted to allow initialization of ```APT.DLL``` while the controllers are connected and powered. 
