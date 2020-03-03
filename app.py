@@ -22,6 +22,7 @@ import os
 import sys
 import time
 import numpy as np
+import serial
 import matplotlib.pyplot as plt
 
 
@@ -85,7 +86,7 @@ class App(QMainWindow):
         # create timer which updates fields on GUI (set interval in ms)
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.update_gui_thread)
-        self.timer.start(1500)
+        self.timer.start(500)
 
         # assign actions to top menu items
         # example: self.ui.menu_item_name.triggered.connect(self.func_name)
@@ -471,7 +472,10 @@ class App(QMainWindow):
             avacs.update_angle(self.avacs)
         # update stage position on the GUI
         if self.mcl['dev'] is not None:
-            mcl.update_position(self.mcl)
+            try:
+                mcl.update_position(self.mcl)
+            except serial.SerialException:
+                pass
         self.ops['gui_update_finished'] = True 
 
 
@@ -518,7 +522,7 @@ class App(QMainWindow):
         # os.system("taskkill /f /im AddInProcess.exe")
         # stop timer
         self.timer.stop()
-        # close app windowl
+        # close app window
         self.deleteLater()
         self.close()
         # this kills the python kernel upon quitting

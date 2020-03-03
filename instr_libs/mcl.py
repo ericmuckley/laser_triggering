@@ -21,6 +21,17 @@ import numpy as np
 from serial.tools import list_ports
 
 
+# default scale for the stage is
+# 4000 units == 1 cm
+
+# change this variable to reverse the y-direction of the stage movement.
+# this is needed if the stage is mounted vertically upside down for example.
+# for normal operation, y_dir = 1
+#for reverse operation, y_dir = -1
+y_dir = 1
+if y_dir not in [1, -1]:
+    y_dir = 1
+
 
 def print_ports():
     """Print a list of avilable serial ports."""
@@ -44,7 +55,7 @@ def stage_on(mcl):
         try:
             dev = serial.Serial(
                     port=mcl['address'].text(),
-                    timeout=2,
+                    timeout=1,
                     stopbits=serial.STOPBITS_TWO)
             mcl['dev'] = dev
             mcl['outbox'].append('Marzhauser MCL-3 stage connected.')
@@ -52,10 +63,10 @@ def stage_on(mcl):
             mcl['outbox'].append('Stage status: {}'.format(get_status(dev)))
             enable_stage(mcl, True)
             x, y = get_x_pos(mcl['dev']), get_y_pos(mcl['dev'])
-            mcl['show_x'].setText(str(x))
-            mcl['show_y'].setText(str(y))
-            mcl['set_x'].setValue(int(x))
-            mcl['set_y'].setValue(int(y))
+            mcl['show_x'].setText(str(round(x, 2)))
+            mcl['show_y'].setText(str(round(y, 2)))
+            mcl['set_x'].setValue(float(x))
+            mcl['set_y'].setValue(float(y))
         except:
             mcl['outbox'].append('Stage could not connect.')
             mcl['outbox'].append('Make sure it is "auto" mode.')
@@ -97,43 +108,55 @@ def get_grid(mcl):
 
 def update_position(mcl):
     """Update position on the main GUI."""
-    new_x = int(mcl['set_x'].value())
-    new_y = int(mcl['set_y'].value())
-    # get current position and update GUI fields
-    current_x = get_x_pos(mcl['dev'], backup=int(mcl['show_x'].text()))
-    current_y = get_y_pos(mcl['dev'], backup=int(mcl['show_y'].text()))
-    #current_x = get_x_pos(mcl['dev'])
-    #current_y = get_y_pos(mcl['dev'])    
     
-    mcl['show_x'].setText(str(current_x))
-    mcl['show_y'].setText(str(current_y))    
+    # get user-defined coordinates from the GUI in centimeters
+    new_x = round(mcl['set_x'].value(), 2)
+    new_y = round(y_dir*mcl['set_y'].value(), 2)
+    # get coordinates in stage units
+    #new_x_units, new_y_units = new_x*4000, new_y*4000
+    
+    # get current stage position and update GUI fields
+    current_x = get_x_pos(mcl['dev'], backup=float(mcl['show_x'].text()))
+    current_y = get_y_pos(mcl['dev'], backup=float(mcl['show_y'].text()))
+    mcl['show_x'].setText(str(round(current_x, 2)))
+    mcl['show_y'].setText(str(round(current_y, 2)))
+    
+    # get current stage position in stage units
+    #current_x_units, current_y_units = current_x/4000, current_y/4000
+
     # move to new position 
-    dx, dy = new_x-current_x, new_y-current_y
+    dx, dy = round(new_x-current_x, 2), round(new_y-current_y, 2)
     if dx != 0 or dy != 0:
         mcl['outbox'].append(
                 'Moving stage to ({}, {})...'.format(new_x, new_y))
-        move_by(mcl['dev'], dx, dy)
+        move_by(mcl['dev'], int(dx*4000), int(y_dir*dy*4000))
         clear_stage_buffer(mcl['dev'])
 
 
 def get_x_pos(dev, backup=0):
     """Get current X position of stage."""
+    clear_stage_buffer(dev)
     try:
         dev.write(('UC\r\r').encode())
         x_pos = dev.readline().decode()
-    except AttributeError:
+        return float(x_pos)/4000
+    except ValueError:
         x_pos = backup
-    return int(x_pos)
+        return x_pos
+    
 
 
 def get_y_pos(dev, backup=0):
     """Get current Y position of stage."""
+    clear_stage_buffer(dev)
     try:
         dev.write(('UD\r\r').encode())
         y_pos = dev.readline().decode()
-    except AttributeError:
+        return float(y_pos)/4000
+    except ValueError:
         y_pos = backup
-    return int(y_pos)
+        return y_pos
+    
 
 
 def clear_stage_buffer(dev):
@@ -144,7 +167,7 @@ def clear_stage_buffer(dev):
         dev.flushOutput()
         time.sleep(0.1)
         dev.readline()
-    except:
+    except serial.SerialException:
         time.sleep(0.1)
 
 

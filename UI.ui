@@ -1207,10 +1207,10 @@ p, li { white-space: pre-wrap; }
          </size>
         </property>
         <property name="text">
-         <string>COM22</string>
+         <string>COM18</string>
         </property>
         <property name="placeholderText">
-         <string>COM22</string>
+         <string>COM18</string>
         </property>
        </widget>
       </item>
@@ -1280,10 +1280,10 @@ p, li { white-space: pre-wrap; }
          <number>2</number>
         </property>
         <property name="minimum">
-         <double>-1000.000000000000000</double>
+         <double>-5.000000000000000</double>
         </property>
         <property name="maximum">
-         <double>1000.000000000000000</double>
+         <double>5.000000000000000</double>
         </property>
         <property name="singleStep">
          <double>1.000000000000000</double>
@@ -1341,7 +1341,7 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>234</width>
+        <width>241</width>
         <height>63</height>
        </rect>
       </property>
@@ -1349,57 +1349,57 @@ p, li { white-space: pre-wrap; }
        <item row="2" column="1">
         <widget class="QDoubleSpinBox" name="mcl_grid_y_start">
          <property name="decimals">
-          <number>1</number>
+          <number>2</number>
          </property>
          <property name="minimum">
-          <double>-1000.000000000000000</double>
+          <double>-5.000000000000000</double>
          </property>
          <property name="maximum">
-          <double>1000.000000000000000</double>
+          <double>5.000000000000000</double>
          </property>
          <property name="singleStep">
           <double>1.000000000000000</double>
          </property>
          <property name="value">
-          <double>-100.000000000000000</double>
+          <double>-5.000000000000000</double>
          </property>
         </widget>
        </item>
        <item row="2" column="2">
         <widget class="QDoubleSpinBox" name="mcl_grid_y_end">
          <property name="decimals">
-          <number>1</number>
+          <number>2</number>
          </property>
          <property name="minimum">
-          <double>-1000.000000000000000</double>
+          <double>-5.000000000000000</double>
          </property>
          <property name="maximum">
-          <double>1000.000000000000000</double>
+          <double>5.000000000000000</double>
          </property>
          <property name="singleStep">
           <double>1.000000000000000</double>
          </property>
          <property name="value">
-          <double>100.000000000000000</double>
+          <double>5.000000000000000</double>
          </property>
         </widget>
        </item>
        <item row="1" column="2">
         <widget class="QDoubleSpinBox" name="mcl_grid_x_end">
          <property name="decimals">
-          <number>1</number>
+          <number>2</number>
          </property>
          <property name="minimum">
-          <double>-1000.000000000000000</double>
+          <double>-5.000000000000000</double>
          </property>
          <property name="maximum">
-          <double>1000.000000000000000</double>
+          <double>5.000000000000000</double>
          </property>
          <property name="singleStep">
           <double>1.000000000000000</double>
          </property>
          <property name="value">
-          <double>100.000000000000000</double>
+          <double>5.000000000000000</double>
          </property>
         </widget>
        </item>
@@ -1420,19 +1420,19 @@ p, li { white-space: pre-wrap; }
        <item row="1" column="1">
         <widget class="QDoubleSpinBox" name="mcl_grid_x_start">
          <property name="decimals">
-          <number>1</number>
+          <number>2</number>
          </property>
          <property name="minimum">
-          <double>-1000.000000000000000</double>
+          <double>-5.000000000000000</double>
          </property>
          <property name="maximum">
-          <double>1000.000000000000000</double>
+          <double>5.000000000000000</double>
          </property>
          <property name="singleStep">
           <double>1.000000000000000</double>
          </property>
          <property name="value">
-          <double>-100.000000000000000</double>
+          <double>-5.000000000000000</double>
          </property>
         </widget>
        </item>
@@ -1463,7 +1463,7 @@ p, li { white-space: pre-wrap; }
           <number>100</number>
          </property>
          <property name="value">
-          <number>2</number>
+          <number>3</number>
          </property>
         </widget>
        </item>
@@ -1473,7 +1473,7 @@ p, li { white-space: pre-wrap; }
           <number>100</number>
          </property>
          <property name="value">
-          <number>2</number>
+          <number>3</number>
          </property>
         </widget>
        </item>
