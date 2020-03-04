@@ -11,6 +11,11 @@ dev.write(('?ver\r\r').encode())
 print(dev.readline().decode())
 
 
+
+# default scale for the MCL-3 stage is
+# 4000 units == 1 cm
+
+
 Created on Mon Feb  3 15:39:10 2020
 @author: ericmuckley@gmail.com
 
@@ -28,10 +33,11 @@ from serial.tools import list_ports
 # this is needed if the stage is mounted vertically upside down for example.
 # for normal operation, y_dir = 1
 #for reverse operation, y_dir = -1
+'''
 y_dir = 1
-if y_dir not in [1, -1]:
+if y_dir not in (1, -1):
     y_dir = 1
-
+'''
 
 def print_ports():
     """Print a list of avilable serial ports."""
@@ -108,29 +114,41 @@ def get_grid(mcl):
 
 def update_position(mcl):
     """Update position on the main GUI."""
-    
-    # get user-defined coordinates from the GUI in centimeters
-    new_x = round(mcl['set_x'].value(), 2)
-    new_y = round(y_dir*mcl['set_y'].value(), 2)
-    # get coordinates in stage units
-    #new_x_units, new_y_units = new_x*4000, new_y*4000
-    
     # get current stage position and update GUI fields
     current_x = get_x_pos(mcl['dev'], backup=float(mcl['show_x'].text()))
     current_y = get_y_pos(mcl['dev'], backup=float(mcl['show_y'].text()))
-    mcl['show_x'].setText(str(round(current_x, 2)))
-    mcl['show_y'].setText(str(round(current_y, 2)))
+    mcl['show_x'].setText(str(current_x))
+    mcl['show_y'].setText(str(current_y))
     
-    # get current stage position in stage units
-    #current_x_units, current_y_units = current_x/4000, current_y/4000
+    # if stage has not moved
+    if mcl['prev_position'] == (current_x, current_y):
+        mcl['moving'] = False
+    # if stage has moved
+    else:
+        mcl['outbox'].append(
+                'Stage moved to ({}, {})'.format(current_x, current_y))
 
+    if mcl['moving'] is True:
+        mcl['status'].setText('IN MOTION')
+    else:
+        mcl['status'].setText('READY')
+
+    # reset the previous position
+    mcl['prev_position'] = (current_x, current_y)
+        
+    # get user-defined coordinates from the GUI in centimeters
+    new_x = round(mcl['set_x'].value(), 2)
+    new_y = round(mcl['set_y'].value(), 2)
     # move to new position 
     dx, dy = round(new_x-current_x, 2), round(new_y-current_y, 2)
     if dx != 0 or dy != 0:
+        mcl['moving'] = True
+        #mcl['just_moved'] = True
         mcl['outbox'].append(
                 'Moving stage to ({}, {})...'.format(new_x, new_y))
-        move_by(mcl['dev'], int(dx*4000), int(y_dir*dy*4000))
+        move_by(mcl['dev'], int(dx*4000), int(dy*4000))
         clear_stage_buffer(mcl['dev'])
+
 
 
 def get_x_pos(dev, backup=0):
@@ -139,10 +157,10 @@ def get_x_pos(dev, backup=0):
     try:
         dev.write(('UC\r\r').encode())
         x_pos = dev.readline().decode()
-        return float(x_pos)/4000
+        return round(float(x_pos)/4000, 2)
     except ValueError:
         x_pos = backup
-        return x_pos
+        return round(x_pos, 2)
     
 
 
@@ -152,10 +170,10 @@ def get_y_pos(dev, backup=0):
     try:
         dev.write(('UD\r\r').encode())
         y_pos = dev.readline().decode()
-        return float(y_pos)/4000
+        return round(float(y_pos)/4000, 2)
     except ValueError:
         y_pos = backup
-        return y_pos
+        return round(y_pos, 2)
     
 
 

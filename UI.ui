@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1083</width>
+    <width>829</width>
     <height>725</height>
    </rect>
   </property>
@@ -14,15 +14,67 @@
    <string>Laser triggering</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QGroupBox{
-border: 1px solid rgb(90, 120, 90);
+   <string notr="true">/*
+QGroupBox{
+border: 1px solid rgb(100, 100, 100);
 border-radius: 0px;
 margin-top: 0.5em;
-font-size: 16px;}
+font-size: 16px;
+color: white;}
 QGroupBox::title{
 subcontrol-position: top center;
 subcontrol-origin: margin;
-padding: 0 3px 0 3px;}
+padding: 0 3px 0 3px;
+color: white;}
+
+
+QMainWindow{
+background-color: rgb(30, 30, 30);
+color: white;}
+
+QLabel{
+color: white;
+font-size: 12px;}
+
+.QFrame{
+border-radius: 0px;
+border: 1px solid rgb(100, 100, 100);
+}
+
+
+
+
+QTextBrowser{
+border-radius: 0px;
+border: 1px solid black;
+font-size: 14px;
+background-color: black;
+color: white;}
+
+
+
+QLineEdit, QSpinBox, QDoubleSpinBox {
+border-radius: 0px;
+font-size: 12px;
+background-color: rgb(50, 50, 50);
+border: 1px solid rgb(30, 30, 30);
+color: white;}
+
+QLineEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover{
+background-color: rgb(80, 80, 80);
+;}
+
+*/
+
+
+
+
+
+
+
+
+
+
 
 
 /*
@@ -179,9 +231,7 @@ color: rgb(120, 120, 120);}</string>
      </rect>
     </property>
     <property name="font">
-     <font>
-      <pointsize>-1</pointsize>
-     </font>
+     <font/>
     </property>
     <property name="title">
      <string>Pulse generator</string>
@@ -366,15 +416,13 @@ color: rgb(120, 120, 120);}</string>
     <property name="geometry">
      <rect>
       <x>580</x>
-      <y>400</y>
-      <width>491</width>
-      <height>291</height>
+      <y>410</y>
+      <width>231</width>
+      <height>281</height>
      </rect>
     </property>
     <property name="font">
-     <font>
-      <pointsize>-1</pointsize>
-     </font>
+     <font/>
     </property>
     <property name="title">
      <string>Output</string>
@@ -384,8 +432,8 @@ color: rgb(120, 120, 120);}</string>
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>471</width>
-       <height>251</height>
+       <width>211</width>
+       <height>241</height>
       </rect>
      </property>
      <property name="font">
@@ -414,16 +462,14 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_configurelightfield">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>30</y>
-      <width>251</width>
-      <height>111</height>
+      <x>280</x>
+      <y>20</y>
+      <width>281</width>
+      <height>131</height>
      </rect>
     </property>
     <property name="font">
-     <font>
-      <pointsize>-1</pointsize>
-     </font>
+     <font/>
     </property>
     <property name="title">
      <string>Configure LightField</string>
@@ -486,14 +532,12 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>580</x>
       <y>20</y>
-      <width>221</width>
+      <width>231</width>
       <height>221</height>
      </rect>
     </property>
     <property name="font">
-     <font>
-      <pointsize>-1</pointsize>
-     </font>
+     <font/>
     </property>
     <property name="title">
      <string>Experimental sequence</string>
@@ -504,7 +548,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>40</y>
        <width>181</width>
-       <height>121</height>
+       <height>124</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="seq_form">
@@ -762,10 +806,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_avacs">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>20</y>
-      <width>221</width>
-      <height>121</height>
+      <x>580</x>
+      <y>260</y>
+      <width>231</width>
+      <height>131</height>
      </rect>
     </property>
     <property name="title">
@@ -776,7 +820,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>169</width>
+       <width>174</width>
        <height>81</height>
       </rect>
      </property>
@@ -1175,7 +1219,7 @@ p, li { white-space: pre-wrap; }
       <x>280</x>
       <y>180</y>
       <width>281</width>
-      <height>301</height>
+      <height>321</height>
      </rect>
     </property>
     <property name="title">
@@ -1187,7 +1231,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>197</width>
-       <height>101</height>
+       <height>111</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="mcl_grid">
@@ -1280,7 +1324,7 @@ p, li { white-space: pre-wrap; }
          <number>2</number>
         </property>
         <property name="minimum">
-         <double>-5.000000000000000</double>
+         <double>0.000000000000000</double>
         </property>
         <property name="maximum">
          <double>5.000000000000000</double>
@@ -1306,13 +1350,27 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="stage_status_label">
+        <property name="text">
+         <string>Stage status</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLabel" name="stage_status">
+        <property name="text">
+         <string>---</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
     <widget class="QFrame" name="mcl_frame">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>150</y>
+       <y>170</y>
        <width>261</width>
        <height>131</height>
       </rect>
@@ -1326,9 +1384,9 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="mcl_grid_label">
       <property name="geometry">
        <rect>
-        <x>70</x>
+        <x>50</x>
         <y>0</y>
-        <width>141</width>
+        <width>171</width>
         <height>20</height>
        </rect>
       </property>
@@ -1342,7 +1400,7 @@ p, li { white-space: pre-wrap; }
         <x>10</x>
         <y>30</y>
         <width>241</width>
-        <height>63</height>
+        <height>64</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
@@ -1494,26 +1552,13 @@ p, li { white-space: pre-wrap; }
      </widget>
     </widget>
    </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>580</x>
-      <y>300</y>
-      <width>131</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>4000 units == 1  cm</string>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1083</width>
+     <width>829</width>
      <height>21</height>
     </rect>
    </property>

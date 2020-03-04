@@ -86,3 +86,6 @@ After installation of the _thorlabs_apt_ library, three files in the support_fil
 3. _ATPAPI.h_
 
 This allows communication between Thorlabs instruments, Windows, and Python.
+
+
+The *PI_GCS2_DLL_x64.dll* library must be placed inside the same folder as the *piline.py* script for communication between Python and the PI hardware.
