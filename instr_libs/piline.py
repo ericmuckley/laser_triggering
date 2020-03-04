@@ -20,19 +20,133 @@ Third Party Software Note :
 http://www.physikinstrumente.com/download/TPSWNote_PhysikInstrumenteGmbH_Co_KG.pdf
 
 
+DIP switches on the back of the PI C-867 unit should be set before
+powering the unit so that the controller "Address = 1":
+    1 - 4: ON
+    5 - 8: OFF
+
 Created on Wed Mar  4 11:38:43 2020
 @author: ericmuckley@gmail.com
 """
 
+#import time
+#import numpy as np
+#from pipython import GCSDevice, pitools, GCSError, gcserror
+#from pipython.datarectools import getservotime
+
 import time
-import numpy as np
-from pipython import GCSDevice, pitools, GCSError, gcserror
-from pipython.datarectools import getservotime
+import serial
+
+
+
+def print_ports():
+    """Print a list of avilable serial ports."""
+    ports = list(serial.tools.list_ports.comports())
+    print('Available serial ports:')
+    [print(p.device) for p in ports]
+
+def get_id(dev):
+    """Get ID of device."""
+    dev.write(('*IDN?\n').encode())
+    return dev.readline().decode()
+
+def get_position(dev):
+    """Get current real position."""
+    dev.write(('POS?\n').encode())
+    return dev.readline().decode()   
+
+def get_stage_type(dev):
+    """Get the stage type connected to the controller."""
+    dev.write(('CST?\n').encode())
+    return dev.readline().decode() 
+
+def get_servo_mode(dev):
+    """Get servomotor mode."""
+    dev.write(('SVO?\n').encode())
+    return bool(int(dev.readline().decode().split('=')[1]))
+
+def turn_on_servo(dev, on=True):
+    """Turn on or off the servo motor."""
+    dev.write(('SVO 1 '+str(int(on))+'\n').encode())
+
+def get_motion_lims(dev):
+    """Get min and max motion limits of the stage."""
+    dev.write(('TMN?\n').encode())
+    min_lim = dev.readline().decode().split('=')[1]
+    dev.write(('TMX?\n').encode())
+    max_lim = dev.readline().decode().split('=')[1]
+    return (min_lim, max_lim)
+
+def check_servo(dev):
+    """Check whether servo motor is on."""
+    dev.write(('SVO?\n').encode())
+    return bool(int(dev.readline().decode().split('=')[1]))
+
+
+
+
+if __name__ == '__main__':
+
+    address = 'COM24'
+    dev = serial.Serial(port=address, baudrate=115200, timeout=2)
+    
+    turn_on_servo(dev, on=True)
+    print('Controller ID: {}'.format(get_id(dev)))
+    print('stage type: {}'.format(get_stage_type(dev)))
+    print('position: {}'.format(get_position(dev)))
+    print('motion limits: {}'.format(get_motion_lims(dev)))
+    print('servo on: {}'.format(check_servo(dev)))
+    
+    '''
+    switch on servo
+    move selected axes to their reference position
+    
+    change target value
+    
+    '''
+
+    # get reference
+    #dev.write(('FRF\n').encode())
+
+
+    #dev.write(('RON 1 1\n').encode())
+
+    #dev.write(('RON?\n').encode())
+    #print('reference mode: {}'.format(dev.readline().decode()))
+
+    # get reference
+    dev.write(('FRF\n').encode())
+
+
+    dev.write(('FRF?\n').encode())
+    print('Reference result: {}'.format(dev.readline().decode()))
+
+
+    dev.write(('GOH\n').encode())
+    
+    #dev.write(('MOV 1 0\n').encode())
+
+    dev.write(('MOV?\n').encode())
+    print('current target: {}'.format(dev.readline().decode()))
+
+    #dev.write(('MVR 1 10\n').encode())
+    
+    
+    dev.write(('ERR?\n').encode())
+    print('error code: {}'.format(dev.readline().decode()))
+
+
+    print('position: {}'.format(get_position(dev)))
+
+
+    turn_on_servo(dev, on=False)
+    dev.close()
+
 
 
 # set name of controller and stages
 #CONTROLLERNAME = 
-
+'''
 PERIOD = 5.0  # duration of one sine period in seconds as float
 CENTERPOS = (1.0, 1.0)  # center position of the circular motion as float for both axes
 AMPLITUDE = (1.0, 1.0)  # amplitude (i.e. diameter) of the circular motion as float for both axes
@@ -204,3 +318,4 @@ if __name__ == '__main__':
     # import logging
     # logging.basicConfig(level=logging.DEBUG)
     main()
+'''

@@ -190,34 +190,6 @@ def clear_stage_buffer(dev):
 
 
 
-
-
-
-'''
-def get_x_pos(dev, backup=0):
-    """Get current X position of stage."""
-    try:
-        dev.write(('UC\r\r').encode())
-        x_pos = int(dev.readline().decode())
-    except:
-        x_pos = backup
-        time.sleep(0.2)
-        print('x failed')
-    return x_pos
-
-
-def get_y_pos(dev, backup=0):
-    """Get current Y position of stage."""
-    try:
-        dev.write(('UD\r\r').encode())
-        y_pos = int(dev.readline().decode())
-    except:
-        y_pos = backup
-        time.sleep(0.2)
-        print('y failed')
-    return y_pos
-'''
-
 def get_z_pos(dev):
     """Get current Z position of stage."""
     dev.readline()  # clears buffer
