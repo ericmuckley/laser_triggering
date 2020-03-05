@@ -34,6 +34,7 @@ from instr_libs import kcube  # Thorlabs KDC101 stepper motor controllers
 from instr_libs import ops  # for controlling operations of main GUI
 from instr_libs import lf  # for controlling LightField Raman software
 from instr_libs import mcl  # for controlling Marzhauser MCL-3 stage
+from instr_libs import piline  # for controlling PI C-867 PILine rotator
 
 
 # ------- change matplotlib settings to make plots look nicer --------------
@@ -121,6 +122,7 @@ class App(QMainWindow):
         self.ui.mcl_on.stateChanged.connect(self.stage_on)
         self.ui.avacs_on.stateChanged.connect(self.avacs_on)
         self.ui.pulsegen_on.stateChanged.connect(self.pulsegen_on)
+        self.ui.piline_on.stateChanged.connect(self.piline_on_thread)
         
         # assign actions to user input fields (text and numeric)
         # example: self.ui.TEXT_FIELD.textChanged.connect(self.FUNCTION_NAME)
@@ -239,25 +241,48 @@ class App(QMainWindow):
         # information related to PILine PI C-867 rotation stage controller
         self.piline = {
             'dev': None,
+            'on': self.ui.piline_on,
+            'outbox': self.ui.outbox,
             'set': self.ui.piline_set,
+            'seq': self.ui.seq_piline,
             'display': self.ui.piline_display,
-            'adddress': self.ui.piline_address}
+            'address': self.ui.piline_address}
 
         # kill the process which opens LightField if its already running
         os.system("taskkill /f /im AddInProcess.exe")
 
         # disable GUI buttons for instruments which are not connected
-        srs.enable_pulse_gen_buttons(self.srs, False)
+        srs.enable_srs(self.srs, False)
         kcube.enable_polarizer(self.kcube, False)
         kcube.enable_analyzer(self.kcube, False)
         mcl.enable_stage(self.mcl, False)
         mso.enable_mso(self.mso, False)
+        piline.enable_piline(self.piline, False)
         self.items_to_deactivate = [
                 self.ui.abort_seq,
                 self.ui.avacs_angle,
                 self.ui.acquire_raman,
                 self.ui.seq_raman_acquisition]
         [i.setEnabled(False) for i in self.items_to_deactivate]
+
+
+
+    # %% ============ PI C-867 PILine rotation controller ================
+
+
+
+
+    def piline_on(self):
+        """Checkbox for piline is checked/unchecked."""
+        piline.piline_on(self.piline)
+
+
+    def piline_on_thread(self):
+        """Connect to PI C-867 PILine in a new thread."""
+        worker = Worker(self.piline_on)  # pass other args here
+        self.threadpool.start(worker)
+
+
 
     # %% ======= experimental sequence control functions =================
 

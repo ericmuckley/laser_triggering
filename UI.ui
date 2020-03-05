@@ -560,7 +560,7 @@ p, li { white-space: pre-wrap; }
       <x>260</x>
       <y>20</y>
       <width>241</width>
-      <height>131</height>
+      <height>121</height>
      </rect>
     </property>
     <property name="font">
@@ -569,55 +569,59 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Configure LightField</string>
     </property>
-    <widget class="QWidget" name="verticalLayoutWidget_6">
+    <widget class="QWidget" name="verticalLayoutWidget_9">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>31</y>
+       <y>40</y>
        <width>201</width>
-       <height>91</height>
+       <height>61</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_6">
+     <layout class="QVBoxLayout" name="verticalLayout_9">
       <item>
-       <widget class="QPushButton" name="launch_lf">
-        <property name="text">
-         <string>Launch LF</string>
-        </property>
-        <property name="default">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="acquire_raman">
-        <property name="text">
-         <string>Acquire</string>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-        <property name="default">
-         <bool>false</bool>
-        </property>
-        <property name="flat">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QFormLayout" name="lf_form">
-        <item row="0" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
          <widget class="QLabel" name="lf_notes_label">
           <property name="text">
            <string>File notes</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
+        <item>
          <widget class="QLineEdit" name="raman_filename_notes">
           <property name="text">
            <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QPushButton" name="launch_lf">
+          <property name="text">
+           <string>Launch LF</string>
+          </property>
+          <property name="default">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="acquire_raman">
+          <property name="text">
+           <string>Acquire</string>
+          </property>
+          <property name="autoDefault">
+           <bool>false</bool>
+          </property>
+          <property name="default">
+           <bool>false</bool>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -632,7 +636,7 @@ p, li { white-space: pre-wrap; }
       <x>530</x>
       <y>20</y>
       <width>241</width>
-      <height>251</height>
+      <height>201</height>
      </rect>
     </property>
     <property name="font">
@@ -641,151 +645,159 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Experimental sequence</string>
     </property>
-    <widget class="QWidget" name="verticalLayoutWidget_8">
+    <widget class="QWidget" name="formLayoutWidget_2">
      <property name="geometry">
       <rect>
        <x>20</x>
        <y>40</y>
-       <width>201</width>
-       <height>209</height>
+       <width>199</width>
+       <height>141</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_8">
-      <item>
-       <layout class="QFormLayout" name="seq_form">
-        <item row="0" column="0">
-         <widget class="QLabel" name="set_seq_cycles_label">
-          <property name="text">
-           <string>Number of cycles</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QSpinBox" name="set_seq_cycles">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>10000</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="pause_between_cycles_label">
-          <property name="text">
-           <string>Cycle delay (s)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QSpinBox" name="pause_between_cycles">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="minimum">
-           <number>3</number>
-          </property>
-          <property name="maximum">
-           <number>10000</number>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="seq_laser_triggering_label">
-          <property name="text">
-           <string>Laser triggering</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QCheckBox" name="seq_laser_trigger">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="seq_raman_acquisition_label">
-          <property name="text">
-           <string>Raman acquisition</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QCheckBox" name="seq_raman_acquisition">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="p_rotation_label">
-          <property name="text">
-           <string>Polarizer rotation</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QCheckBox" name="seq_polarizer_rot">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
-         <widget class="QCheckBox" name="seq_mcl">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="seq_stage_movement_label">
-          <property name="text">
-           <string>Stage movement</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="seq_piline_label">
-          <property name="text">
-           <string>Piline rotation</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="1">
-         <widget class="QCheckBox" name="seq_piline">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-       </layout>
+     <layout class="QFormLayout" name="seq_form">
+      <item row="0" column="0">
+       <widget class="QLabel" name="set_seq_cycles_label">
+        <property name="text">
+         <string>Number of cycles</string>
+        </property>
+       </widget>
       </item>
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="set_seq_cycles">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>10000</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="pause_between_cycles_label">
+        <property name="text">
+         <string>Cycle delay (s)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="pause_between_cycles">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="minimum">
+         <number>3</number>
+        </property>
+        <property name="maximum">
+         <number>10000</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="seq_laser_triggering_label">
+        <property name="text">
+         <string>Laser triggering</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="seq_laser_trigger">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="seq_raman_acquisition_label">
+        <property name="text">
+         <string>Raman acquisition</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="seq_raman_acquisition">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="p_rotation_label">
+        <property name="text">
+         <string>Polarizer rotation</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="seq_polarizer_rot">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="seq_mcl">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="seq_stage_movement_label">
+        <property name="text">
+         <string>Stage movement</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="seq_piline_label">
+        <property name="text">
+         <string>Piline rotation</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QCheckBox" name="seq_piline">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="verticalLayoutWidget_6">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>100</y>
+       <width>77</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_6">
       <item>
        <widget class="QPushButton" name="run_seq">
         <property name="text">
@@ -807,9 +819,9 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>530</x>
-      <y>330</y>
+      <y>370</y>
       <width>241</width>
-      <height>171</height>
+      <height>141</height>
      </rect>
     </property>
     <property name="title">
@@ -821,7 +833,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>201</width>
-       <height>126</height>
+       <height>101</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -887,18 +899,22 @@ p, li { white-space: pre-wrap; }
        </layout>
       </item>
       <item>
-       <widget class="QPushButton" name="scope_acquire">
-        <property name="text">
-         <string>Acquire</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="export_scope_trace">
-        <property name="text">
-         <string>Export</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="scope_acquire">
+          <property name="text">
+           <string>Acquire</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="export_scope_trace">
+          <property name="text">
+           <string>Export</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
@@ -1266,9 +1282,9 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>180</y>
+      <y>200</y>
       <width>241</width>
-      <height>321</height>
+      <height>301</height>
      </rect>
     </property>
     <property name="title">
@@ -1419,7 +1435,7 @@ p, li { white-space: pre-wrap; }
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>190</y>
+       <y>170</y>
        <width>211</width>
        <height>115</height>
       </rect>
@@ -1604,10 +1620,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_piline">
     <property name="geometry">
      <rect>
-      <x>780</x>
-      <y>20</y>
-      <width>181</width>
-      <height>141</height>
+      <x>530</x>
+      <y>240</y>
+      <width>241</width>
+      <height>111</height>
      </rect>
     </property>
     <property name="title">
@@ -1616,9 +1632,9 @@ p, li { white-space: pre-wrap; }
     <widget class="QWidget" name="gridLayoutWidget_8">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>20</x>
        <y>30</y>
-       <width>167</width>
+       <width>201</width>
        <height>65</height>
       </rect>
      </property>

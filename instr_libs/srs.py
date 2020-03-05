@@ -44,15 +44,12 @@ def pulsegen_on(srs):
         enable_pulse_gen_buttons(srs, False)
   
     
-def enable_pulse_gen_buttons(srs, enable):
+def enable_srs(srs, enable):
     """Enable/disable buttons related to pulse generator."""
     srs['address'].setEnabled(not enable)
-    srs['width'].setEnabled(enable)
-    srs['delay'].setEnabled(enable)
-    srs['amplitude'].setEnabled(enable)
-    srs['number'].setEnabled(enable)
-    srs['trigger'].setEnabled(enable)
-    srs['seq_laser_trigger'].setEnabled(enable)
+    items = ['width', 'delay', 'amplitude', 'number',
+             'trigger', 'seq_laser_trigger']
+    [srs[i].setEnabled(enable) for i in items]
     
     
 def trigger_pulses(srs):
