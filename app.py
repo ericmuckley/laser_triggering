@@ -91,7 +91,7 @@ class App(QMainWindow):
         # assign actions to top menu items
         # example: self.ui.menu_item_name.triggered.connect(self.func_name)
         self.ui.quit_app.triggered.connect(self.quitapp)
-        self.ui.show_help.triggered.connect(ops.show_help)
+        self.ui.show_help.triggered.connect(self.show_help)
         self.ui.set_filedir.triggered.connect(self.set_filedir)
         self.ui.print_ports.triggered.connect(self.print_ports)
         self.ui.plot_spectra.triggered.connect(self.plot_file_list)
@@ -122,15 +122,23 @@ class App(QMainWindow):
         self.ui.avacs_on.stateChanged.connect(self.avacs_on)
         self.ui.pulsegen_on.stateChanged.connect(self.pulsegen_on)
         
+        # assign actions to user input fields (text and numeric)
+        # example: self.ui.TEXT_FIELD.textChanged.connect(self.FUNCTION_NAME)
+        # example: self.ui.SPIN_BOX.valueChanged.connect(self.FUNCTION_NAME)
+        self.ui.piline_address.textChanged.connect(self.test_text)
+        self.ui.piline_set.valueChanged.connect(self.test_val)
+        
+        
+        
 
         # intialize log file for logging experimental settings
         self.filedir = os.getcwd()
         self.logdir = self.filedir + '\\logs\\'
         if not os.path.exists(self.logdir):
             os.makedirs(self.logdir)
-        self.starttime = time.strftime('%Y-%m-%d_%H-%M-%S')
-
-        # intialize dictionaries for transporting data to other modules
+        self.starttime = time.strftime('%Y-%m-%d_%H-%M-%S')    
+        
+        # information related to operations of the application
         self.ops = {
                 'app': self.ui,
                 'row_counter': 0,
@@ -141,6 +149,8 @@ class App(QMainWindow):
                 'gui_update_finished': True,
                 'data': np.full((1000, 11), '', dtype=object),
                 'logpath': self.logdir+self.starttime+'.csv'}
+    
+        # information related to Laseroptik beam attenuator
         self.avacs = {
                 'dev': None,
                 'on': self.ui.avacs_on,
@@ -148,6 +158,8 @@ class App(QMainWindow):
                 'angle': self.ui.avacs_angle,
                 'address': self.ui.avacs_address,
                 'curr_angle': self.ui.current_avacs_angle}
+        
+        # information related to SRS DG645 digital delay pulse generator
         self.srs = {
                 'dev': None,
                 'tot_pulses': 0,
@@ -160,6 +172,8 @@ class App(QMainWindow):
                 'address': self.ui.pulsegen_address,
                 'amplitude': self.ui.pulse_amplitude,
                 'seq_laser_trigger': self.ui.seq_laser_trigger}
+        
+        # information related to Tektronix MSO64 oscilloscope
         self.mso = {
                 'dev': None,
                 'on': self.ui.mso_on,
@@ -169,6 +183,8 @@ class App(QMainWindow):
                 'acquire': self.ui.scope_acquire,
                 'downsample': self.ui.mso_downsample,
                 'export': self.ui.export_scope_trace}
+        
+        # information related to Princeton Instruments LightField software
         self.lf = {
                 'app': None,
                 'recent_file': None,
@@ -177,6 +193,8 @@ class App(QMainWindow):
                 'acquire': self.ui.acquire_raman,
                 'notes': self.ui.raman_filename_notes,
                 'seq': self.ui.seq_raman_acquisition}
+
+        # information related to Thorlabs K-Cube KDC101 rotation controllers
         self.kcube = {
                 'pdev': None,
                 'adev': None,
@@ -195,6 +213,8 @@ class App(QMainWindow):
                 'curr_pangle_label': self.ui.current_p_angle,
                 'curr_aangle_label': self.ui.current_a_angle,
                 'seq_polarizer_rot': self.ui.seq_polarizer_rot}
+
+        # information related to Marzhauser MCL-3 X-Y stage
         self.mcl = {
                'dev': None,
                'moving': False,
@@ -216,6 +236,13 @@ class App(QMainWindow):
                'grid_ysteps': self.ui.mcl_grid_y_steps,
                'preview_grid_cords': self.ui.preview_grid_cords}
 
+        # information related to PILine PI C-867 rotation stage controller
+        self.piline = {
+            'dev': None,
+            'set': self.ui.piline_set,
+            'display': self.ui.piline_display,
+            'adddress': self.ui.piline_address}
+
         # kill the process which opens LightField if its already running
         os.system("taskkill /f /im AddInProcess.exe")
 
@@ -233,6 +260,15 @@ class App(QMainWindow):
         [i.setEnabled(False) for i in self.items_to_deactivate]
 
     # %% ======= experimental sequence control functions =================
+
+    def test_text(self):
+        self.ui.outbox.append('txt changed')
+
+    def test_val(self):
+        self.ui.outbox.append('val changed')
+
+
+
 
     def run_seq(self):
         """Run an experimental sequence."""
@@ -510,16 +546,22 @@ class App(QMainWindow):
         """Print a list of available serial and VISA ports."""
         ops.print_ports(self.ops)
 
+    def show_help():
+        """Show the help window as an HTML popup."""
+        ops.show_help()
+
     def quitapp(self):
         """Quit the application."""
-        if self.srs['dev']:
+        if self.srs['dev'] is not None:
             self.srs['dev'].close()
-        if self.mso['dev']:
+        if self.mso['dev'] is not None:
             self.mso['dev'].close()
-        if self.avacs['dev']:
+        if self.avacs['dev'] is not None:
             self.avacs['dev'].close()
-        if self.mcl['dev']:
+        if self.mcl['dev'] is not None:
             self.mcl['dev'].close()
+        if self.piline['dev'] is not None:
+            self.piline['dev'].close()
         # kill the process which opens LightField if its already running
         # os.system("taskkill /f /im AddInProcess.exe")
         # stop timer

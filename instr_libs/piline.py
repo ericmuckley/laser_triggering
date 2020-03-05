@@ -75,71 +75,79 @@ def get_motion_lims(dev):
     min_lim = dev.readline().decode().split('=')[1]
     dev.write(('TMX?\n').encode())
     max_lim = dev.readline().decode().split('=')[1]
-    return (min_lim, max_lim)
+    dev.write(('LIM?\n').encode())
+    lim_switches = dev.readline().decode().split('=')[1]
+    return (min_lim, max_lim, lim_switches)
 
 def check_servo(dev):
     """Check whether servo motor is on."""
     dev.write(('SVO?\n').encode())
     return bool(int(dev.readline().decode().split('=')[1]))
 
+def get_error(dev):
+    """Return error of the device.""" 
+    dev.write(('ERR?\n').encode())
+    return dev.readline().decode()
 
+def get_reference_mode(dev):
+    """Get reference mode of the device."""
+    dev.write(('RON?\n').encode())
+    return dev.readline().decode()
+
+def get_reference_result(dev):
+    """Get result of reference query."""
+    dev.write(('FRF? 1\n').encode())
+    return dev.readline().decode()
+
+def initialize_stage(dev):
+    """Initialize the stage and get some operating parameters."""
+    turn_on_servo(dev, on=True)
+    # read stage information
+    print('Controller ID: {}'.format(get_id(dev)))
+    print('stage type: {}'.format(get_stage_type(dev)))
+    print('current position: {}'.format(get_position(dev)))
+    print('servo on: {}'.format(check_servo(dev)))
+    print('reference mode: {}'.format(get_reference_mode(dev)))
+    # get reference point and wait until its finished
+    dev.write(('FRF 1\n').encode())
+    time.sleep(6)
+    ref_result = bool(int(get_reference_result(dev).split('=')[1]))
+    print('Reference successful: {}'.format(ref_result))
+    print('Stage configured successfully.')
 
 
 if __name__ == '__main__':
 
+
     address = 'COM24'
     dev = serial.Serial(port=address, baudrate=115200, timeout=2)
+    initialize_stage(dev)
+    #time.sleep(pause)
+ 
+    #dev.write(('FED 1\n').encode())
+    #print('result: {}'.format(dev.readline().decode()))
+
+    #dev.write(('GOH\n').encode())
     
-    turn_on_servo(dev, on=True)
-    print('Controller ID: {}'.format(get_id(dev)))
-    print('stage type: {}'.format(get_stage_type(dev)))
-    print('position: {}'.format(get_position(dev)))
-    print('motion limits: {}'.format(get_motion_lims(dev)))
-    print('servo on: {}'.format(check_servo(dev)))
+    #dev.write(('POS 1 0\n').encode())
     
-    '''
-    switch on servo
-    move selected axes to their reference position
-    
-    change target value
-    
-    '''
+    #dev.write(('MVR 1 0\n').encode())
 
-    # get reference
-    #dev.write(('FRF\n').encode())
+    dev.write(('MOV 1 360\n').encode())
 
-
-    #dev.write(('RON 1 1\n').encode())
-
-    #dev.write(('RON?\n').encode())
-    #print('reference mode: {}'.format(dev.readline().decode()))
-
-    # get reference
-    dev.write(('FRF\n').encode())
-
-
-    dev.write(('FRF?\n').encode())
-    print('Reference result: {}'.format(dev.readline().decode()))
-
-
-    dev.write(('GOH\n').encode())
-    
-    #dev.write(('MOV 1 0\n').encode())
-
-    dev.write(('MOV?\n').encode())
-    print('current target: {}'.format(dev.readline().decode()))
+    time.sleep(5)
 
     #dev.write(('MVR 1 10\n').encode())
+    #dev.write(('TRS?\n').encode())
+    #print('result: {}'.format(dev.readline().decode()))
+
+
     
-    
-    dev.write(('ERR?\n').encode())
-    print('error code: {}'.format(dev.readline().decode()))
-
-
-    print('position: {}'.format(get_position(dev)))
-
-
     turn_on_servo(dev, on=False)
+
+    print('current position: {}'.format(get_position(dev)))
+
+    print('error code: {}'.format(get_error(dev)))
     dev.close()
 
 
