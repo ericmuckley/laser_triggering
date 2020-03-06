@@ -804,7 +804,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>221</width>
-       <height>71</height>
+       <height>75</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="scope_grid">
@@ -893,7 +893,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>221</width>
-       <height>71</height>
+       <height>75</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="avacs_grid">
@@ -1557,7 +1557,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>221</width>
-       <height>211</height>
+       <height>214</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="piline_grid_layout">

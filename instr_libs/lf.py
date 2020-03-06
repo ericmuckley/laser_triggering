@@ -35,8 +35,17 @@ from PrincetonInstruments.LightField.Automation import Automation
 from PrincetonInstruments.LightField.AddIns import ExperimentSettings
 from PrincetonInstruments.LightField.AddIns import DeviceType 
 
-
-
+# ------- change matplotlib settings to make plots look nicer --------------
+'''
+plt.rcParams['xtick.labelsize'] = 20
+plt.rcParams['ytick.labelsize'] = 20
+plt.rcParams['axes.linewidth'] = 3
+plt.rcParams['xtick.minor.width'] = 3
+plt.rcParams['xtick.major.width'] = 3
+plt.rcParams['ytick.minor.width'] = 3
+plt.rcParams['ytick.major.width'] = 3
+plt.rcParams['figure.autolayout'] = True
+'''
 
 def launch_lf(lf):
     """Launch LightField software."""

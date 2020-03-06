@@ -25,9 +25,8 @@ import numpy as np
 from PyQt5 import QtWidgets, uic, QtCore  # , QtGui
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
 
+# -------- import custom modules for controlling instruments ---------------
 
-
-# -------- import custom modules for contorlling instruments ---------------
 from instr_libs import avacs  # Laseroptik AVACS beam attenuator
 from instr_libs import srs  # SRS DG645 digital delay pulse generator
 from instr_libs import mso  # Tektronix MSO64 oscilloscope
@@ -37,18 +36,6 @@ from instr_libs import lf  # for controlling LightField Raman software
 from instr_libs import mcl  # for controlling Marzhauser MCL-3 stage
 from instr_libs import piline  # for controlling PI C-867 PILine rotator
 
-
-# ------- change matplotlib settings to make plots look nicer --------------
-'''
-plt.rcParams['xtick.labelsize'] = 20
-plt.rcParams['ytick.labelsize'] = 20
-plt.rcParams['axes.linewidth'] = 3
-plt.rcParams['xtick.minor.width'] = 3
-plt.rcParams['xtick.major.width'] = 3
-plt.rcParams['ytick.minor.width'] = 3
-plt.rcParams['ytick.major.width'] = 3
-plt.rcParams['figure.autolayout'] = True
-'''
 
 class Worker(QtCore.QRunnable):
     """Class to start a new worker thread for background tasks.
@@ -577,33 +564,6 @@ class App(QMainWindow):
         avacs.set_now(self.avacs)
 
     # %% ============ system control functions =============================
-
-    '''
-    def update_gui_thread(self):
-        """Update the GUI objects in a new thread."""
-        if self.ops['gui_update_finished']:
-            self.ops['gui_update_finished'] = False
-            worker = Worker(self.update_gui)  # pass other args here
-            self.threadpool.start(worker)
-
-    def update_gui(self):
-        """Function to execute on a regularly based on timer. Use this
-        for continuously updating GUI objects."""
-        # update current polarizer and analyzer angles on GUI
-        if self.kcube['pdev'] is not None:
-            kcube.polarizer_move_to(self.kcube)
-        if self.kcube['adev'] is not None:
-            kcube.analyzer_move_to(self.kcube)
-        if self.avacs['dev'] is not None:
-            avacs.update_angle(self.avacs)
-        # update stage position on the GUI
-        if self.mcl['dev'] is not None:
-            try:
-                mcl.update_position(self.mcl)
-            except serial.SerialException:
-                pass
-        self.ops['gui_update_finished'] = True 
-    '''
 
     def set_filedir(self):
         # set the directory for saving data files

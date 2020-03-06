@@ -52,18 +52,18 @@ def polarizer_on(kcube):
             # this allows rotation in both directions
             kcube['pdev'].set_hardware_limit_switches(1,1)
             # set initial angle to be current angle when program started
-            kcube['pangle'].setValue(round(kcube['pdev'].position))
+            kcube['p_set'].setValue(round(kcube['pdev'].position))
         except:
             kcube['outbox'].append('Polarizer controller could not connect.')
             enable_polarizer(kcube, False)
             kcube['p_on'].setChecked(False)
             kcube['pdev'] = None
-            kcube['curr_pangle_label'].setText('---   ')
+            kcube['p_display'].setText('---   ')
     if not kcube['p_on'].isChecked():
         kcube['pdev'] = None
         enable_polarizer(kcube, False)
         kcube['p_on'].setChecked(False)
-        kcube['curr_pangle_label'].setText('---   ')
+        kcube['p_display'].setText('---   ')
         kcube['outbox'].append('Polarizer controller closed.')
         
 
@@ -80,18 +80,18 @@ def analyzer_on(kcube):
             # this allows rotation in both directions
             kcube['adev'].set_hardware_limit_switches(1,1)
             # set initial angle to be current angle when program started
-            kcube['aangle'].setValue(round(kcube['adev'].position))
+            kcube['a_set'].setValue(round(kcube['adev'].position))
         except:
             kcube['outbox'].append('Analyzer controller could not connect.')
             enable_analyzer(kcube, False)
             kcube['a_on'].setChecked(False)
             kcube['adev'] = None
-            kcube['curr_aangle_label'].setText('---   ')
+            kcube['a_display'].setText('---   ')
     if not kcube['a_on'].isChecked():
         kcube['adev'] = None
         enable_analyzer(kcube, False)
         kcube['a_on'].setChecked(False)
-        kcube['curr_aangle_label'].setText('---   ')
+        kcube['a_display'].setText('---   ')
         kcube['outbox'].append('Analyzer controller closed.')
 
 
@@ -137,38 +137,20 @@ def a_in_motion(kcube):
 
 def polarizer_move_to(kcube):
     """Move the polarizer to specified angle."""
-    angle = int(kcube['pangle'].value())
+    angle = int(kcube['p_set'].value())
     kcube['pdev'].move_to(angle)
-    kcube['curr_pangle_label'].setText(str(angle))
+    kcube['p_display'].setText(str(angle))
     #str(round(kcube['pdev'].position)))
             
     
 def analyzer_move_to(kcube):
     """Move the analyzer to specified angle."""
-    angle = int(kcube['aangle'].value())
+    angle = int(kcube['a_set'].value())
     kcube['adev'].move_to(angle)
-    kcube['curr_aangle_label'].setText(str(angle))
+    kcube['a_display'].setText(str(angle))
     #str(round(kcube['adev'].position)))  
 
 
-def polarizer_home(kcube):
-    """Move the polarizer to its home position."""
-    kcube['pangle'].setValue(0)
-    kcube['pdev'].move_to(0)
-    #kcube['curr_pangle_label'].setText(
-    #        str(round(kcube['pdev'].position)))  
-    #kcube['pdev'].move_home()
-    #
-
-
-def analyzer_home(kcube):
-    """Move the analizer to its home position."""
-    kcube['aangle'].setValue(0)
-    kcube['adev'].move_to(0)
-    #kcube['curr_aangle_label'].setText(
-    #        str(round(kcube['adev'].position)))  
-    #kcube['adev'].move_home()
-    #kcube['pangle'].setValue(0)
 
 
 
