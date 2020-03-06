@@ -267,6 +267,7 @@ class App(QMainWindow):
         mcl.enable_stage(self.mcl, False)
         mso.enable_mso(self.mso, False)
         piline.enable_piline(self.piline, False)
+        avacs.enable_avacs(self.avacs, False)
         self.items_to_deactivate = [
                 self.ui.abort_seq,
                 self.ui.acquire_raman,

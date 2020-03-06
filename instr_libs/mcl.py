@@ -35,7 +35,7 @@ def enable_stage(mcl, enabled):
     """Enable/disable GUI objects related to the MCL stage."""
     items = ['seq_mcl', 'set_x', 'set_y', 'grid_xf', 'show_x', 'show_y',
              'grid_yf', 'grid_xi', 'grid_yi', 'grid_xsteps', 'grid_ysteps',
-             'preview_grid_cords']
+             'preview_grid_cords', 'set_now']
     [mcl[i].setEnabled(enabled) for i in items]
     mcl['address'].setEnabled(not enabled)
 
@@ -43,23 +43,24 @@ def enable_stage(mcl, enabled):
 def stage_on(mcl):
     "Run this function when MCL-3 stage checkbox is checked."""
     if mcl['on'].isChecked():
-        try:
-            dev = serial.Serial(
-                    port=mcl['address'].text(),
-                    timeout=1,
-                    stopbits=serial.STOPBITS_TWO)
-            mcl['dev'] = dev
-            mcl['outbox'].append('Configuring Marzhauser MCL-3 stage...')
-            clear_stage_buffer(dev)
-            mcl['outbox'].append('Stage status: {}'.format(get_status(dev)))
-            x, y = get_x_pos(mcl['dev']), get_y_pos(mcl['dev'])
-            mcl['show_x'].setText(str(round(x, 2)))
-            mcl['show_y'].setText(str(round(y, 2)))
-            mcl['set_x'].setValue(float(x))
-            mcl['set_y'].setValue(float(y))
-            set_now(mcl)
-            enable_stage(mcl, True)
-            mcl['outbox'].append('Marzhauser MCL-3 stage connected.')
+        #try:
+        dev = serial.Serial(
+                port=mcl['address'].text(),
+                timeout=1,
+                stopbits=serial.STOPBITS_TWO)
+        mcl['dev'] = dev
+        mcl['outbox'].append('Configuring Marzhauser MCL-3 stage...')
+        clear_stage_buffer(dev)
+        mcl['outbox'].append('Stage status: {}'.format(get_status(dev)))
+        x, y = get_x_pos(mcl['dev']), get_y_pos(mcl['dev'])
+        mcl['show_x'].setText(str(x))
+        mcl['show_y'].setText(str(y))
+        mcl['set_x'].setValue(float(x))
+        mcl['set_y'].setValue(float(y))
+        set_now(mcl)
+        enable_stage(mcl, True)
+        mcl['outbox'].append('Marzhauser MCL-3 stage connected.')
+        '''
         except:
             mcl['outbox'].append('Stage could not connect.')
             mcl['outbox'].append('Make sure it is "auto" mode.')
@@ -68,6 +69,7 @@ def stage_on(mcl):
             mcl['on'].setChecked(False)
             mcl['show_x'].setText('---')
             mcl['show_y'].setText('---')
+        '''
     if not mcl['on'].isChecked():
         try:
             mcl['dev'].close()
@@ -87,6 +89,8 @@ def set_now(mcl):
     """Set the stage to a new position."""
     
     mcl['set_now'].setEnabled(False)
+    mcl['show_x'].setText('moving')
+    mcl['show_y'].setText('moving')
     
     # get new user-defined coordinates from the GUI in centimeters
     new_x = round(mcl['set_x'].value(), 2)
@@ -94,19 +98,12 @@ def set_now(mcl):
     mcl['outbox'].append('Moving stage to ({}, {})...'.format(new_x, new_y))
     
     # get current position of stage
-    current_x = get_x_pos(mcl['dev'])#, backup=float(mcl['show_x'].text()))
-    current_y = get_y_pos(mcl['dev'])#, backup=float(mcl['show_y'].text()))
-    
-    mcl['show_x'].setText(str(current_x))
-    mcl['show_y'].setText(str(current_y))
-   
-    
+    current_x = get_x_pos(mcl['dev'])
+    current_y = get_y_pos(mcl['dev'])
+
     # move to new position 
     dx, dy = round(new_x-current_x, 2), round(new_y-current_y, 2)
     if dx != 0 or dy != 0:
-        
-        mcl['show_x'].setText('moving')
-        mcl['show_y'].setText('moving')
         
         move_by(mcl['dev'], int(dx*4000), int(dy*4000))
         clear_stage_buffer(mcl['dev'])
@@ -114,11 +111,12 @@ def set_now(mcl):
         
         # wait until stage position has reached its setpoint
         while current_x != new_x or current_y != new_y:
+            
             current_x = get_x_pos(mcl['dev'])
             current_y = get_y_pos(mcl['dev'])
             
             time.sleep(1)
-    mcl['outbox'].append('Stage moved to {}'.format((current_x, current_y)))
+    mcl['outbox'].append('Stage at {}'.format((current_x, current_y)))
     mcl['show_x'].setText(str(current_x))
     mcl['show_y'].setText(str(current_y))
     mcl['set_now'].setEnabled(True)
@@ -145,64 +143,33 @@ def get_grid(mcl):
 
 
 
-'''
-def update_position(mcl):
-    """Update position on the main GUI."""
-    # get current stage position and update GUI fields
-    current_x = get_x_pos(mcl['dev'], backup=float(mcl['show_x'].text()))
-    current_y = get_y_pos(mcl['dev'], backup=float(mcl['show_y'].text()))
-    mcl['show_x'].setText(str(current_x))
-    mcl['show_y'].setText(str(current_y))
-    
-    # if stage has not moved
-    if mcl['prev_position'] == (current_x, current_y):
-        mcl['moving'] = False
-    # if stage has moved
-    else:
-        mcl['outbox'].append(
-                'Stage moved to ({}, {})'.format(current_x, current_y))
 
-    # reset the previous position
-    mcl['prev_position'] = (current_x, current_y)
-        
-    # get user-defined coordinates from the GUI in centimeters
-    new_x = round(mcl['set_x'].value(), 2)
-    new_y = round(mcl['set_y'].value(), 2)
-    # move to new position 
-    dx, dy = round(new_x-current_x, 2), round(new_y-current_y, 2)
-    if dx != 0 or dy != 0:
-        mcl['moving'] = True
-        #mcl['just_moved'] = True
-        mcl['outbox'].append(
-                'Moving stage to ({}, {})...'.format(new_x, new_y))
-        move_by(mcl['dev'], int(dx*4000), int(dy*4000))
-        clear_stage_buffer(mcl['dev'])
-'''
-
-
-def get_x_pos(dev, backup=0):
+def get_x_pos(dev):
     """Get current X position of stage."""
     clear_stage_buffer(dev)
-    try:
-        dev.write(('UC\r\r').encode())
-        x_pos = dev.readline().decode()
-        return round(float(x_pos)/4000, 2)
-    except ValueError:
-        x_pos = backup
-        return round(x_pos, 2)
-    
+    while True:
+        try:
+            dev.write(('UC\r\r').encode())
+            x_pos = dev.readline().decode()
+            x_pos = round(float(x_pos)/4000, 2)
+            break
+        except ValueError:
+            time.sleep(1)
+    return x_pos
 
 
-def get_y_pos(dev, backup=0):
+def get_y_pos(dev):
     """Get current Y position of stage."""
     clear_stage_buffer(dev)
-    try:
-        dev.write(('UD\r\r').encode())
-        y_pos = dev.readline().decode()
-        return round(float(y_pos)/4000, 2)
-    except ValueError:
-        y_pos = backup
-        return round(y_pos, 2)
+    while True:
+        try:
+            dev.write(('UD\r\r').encode())
+            y_pos = dev.readline().decode()
+            y_pos = round(float(y_pos)/4000, 2)
+            break
+        except ValueError:
+            time.sleep(1)
+    return y_pos
     
 
 
