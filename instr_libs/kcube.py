@@ -95,6 +95,29 @@ def analyzer_on(kcube):
         kcube['outbox'].append('Analyzer controller closed.')
 
 
+
+def polarizer_set_now(kcube):
+    """Set angle of the polarizer."""
+    kcube['p_set_now'].setEnabled(False)
+    kcube['outbox'].append(
+        'Setting polarizer to {} deg...'.format(kcube['p_set']))
+    
+    
+    kcube['p_set_now'].setEnabled(True)
+    
+    
+def analyzer_set_now(kcube):
+     """Set angle of the analyzer."""
+     kcube['a_set_now'].setEanbled(False)
+     kcube['outbox'].append(
+        'Setting analyzer to {} deg...'.format(kcube['a_set']))
+     
+     kcube['a_set_now'].setEnabled(True)
+
+
+
+
+
 def get_angle_steps(kcube):
     """Get angle steps from the GUI."""
     return np.linspace(kcube['rotation_start'].value(),

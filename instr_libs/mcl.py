@@ -57,6 +57,7 @@ def stage_on(mcl):
             mcl['show_y'].setText(str(round(y, 2)))
             mcl['set_x'].setValue(float(x))
             mcl['set_y'].setValue(float(y))
+            set_now(mcl)
             enable_stage(mcl, True)
             mcl['outbox'].append('Marzhauser MCL-3 stage connected.')
         except:
@@ -81,25 +82,46 @@ def stage_on(mcl):
 
 
 
-
-
-
+ 
 def set_now(mcl):
     """Set the stage to a new position."""
+    
     mcl['set_now'].setEnabled(False)
-    mcl['outbox'].append('Setting ')
     
+    # get new user-defined coordinates from the GUI in centimeters
+    new_x = round(mcl['set_x'].value(), 2)
+    new_y = round(mcl['set_y'].value(), 2)
+    mcl['outbox'].append('Moving stage to ({}, {})...'.format(new_x, new_y))
     
+    # get current position of stage
+    current_x = get_x_pos(mcl['dev'])#, backup=float(mcl['show_x'].text()))
+    current_y = get_y_pos(mcl['dev'])#, backup=float(mcl['show_y'].text()))
     
+    mcl['show_x'].setText(str(current_x))
+    mcl['show_y'].setText(str(current_y))
+   
     
-    
-    
-    
+    # move to new position 
+    dx, dy = round(new_x-current_x, 2), round(new_y-current_y, 2)
+    if dx != 0 or dy != 0:
+        
+        mcl['show_x'].setText('moving')
+        mcl['show_y'].setText('moving')
+        
+        move_by(mcl['dev'], int(dx*4000), int(dy*4000))
+        clear_stage_buffer(mcl['dev'])
+        time.sleep(1)
+        
+        # wait until stage position has reached its setpoint
+        while current_x != new_x or current_y != new_y:
+            current_x = get_x_pos(mcl['dev'])
+            current_y = get_y_pos(mcl['dev'])
+            
+            time.sleep(1)
+    mcl['outbox'].append('Stage moved to {}'.format((current_x, current_y)))
+    mcl['show_x'].setText(str(current_x))
+    mcl['show_y'].setText(str(current_y))
     mcl['set_now'].setEnabled(True)
-
-
-
-
 
 
 
@@ -122,6 +144,8 @@ def get_grid(mcl):
     return grid_cords
 
 
+
+'''
 def update_position(mcl):
     """Update position on the main GUI."""
     # get current stage position and update GUI fields
@@ -153,7 +177,7 @@ def update_position(mcl):
                 'Moving stage to ({}, {})...'.format(new_x, new_y))
         move_by(mcl['dev'], int(dx*4000), int(dy*4000))
         clear_stage_buffer(mcl['dev'])
-
+'''
 
 
 def get_x_pos(dev, backup=0):
@@ -193,13 +217,6 @@ def clear_stage_buffer(dev):
     except serial.SerialException:
         time.sleep(0.1)
 
-
-
-def get_z_pos(dev):
-    """Get current Z position of stage."""
-    dev.readline()  # clears buffer
-    dev.write(('UE\r\r').encode())
-    return int(dev.readline().decode())
 
 
 def get_pos(dev):

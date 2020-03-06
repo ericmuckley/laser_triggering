@@ -121,7 +121,8 @@ class App(QMainWindow):
         self.ui.piline_preview.clicked.connect(self.piline_preview)
         self.ui.avacs_set_now.clicked.connect(self.avacs_set_now_thread)
         self.ui.mcl_set_now.clicked.connect(self.mcl_set_now_thread)
-
+        self.ui.polarizer_set_now.clicked.connect(self.p_set_now_thread)
+        self.ui.analyzer_set_now.clicked.connect(self.a_set_now_thread)
 
 
         # assign actions to checkboxes
@@ -480,7 +481,7 @@ class App(QMainWindow):
         """Checkbox for polarizer controller is checked/unchecked."""
         kcube.polarizer_on(self.kcube)
 
-    def analyzer_set_now_thread(self):
+    def a_set_now_thread(self):
         """Move the analyzer to specified angle in a new thread."""
         worker = Worker(self.analyzer_set_now)  # pass other args here
         self.threadpool.start(worker)
@@ -489,7 +490,7 @@ class App(QMainWindow):
         """Move the analizer to its home position."""
         kcube.analyzer_set_now(self.kcube)
 
-    def polarizer_set_now_thread(self):
+    def p_set_now_thread(self):
         """Move the polarizer to specified angle in a new thread."""
         worker = Worker(self.polarizer_set_now)  # pass other args here
         self.threadpool.start(worker)
@@ -497,9 +498,6 @@ class App(QMainWindow):
     def polarizer_set_now(self):
         """Move the polarizer to its home position."""
         kcube.polarizer_set_now(self.kcube)
-
-
-
 
 
     # %% ========= Princeton Instruments LightField control ==============

@@ -4,6 +4,11 @@
 This respository contains code for an application which allows in situ spectroscopic characterization of materials during automated laser processing. The application controls triggering of laser pulses, acquisition of Raman spectra, acquisition of traces from an oscilloscope, and motorized control of optical polarizer/analyzer systems.
 
 
+
+A screenshot of the user interface is shown below.
+![Screenshot of the GUI](./img/gui.jpg)
+
+
 # Use
 The application can be started by opening a Python code editor running the ```app.py``` file. Alternatively, the software can be started using the ```RUN_LASER_TRIGGERING.bat``` Windows BAT file.
 
@@ -60,7 +65,7 @@ Each time a Raman spectrum is acquired, the spectrum is saved to a *.csv* file, 
     * **slink.py**: module for controlling Gentech S-link photometer
 * **logs**: default directory for saving experiment configuration files and logging experimental data
 * **support_files**: directory for storing supporting files (_APT.dll_, _APTAPI.h_, _ATP.lib_) and other unused depreciated files
-
+* **img**: directory for storing images which are embedded in the README.md file
 
 
 
