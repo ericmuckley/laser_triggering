@@ -23,7 +23,7 @@ def enable_piline(piline, enable):
     PILine C-1867 rotation controller."""
     piline['address'].setEnabled(not enable)
     items = ['set', 'display', 'seq', 'initial',
-             'final', 'steps', 'preview']
+             'set_now', 'final', 'steps', 'preview']
     [piline[i].setEnabled(enable) for i in items]
 
 
@@ -78,7 +78,7 @@ def initialize(piline):
 
 def move(piline):
     """Move the stage to a position designated on the GUI."""
-    piline['set'].setEnabled(False)
+    piline['set_now'].setEnabled(False)
     # get currently set position
     set_pos = float(piline['set'].value())
     piline['display'].setText('moving')
@@ -95,7 +95,7 @@ def move(piline):
     # display new position value 
     piline['display'].setText(str(get_position_float(piline)))
     piline['outbox'].append('Stage rotation complete.')
-    piline['set'].setEnabled(True)
+    piline['set_now'].setEnabled(True)
     piline['outbox'].verticalScrollBar().setValue(99999999)
 
 def get_position_float(piline):

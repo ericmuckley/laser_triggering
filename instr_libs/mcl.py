@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 
-MOdule for controlling the Marzhauser MCL-3 stage controller.
+Module for controlling the Marzhauser MCL-3 stage controller.
 Note: the Marzhauser ECO-STEP controller uses a different set of
 serial commands than the MCL-3. For the MCL-3, use commands in
 this module.
@@ -10,34 +10,19 @@ For the ECO-STEP, test communication using:
 dev.write(('?ver\r\r').encode())
 print(dev.readline().decode())
 
-
-
 # default scale for the MCL-3 stage is
 # 4000 units == 1 cm
 
-
 Created on Mon Feb  3 15:39:10 2020
 @author: ericmuckley@gmail.com
-
 """
+
 import time
 import serial
 import numpy as np
 from serial.tools import list_ports
 
 
-# default scale for the stage is
-# 4000 units == 1 cm
-
-# change this variable to reverse the y-direction of the stage movement.
-# this is needed if the stage is mounted vertically upside down for example.
-# for normal operation, y_dir = 1
-#for reverse operation, y_dir = -1
-'''
-y_dir = 1
-if y_dir not in (1, -1):
-    y_dir = 1
-'''
 
 def print_ports():
     """Print a list of avilable serial ports."""
@@ -93,6 +78,30 @@ def stage_on(mcl):
         mcl['show_x'].setText('---')
         mcl['show_y'].setText('---')
         mcl['dev'] = None
+
+
+
+
+
+
+def set_now(mcl):
+    """Set the stage to a new position."""
+    mcl['set_now'].setEnabled(False)
+    mcl['outbox'].append('Setting ')
+    
+    
+    
+    
+    
+    
+    
+    mcl['set_now'].setEnabled(True)
+
+
+
+
+
+
 
 def preview_grid_cords(mcl):
     """Preview the grid coordinates."""

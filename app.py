@@ -119,6 +119,8 @@ class App(QMainWindow):
         self.ui.preview_grid_cords.clicked.connect(self.preview_grid_cords)
         self.ui.piline_set_now.clicked.connect(self.piline_set_now_thread)
         self.ui.piline_preview.clicked.connect(self.piline_preview)
+        self.ui.avacs_set_now.clicked.connect(self.avacs_set_now_thread)
+        self.ui.mcl_set_now.clicked.connect(self.mcl_set_now_thread)
 
 
 
@@ -126,7 +128,7 @@ class App(QMainWindow):
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
         self.ui.mso_on.stateChanged.connect(self.mso_on)
         self.ui.mcl_on.stateChanged.connect(self.mcl_on_thread)
-        self.ui.avacs_on.stateChanged.connect(self.avacs_on)
+        self.ui.avacs_on.stateChanged.connect(self.avacs_on_thread)
         self.ui.pulsegen_on.stateChanged.connect(self.pulsegen_on)
         self.ui.piline_on.stateChanged.connect(self.piline_on_thread)
         
@@ -159,9 +161,10 @@ class App(QMainWindow):
                 'dev': None,
                 'on': self.ui.avacs_on,
                 'outbox': self.ui.outbox,
-                'angle': self.ui.avacs_angle,
+                'set': self.ui.avacs_set,
                 'address': self.ui.avacs_address,
-                'curr_angle': self.ui.current_avacs_angle}
+                'set_now': self.ui.avacs_set_now,
+                'display': self.ui.avacs_display}
         
         # information related to SRS DG645 digital delay pulse generator
         self.srs = {
@@ -221,13 +224,12 @@ class App(QMainWindow):
         # information related to Marzhauser MCL-3 X-Y stage
         self.mcl = {
                'dev': None,
-               'moving': False,
                'on': self.ui.mcl_on,
-               'prev_position': (0, 0),
                'outbox': self.ui.outbox,
                'seq_mcl': self.ui.seq_mcl,
                'set_x': self.ui.mcl_set_x,
                'set_y': self.ui.mcl_set_y,
+               'set_now': self.ui.mcl_set_now,
                'address': self.ui.mcl_address,
                'show_x': self.ui.mcl_current_x,
                'show_y': self.ui.mcl_current_y,       
@@ -266,7 +268,6 @@ class App(QMainWindow):
         piline.enable_piline(self.piline, False)
         self.items_to_deactivate = [
                 self.ui.abort_seq,
-                self.ui.avacs_angle,
                 self.ui.acquire_raman,
                 self.ui.seq_raman_acquisition]
         [i.setEnabled(False) for i in self.items_to_deactivate]
@@ -445,6 +446,16 @@ class App(QMainWindow):
 
     # %% ============ Marzhauser MCL-3 stage controller ==================    
 
+
+    def mcl_set_now_thread(self):
+        """Set new stage position in a new thread."""
+        worker = Worker(self.mcl_set_now)  # pass other args here
+        self.threadpool.start(worker)
+
+    def mcl_set_now(self):
+        """Set the stage position."""
+        mcl.set_now(self.mcl)
+
     def mcl_on_thread(self):
         """Open Marzhauser MCL-3 stage controller in a new thread."""
         worker = Worker(self.mcl_on)  # pass other args here
@@ -548,9 +559,23 @@ class App(QMainWindow):
 
     # %% ============ Laseroptik AVACS beam attenuator ===================
 
+    def avacs_on_thread(self):
+        """Open connection to AVACS in a new thread."""
+        worker = Worker(self.avacs_on)  # pass other args here
+        self.threadpool.start(worker)
+
     def avacs_on(self):
         """Laseroptik beam attenuator checkbox is checked/unchecked."""
         avacs.avacs_on(self.avacs)
+    
+    def avacs_set_now_thread(self):
+        """Set the AVACS beam attenuator angle in a new thread."""
+        worker = Worker(self.avacs_set_now)  # pass other args here
+        self.threadpool.start(worker)
+    
+    def avacs_set_now(self):
+        """Set beam attenuator angle now."""
+        avacs.set_now(self.avacs)
 
     # %% ============ system control functions =============================
 

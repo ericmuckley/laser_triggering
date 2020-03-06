@@ -21,7 +21,6 @@ color: white;}
 
 
 
-
 QMenu {
 border: 2px solid black;
 font-size: 12px;
@@ -338,7 +337,7 @@ color: rgb(120, 120, 120);}</string>
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>171</width>
+       <width>174</width>
        <height>151</height>
       </rect>
      </property>
@@ -563,7 +562,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>221</width>
+       <width>211</width>
        <height>61</height>
       </rect>
      </property>
@@ -612,6 +611,9 @@ p, li { white-space: pre-wrap; }
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_seq">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -631,8 +633,8 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>169</width>
-       <height>171</height>
+       <width>171</width>
+       <height>178</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout">
@@ -653,7 +655,7 @@ p, li { white-space: pre-wrap; }
       <item row="4" column="1">
        <widget class="QCheckBox" name="seq_polarizer_rot">
         <property name="enabled">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="text">
          <string/>
@@ -670,7 +672,7 @@ p, li { white-space: pre-wrap; }
       <item row="5" column="1">
        <widget class="QCheckBox" name="seq_mcl">
         <property name="enabled">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="text">
          <string/>
@@ -680,7 +682,7 @@ p, li { white-space: pre-wrap; }
       <item row="6" column="1">
        <widget class="QCheckBox" name="seq_piline">
         <property name="enabled">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="text">
          <string/>
@@ -764,7 +766,7 @@ p, li { white-space: pre-wrap; }
       <item row="3" column="1">
        <widget class="QCheckBox" name="seq_raman_acquisition">
         <property name="enabled">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="text">
          <string/>
@@ -774,7 +776,7 @@ p, li { white-space: pre-wrap; }
       <item row="2" column="1">
        <widget class="QCheckBox" name="seq_laser_trigger">
         <property name="enabled">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
         <property name="text">
          <string/>
@@ -890,13 +892,13 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>191</width>
+       <width>195</width>
        <height>75</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="avacs_grid">
       <item row="1" column="1">
-       <widget class="QDoubleSpinBox" name="avacs_angle">
+       <widget class="QDoubleSpinBox" name="avacs_set">
         <property name="decimals">
          <number>1</number>
         </property>
@@ -942,7 +944,7 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QLabel" name="current_avacs_angle">
+       <widget class="QLabel" name="avacs_display">
         <property name="minimumSize">
          <size>
           <width>40</width>
@@ -976,7 +978,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>260</x>
       <y>160</y>
-      <width>211</width>
+      <width>241</width>
       <height>331</height>
      </rect>
     </property>
@@ -988,7 +990,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>185</width>
+       <width>201</width>
        <height>283</height>
       </rect>
      </property>
@@ -1219,7 +1221,7 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>20</x>
       <y>480</y>
-      <width>211</width>
+      <width>231</width>
       <height>361</height>
      </rect>
     </property>
@@ -1231,7 +1233,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>171</width>
+       <width>188</width>
        <height>311</height>
       </rect>
      </property>
