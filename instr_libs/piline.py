@@ -18,12 +18,12 @@ import serial
 import numpy as np
 
 
-
 def enable_piline(piline, enable):
     """Enable/disable GUI widgets related to the PI
     PILine C-1867 rotation controller."""
     piline['address'].setEnabled(not enable)
-    items = ['set', 'display', 'seq']
+    items = ['set', 'display', 'seq', 'initial',
+             'final', 'steps', 'preview']
     [piline[i].setEnabled(enable) for i in items]
 
 
@@ -35,9 +35,10 @@ def piline_on(piline):
             dev = serial.Serial(port=piline['address'].text(),
                                 baudrate=115200, timeout=2)
             piline['dev'] = dev
-            enable_piline(piline, True)
-            initialize(dev, piline['outbox'])
+            initialize(piline)
             piline['outbox'].append('PI C-867 connected.')
+            enable_piline(piline, True)
+            piline['outbox'].verticalScrollBar().setValue(99999999)
         except:
             enable_piline(piline, False)
             piline['outbox'].append('PI C-867 could not connect.')
@@ -55,27 +56,71 @@ def piline_on(piline):
         piline['on'].setChecked(False)
 
 
-def initialize(dev, outbox):
+def initialize(piline):
     """Initialize the stage and get some operating parameters."""
-    turn_on_servo(dev, on=True)
-    # read stage information
-    outbox.append('Controller ID: {}'.format(get_id(dev)))
-    outbox.append('stage type: {}'.format(get_stage_type(dev)))
-    outbox.append('current position: {}'.format(get_position(dev)))
-    outbox.append('servo on: {}'.format(check_servo(dev)))
-    outbox.append('reference mode: {}'.format(get_reference_mode(dev)))
     # get reference point and wait until its finished
-    outbox.append('Please wait while stange initializes.....')
-    dev.write(('FRF 1\n').encode())
+    piline['outbox'].append('Please wait while C-867 stage initializes...')
+    turn_on_servo(piline['dev'], on=True)
+    piline['dev'].write(('FRF 1\n').encode())
     time.sleep(6)
-    ref_result = bool(int(get_reference_result(dev).split('=')[1]))
-    outbox.append('Stage reference successful: {}'.format(ref_result))
-    print('Stage configured successfully.')
+    # read stage information
+    piline['outbox'].append(
+        'Controller ID: {}'.format(get_id(piline['dev'])))
+    piline['outbox'].append(
+        'stage type: {}'.format(get_stage_type(piline['dev'])))
+    piline['outbox'].append('servo on: {}'.format(check_servo(piline['dev'])))
+    # display position value 
+    piline['dev'].write(('POS?\n').encode())
+    pos = piline['dev'].readline().decode()  
+    pos = float(pos.split('=')[1])
+    piline['display'].setText(str(pos))    
 
 
+def move(piline):
+    """Move the stage to a position designated on the GUI."""
+    piline['set'].setEnabled(False)
+    # get currently set position
+    set_pos = float(piline['set'].value())
+    piline['display'].setText('moving')
+    piline['outbox'].append('Moving rotation stage to {}...'.format(set_pos))
+    # begin moving toward new set position
+    piline['dev'].write(('MOV 1 '+str(set_pos)+'\n').encode())
+    # get current position
+    curr_pos = get_position_float(piline)
+    # wait until current position = set position
+    while round(set_pos) != round(curr_pos):
+        time.sleep(0.5)
+        curr_pos = get_position_float(piline)
+    time.sleep(0.5)
+    # display new position value 
+    piline['display'].setText(str(get_position_float(piline)))
+    piline['outbox'].append('Stage rotation complete.')
+    piline['set'].setEnabled(True)
+    piline['outbox'].verticalScrollBar().setValue(99999999)
+
+def get_position_float(piline):
+    """Get current positoin of stage as a float."""
+    piline['dev'].write(('POS?\n').encode())
+    pos = piline['dev'].readline().decode()
+    pos = float(pos.split('=')[1])
+    return pos
 
 
+def preview_angles(piline):
+    """Get preview of angles to sample."""
+    angles = get_angles(piline)
+    piline['outbox'].append('Angles to sample in degrees:')
+    piline['outbox'].append(str(angles))
+    piline['outbox'].verticalScrollBar().setValue(99999999)
+    
 
+def get_angles(piline):
+    """Get angles to sample."""
+    angles = np.linspace(
+        piline['initial'].value(),
+        piline['final'].value(),
+        piline['steps'].value()+1)
+    return angles
 
 
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>977</width>
-    <height>851</height>
+    <width>792</width>
+    <height>875</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -59,7 +59,7 @@ QGroupBox{
 border: 1px solid white;
 border-radius: 0px;
 margin-top: 0.5em;
-font-size: 16px;
+font-size: 14px;
 color: white;}
 QGroupBox::title{
 subcontrol-position: top center;
@@ -314,190 +314,179 @@ color: rgb(120, 120, 120);}</string>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBox_configurepulses">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>20</y>
+      <y>260</y>
       <width>211</width>
-      <height>221</height>
+      <height>201</height>
      </rect>
     </property>
     <property name="font">
      <font/>
     </property>
     <property name="title">
-     <string>Pulse generator</string>
+     <string>SRS DG645 pulse generator</string>
     </property>
     <property name="flat">
      <bool>false</bool>
     </property>
-    <widget class="QWidget" name="verticalLayoutWidget_4">
+    <widget class="QWidget" name="gridLayoutWidget_5">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>40</y>
-       <width>181</width>
-       <height>169</height>
+       <y>30</y>
+       <width>171</width>
+       <height>151</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
-      <item>
-       <layout class="QGridLayout" name="srs_grid">
-        <item row="1" column="2">
-         <widget class="QLineEdit" name="pulsegen_address">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>COM16</string>
-          </property>
-          <property name="placeholderText">
-           <string>COM16</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="2">
-         <widget class="QDoubleSpinBox" name="pulse_amplitude">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="decimals">
-           <number>1</number>
-          </property>
-          <property name="minimum">
-           <double>0.500000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>5.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.500000000000000</double>
-          </property>
-          <property name="value">
-           <double>1.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2">
-         <widget class="QDoubleSpinBox" name="pulse_delay">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="decimals">
-           <number>3</number>
-          </property>
-          <property name="minimum">
-           <double>0.001000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>100000.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.001000000000000</double>
-          </property>
-          <property name="value">
-           <double>1.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QDoubleSpinBox" name="pulse_width">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="decimals">
-           <number>3</number>
-          </property>
-          <property name="minimum">
-           <double>0.001000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>1000.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.001000000000000</double>
-          </property>
-          <property name="value">
-           <double>1.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="label_pulsewidth">
-          <property name="text">
-           <string>Width (ms)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QLabel" name="label_pulseamplitude">
-          <property name="text">
-           <string>Amplitude (V)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="label_pulsedelay">
-          <property name="text">
-           <string>Delay (ms)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
-         <widget class="QLabel" name="label_pulsenumber">
-          <property name="text">
-           <string>Number</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="2">
-         <widget class="QSpinBox" name="pulse_number">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="minimum">
-           <number>1</number>
-          </property>
-          <property name="maximum">
-           <number>1000000000</number>
-          </property>
-          <property name="value">
-           <number>10</number>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QCheckBox" name="pulsegen_on">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="srs_label">
-          <property name="text">
-           <string>SRS DG645</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="srs_address_label">
-          <property name="text">
-           <string>Address</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+     <layout class="QGridLayout" name="srs_grid">
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="pulse_delay">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="decimals">
+         <number>3</number>
+        </property>
+        <property name="minimum">
+         <double>0.001000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>100000.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.001000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
       </item>
-      <item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_pulsewidth">
+        <property name="text">
+         <string>Width (ms)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_pulseamplitude">
+        <property name="text">
+         <string>Amplitude (V)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QDoubleSpinBox" name="pulse_width">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="decimals">
+         <number>3</number>
+        </property>
+        <property name="minimum">
+         <double>0.001000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>1000.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.001000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="srs_address_label">
+        <property name="text">
+         <string>Address</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_pulsenumber">
+        <property name="text">
+         <string>Number</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_pulsedelay">
+        <property name="text">
+         <string>Delay (ms)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="pulsegen_address">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>COM16</string>
+        </property>
+        <property name="placeholderText">
+         <string>COM16</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QDoubleSpinBox" name="pulse_amplitude">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="minimum">
+         <double>0.500000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>5.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.500000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QSpinBox" name="pulse_number">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>1000000000</number>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="pulsegen_on">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
        <widget class="QPushButton" name="trigger_pulses">
         <property name="text">
-         <string>Send pulses</string>
+         <string>Trigger</string>
         </property>
         <property name="flat">
          <bool>false</bool>
@@ -511,9 +500,9 @@ color: rgb(120, 120, 120);}</string>
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>530</y>
+      <y>570</y>
       <width>511</width>
-      <height>281</height>
+      <height>271</height>
      </rect>
     </property>
     <property name="font">
@@ -526,7 +515,7 @@ color: rgb(120, 120, 120);}</string>
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>40</y>
+       <y>30</y>
        <width>471</width>
        <height>221</height>
       </rect>
@@ -545,7 +534,7 @@ color: rgb(120, 120, 120);}</string>
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Welcome to the laser triggering application.To connect to an instrument, input the instrument's address and select the square checkbox next to that instrument's name. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Welcome to the laser triggering application. To connect to an instrument, input the instrument's address and select the square checkbox next to that instrument's name. &lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;To acquire Raman spectra, first launch LightField software using the &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Launch LF&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; button. Once LightField has loaded, open the &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;Default_Python_Experiment&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; in LightField. Then acquire spectra using the &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Acquire&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; button above.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
@@ -560,7 +549,7 @@ p, li { white-space: pre-wrap; }
       <x>260</x>
       <y>20</y>
       <width>241</width>
-      <height>121</height>
+      <height>111</height>
      </rect>
     </property>
     <property name="font">
@@ -569,63 +558,55 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Configure LightField</string>
     </property>
-    <widget class="QWidget" name="verticalLayoutWidget_9">
+    <widget class="QWidget" name="gridLayoutWidget_7">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>40</y>
-       <width>201</width>
+       <x>10</x>
+       <y>30</y>
+       <width>221</width>
        <height>61</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_9">
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QLabel" name="lf_notes_label">
-          <property name="text">
-           <string>File notes</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="raman_filename_notes">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-       </layout>
+     <layout class="QGridLayout" name="a_grid">
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="raman_filename_notes">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
       </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
-        <item>
-         <widget class="QPushButton" name="launch_lf">
-          <property name="text">
-           <string>Launch LF</string>
-          </property>
-          <property name="default">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="acquire_raman">
-          <property name="text">
-           <string>Acquire</string>
-          </property>
-          <property name="autoDefault">
-           <bool>false</bool>
-          </property>
-          <property name="default">
-           <bool>false</bool>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="acquire_raman">
+        <property name="text">
+         <string>Acquire</string>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lf_notes_label">
+        <property name="text">
+         <string>File notes</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="launch_lf">
+        <property name="text">
+         <string>Launch LF</string>
+        </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -633,10 +614,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_seq">
     <property name="geometry">
      <rect>
-      <x>530</x>
+      <x>20</x>
       <y>20</y>
-      <width>241</width>
-      <height>201</height>
+      <width>211</width>
+      <height>221</height>
      </rect>
     </property>
     <property name="font">
@@ -645,16 +626,74 @@ p, li { white-space: pre-wrap; }
     <property name="title">
      <string>Experimental sequence</string>
     </property>
-    <widget class="QWidget" name="formLayoutWidget_2">
+    <widget class="QWidget" name="gridLayoutWidget_2">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>40</y>
-       <width>199</width>
-       <height>141</height>
+       <y>30</y>
+       <width>169</width>
+       <height>171</height>
       </rect>
      </property>
-     <layout class="QFormLayout" name="seq_form">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="7" column="0">
+       <widget class="QPushButton" name="run_seq">
+        <property name="text">
+         <string>Run</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="p_rotation_label">
+        <property name="text">
+         <string>Polarizer rotation</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="seq_polarizer_rot">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="seq_stage_movement_label">
+        <property name="text">
+         <string>X-Y stage</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="seq_mcl">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QCheckBox" name="seq_piline">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QPushButton" name="abort_seq">
+        <property name="text">
+         <string>Abort</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="set_seq_cycles_label">
         <property name="text">
@@ -662,19 +701,10 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QSpinBox" name="set_seq_cycles">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>10000</number>
+      <item row="6" column="0">
+       <widget class="QLabel" name="seq_piline_label">
+        <property name="text">
+         <string>Piline rotation</string>
         </property>
        </widget>
       </item>
@@ -701,20 +731,19 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="seq_laser_triggering_label">
-        <property name="text">
-         <string>Laser triggering</string>
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="set_seq_cycles">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
         </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QCheckBox" name="seq_laser_trigger">
-        <property name="enabled">
-         <bool>true</bool>
+        <property name="minimum">
+         <number>1</number>
         </property>
-        <property name="text">
-         <string/>
+        <property name="maximum">
+         <number>10000</number>
         </property>
        </widget>
       </item>
@@ -722,6 +751,13 @@ p, li { white-space: pre-wrap; }
        <widget class="QLabel" name="seq_raman_acquisition_label">
         <property name="text">
          <string>Raman acquisition</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="seq_laser_triggering_label">
+        <property name="text">
+         <string>Laser triggering</string>
         </property>
        </widget>
       </item>
@@ -735,80 +771,13 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="p_rotation_label">
-        <property name="text">
-         <string>Polarizer rotation</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QCheckBox" name="seq_polarizer_rot">
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="seq_laser_trigger">
         <property name="enabled">
          <bool>true</bool>
         </property>
         <property name="text">
          <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QCheckBox" name="seq_mcl">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="seq_stage_movement_label">
-        <property name="text">
-         <string>Stage movement</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="seq_piline_label">
-        <property name="text">
-         <string>Piline rotation</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QCheckBox" name="seq_piline">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="verticalLayoutWidget_6">
-     <property name="geometry">
-      <rect>
-       <x>140</x>
-       <y>100</y>
-       <width>77</width>
-       <height>80</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_6">
-      <item>
-       <widget class="QPushButton" name="run_seq">
-        <property name="text">
-         <string>Run</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="abort_seq">
-        <property name="text">
-         <string>Abort</string>
         </property>
        </widget>
       </item>
@@ -819,102 +788,87 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>530</x>
-      <y>370</y>
+      <y>20</y>
       <width>241</width>
-      <height>141</height>
+      <height>121</height>
      </rect>
     </property>
     <property name="title">
-     <string>Oscilloscope</string>
+     <string>Tektronix MSO64 oscilloscope</string>
     </property>
-    <widget class="QWidget" name="verticalLayoutWidget_7">
+    <widget class="QWidget" name="gridLayoutWidget">
      <property name="geometry">
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>201</width>
-       <height>101</height>
+       <width>202</width>
+       <height>75</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_7">
-      <item>
-       <layout class="QGridLayout" name="scope_grid">
-        <item row="2" column="1">
-         <widget class="QSpinBox" name="mso_downsample">
-          <property name="minimum">
-           <number>2</number>
-          </property>
-          <property name="maximum">
-           <number>1000</number>
-          </property>
-          <property name="value">
-           <number>10</number>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QCheckBox" name="mso_on">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="mso_address_label">
-          <property name="text">
-           <string>Address</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="mso_label">
-          <property name="text">
-           <string>MSO64</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="mso_address">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>USB0::0x0699::0x0528::B010898::INSTR</string>
-          </property>
-          <property name="placeholderText">
-           <string>USB0::0x0699::0x0528::B010898::INSTR</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="downsample_label">
-          <property name="text">
-           <string>Downsampling factor</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+     <layout class="QGridLayout" name="scope_grid">
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="mso_on">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
       </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QPushButton" name="scope_acquire">
-          <property name="text">
-           <string>Acquire</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="export_scope_trace">
-          <property name="text">
-           <string>Export</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="mso_downsample">
+        <property name="minimum">
+         <number>2</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="mso_address_label">
+        <property name="text">
+         <string>Address</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="mso_address">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>USB0::0x0699::0x0528::B010898::INSTR</string>
+        </property>
+        <property name="placeholderText">
+         <string>USB0::0x0699::0x0528::B010898::INSTR</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="downsample_label">
+        <property name="text">
+         <string>Downsampling factor</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QPushButton" name="scope_acquire">
+        <property name="text">
+         <string>Acquire</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="export_scope_trace">
+        <property name="text">
+         <string>Export</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -922,47 +876,26 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_avacs">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>270</y>
-      <width>211</width>
+      <x>520</x>
+      <y>160</y>
+      <width>231</width>
       <height>121</height>
      </rect>
     </property>
     <property name="title">
-     <string>Beam attenuator</string>
+     <string>AVACS beam attenuator</string>
     </property>
     <widget class="QWidget" name="gridLayoutWidget_3">
      <property name="geometry">
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>174</width>
-       <height>71</height>
+       <width>191</width>
+       <height>75</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="avacs_grid">
-      <item row="0" column="0">
-       <widget class="QLabel" name="avacs_label">
-        <property name="text">
-         <string>AVACS</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="avacs_on">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="avacs_angle_label">
-        <property name="text">
-         <string>Angle (deg)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
+      <item row="1" column="1">
        <widget class="QDoubleSpinBox" name="avacs_angle">
         <property name="decimals">
          <number>1</number>
@@ -978,7 +911,14 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="1" column="0">
+       <widget class="QLabel" name="avacs_angle_label">
+        <property name="text">
+         <string>Angle (deg)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
        <widget class="QLineEdit" name="avacs_address">
         <property name="maximumSize">
          <size>
@@ -994,14 +934,14 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="0" column="0">
        <widget class="QLabel" name="avacs_address_label">
         <property name="text">
          <string>Address</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
+      <item row="1" column="2">
        <widget class="QLabel" name="current_avacs_angle">
         <property name="minimumSize">
          <size>
@@ -1014,264 +954,260 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="avacs_set_now">
+        <property name="text">
+         <string>Set</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="avacs_on">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_thorlabs">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>420</y>
+      <x>260</x>
+      <y>160</y>
       <width>211</width>
-      <height>391</height>
+      <height>331</height>
      </rect>
     </property>
     <property name="title">
-     <string>Thorlabs controllers</string>
+     <string>Thorlabs K-Cubes</string>
     </property>
-    <widget class="QWidget" name="verticalLayoutWidget_2">
+    <widget class="QWidget" name="gridLayoutWidget_4">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>280</y>
-       <width>171</width>
-       <height>96</height>
+       <y>30</y>
+       <width>185</width>
+       <height>283</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QLabel" name="rotation_label">
+     <layout class="QGridLayout" name="polarizer_grid">
+      <item row="1" column="2">
+       <widget class="QCheckBox" name="polarizer_on">
         <property name="text">
-         <string>Automatic rotation</string>
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="polarizer_label">
+        <property name="text">
+         <string>Address</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="p_angle_label">
+        <property name="text">
+         <string>Angle (deg)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="polarizer_checkbox_label">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Polarizer</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="polarizer_address">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>27255762</string>
+        </property>
+        <property name="placeholderText">
+         <string>27255762</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QSpinBox" name="polarizer_set">
+        <property name="maximum">
+         <number>359</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLabel" name="polarizer_display">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>---       </string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="2">
+       <widget class="QLabel" name="analyzer_display">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>---</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QLineEdit" name="analyzer_address">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>27255929</string>
+        </property>
+        <property name="placeholderText">
+         <string>27255929</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QSpinBox" name="analyzer_set">
+        <property name="maximum">
+         <number>359</number>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QCheckBox" name="analyzer_on">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="rotation_label">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Auto</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
-      <item>
-       <layout class="QFormLayout" name="rotation_grid">
-        <item row="1" column="0">
-         <widget class="QLabel" name="rot_start_label">
-          <property name="text">
-           <string>Start (deg)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QSpinBox" name="rotation_start">
-          <property name="maximum">
-           <number>359</number>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="rot_end_label">
-          <property name="text">
-           <string>End (deg)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QSpinBox" name="rotation_end">
-          <property name="maximum">
-           <number>359</number>
-          </property>
-          <property name="value">
-           <number>15</number>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="rot_steps_label">
-          <property name="text">
-           <string>Steps</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QSpinBox" name="rotation_steps">
-          <property name="maximum">
-           <number>360</number>
-          </property>
-          <property name="value">
-           <number>3</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="verticalLayoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>160</y>
-       <width>176</width>
-       <height>97</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <layout class="QGridLayout" name="a_grid">
-        <item row="1" column="0">
-         <widget class="QLabel" name="analyzer_label">
-          <property name="text">
-           <string>Address</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="a_checkbox_label">
-          <property name="text">
-           <string>Analyzer</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QSpinBox" name="analyzer_angle">
-          <property name="maximum">
-           <number>359</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="analyzer_address">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>27255929</string>
-          </property>
-          <property name="placeholderText">
-           <string>27255929</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QCheckBox" name="analyzer_on">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QLabel" name="current_a_angle">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>---       </string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="a_angle_label">
-          <property name="text">
-           <string>Angle (deg)</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QPushButton" name="analyzer_home">
+      <item row="10" column="0">
+       <widget class="QLabel" name="rot_end_label">
         <property name="text">
-         <string>Go home</string>
+         <string>Final (deg)</string>
         </property>
        </widget>
       </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="verticalLayoutWidget_3">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>40</y>
-       <width>176</width>
-       <height>97</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <layout class="QGridLayout" name="polarizer_grid">
-        <item row="0" column="0">
-         <widget class="QLabel" name="polarizer_checkbox_label">
-          <property name="text">
-           <string>Polarizer</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="polarizer_address">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>27255762</string>
-          </property>
-          <property name="placeholderText">
-           <string>27255762</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QSpinBox" name="polarizer_angle">
-          <property name="maximum">
-           <number>359</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="polarizer_label">
-          <property name="text">
-           <string>Address</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="p_angle_label">
-          <property name="text">
-           <string>Angle (deg)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QLabel" name="current_p_angle">
-          <property name="minimumSize">
-           <size>
-            <width>40</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>---       </string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QCheckBox" name="polarizer_on">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QPushButton" name="polarizer_home">
+      <item row="9" column="0">
+       <widget class="QLabel" name="rot_start_label">
         <property name="text">
-         <string>Go home</string>
+         <string>Initial (deg)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QPushButton" name="polarizer_set_now">
+        <property name="text">
+         <string>Set</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QPushButton" name="analyzer_set_now">
+        <property name="text">
+         <string>Set</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="a_checkbox_label">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Analyzer</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="a_angle_label">
+        <property name="text">
+         <string>Angle (deg)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="analyzer_label">
+        <property name="text">
+         <string>Address</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0">
+       <widget class="QLabel" name="rot_steps_label">
+        <property name="text">
+         <string>Steps</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QSpinBox" name="rotation_start">
+        <property name="maximum">
+         <number>359</number>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="1">
+       <widget class="QSpinBox" name="rotation_end">
+        <property name="maximum">
+         <number>359</number>
+        </property>
+        <property name="value">
+         <number>15</number>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1">
+       <widget class="QSpinBox" name="rotation_steps">
+        <property name="maximum">
+         <number>360</number>
+        </property>
+        <property name="value">
+         <number>3</number>
         </property>
        </widget>
       </item>
@@ -1281,33 +1217,216 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_mcl">
     <property name="geometry">
      <rect>
-      <x>260</x>
-      <y>200</y>
-      <width>241</width>
-      <height>301</height>
+      <x>20</x>
+      <y>480</y>
+      <width>211</width>
+      <height>361</height>
      </rect>
     </property>
     <property name="title">
-     <string>Stage controller</string>
+     <string>Marzhauser MCL-3 stage</string>
     </property>
     <widget class="QWidget" name="gridLayoutWidget_6">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>40</y>
-       <width>201</width>
-       <height>111</height>
+       <y>30</y>
+       <width>171</width>
+       <height>311</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="mcl_grid">
-      <item row="1" column="0">
-       <widget class="QLabel" name="mcl_address_label">
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="mcl_on">
         <property name="text">
-         <string>Address</string>
+         <string/>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="6" column="1">
+       <widget class="QDoubleSpinBox" name="mcl_grid_x_start">
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>-5.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>5.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>-5.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QSpinBox" name="mcl_grid_x_steps">
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>3</number>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="0">
+       <widget class="QLabel" name="mcl_grid_final_y_label">
+        <property name="text">
+         <string>Final Y (cm)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
+       <widget class="QLabel" name="mcl_grid_initial_label_y">
+        <property name="text">
+         <string>Initial X (cm)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QDoubleSpinBox" name="mcl_grid_y_start">
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>-5.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>5.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>-5.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1">
+       <widget class="QSpinBox" name="mcl_grid_y_steps">
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>3</number>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="1">
+       <widget class="QPushButton" name="preview_grid_cords">
+        <property name="text">
+         <string>Preview</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="1">
+       <widget class="QDoubleSpinBox" name="mcl_grid_y_end">
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>-5.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>5.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>5.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="mcl_grid_label">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Auto</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="mcl_label">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Manual</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0">
+       <widget class="QLabel" name="y_steps_label">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Y steps</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="mcl_grid_final_label">
+        <property name="text">
+         <string>Final X (cm)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QDoubleSpinBox" name="mcl_grid_x_end">
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>-5.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>5.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>5.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="mcl_grid_steps_label">
+        <property name="text">
+         <string>X steps</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="mcl_grid_initial_label">
+        <property name="text">
+         <string>Initial X (cm)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
        <widget class="QLineEdit" name="mcl_address">
         <property name="maximumSize">
          <size>
@@ -1323,16 +1442,17 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
-       <widget class="QLabel" name="mcl_current_x">
-        <property name="minimumSize">
-         <size>
-          <width>40</width>
-          <height>0</height>
-         </size>
-        </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="mcl_address_label">
         <property name="text">
-         <string>---       </string>
+         <string>Address</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="mcl_y_label">
+        <property name="text">
+         <string>Y pos. (cm)</string>
         </property>
        </widget>
       </item>
@@ -1355,31 +1475,10 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QCheckBox" name="mcl_on">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="mcl_label">
-        <property name="text">
-         <string>MCL-3</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="0">
        <widget class="QLabel" name="mcl_x_label">
         <property name="text">
-         <string>X position (cm)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="mcl_y_label">
-        <property name="text">
-         <string>Y position (cm)</string>
+         <string>X pos. (cm)</string>
         </property>
        </widget>
       </item>
@@ -1415,202 +1514,23 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="stage_status_label">
+      <item row="2" column="2">
+       <widget class="QLabel" name="mcl_current_x">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="text">
-         <string>Stage status</string>
+         <string>---       </string>
         </property>
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="QLabel" name="stage_status">
+       <widget class="QPushButton" name="mcl_set_now">
         <property name="text">
-         <string>---</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="verticalLayoutWidget_5">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>170</y>
-       <width>211</width>
-       <height>115</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_5">
-      <item>
-       <widget class="QLabel" name="mcl_grid_label">
-        <property name="text">
-         <string>Grid</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="2" column="1">
-         <widget class="QDoubleSpinBox" name="mcl_grid_y_start">
-          <property name="decimals">
-           <number>2</number>
-          </property>
-          <property name="minimum">
-           <double>-5.000000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>5.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>1.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>-5.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QDoubleSpinBox" name="mcl_grid_y_end">
-          <property name="decimals">
-           <number>2</number>
-          </property>
-          <property name="minimum">
-           <double>-5.000000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>5.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>1.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>5.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QDoubleSpinBox" name="mcl_grid_x_end">
-          <property name="decimals">
-           <number>2</number>
-          </property>
-          <property name="minimum">
-           <double>-5.000000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>5.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>1.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>5.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_2">
-          <property name="maximumSize">
-           <size>
-            <width>100</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="layoutDirection">
-           <enum>Qt::LeftToRight</enum>
-          </property>
-          <property name="text">
-           <string>Y (cm)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label">
-          <property name="maximumSize">
-           <size>
-            <width>100</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>X (cm)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QDoubleSpinBox" name="mcl_grid_x_start">
-          <property name="decimals">
-           <number>2</number>
-          </property>
-          <property name="minimum">
-           <double>-5.000000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>5.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>1.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>-5.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="mcl_grid_initial_label">
-          <property name="text">
-           <string>Initial</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QLabel" name="mcl_grid_final_label">
-          <property name="text">
-           <string>Final</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QLabel" name="mcl_grid_steps_label">
-          <property name="text">
-           <string>Steps</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QSpinBox" name="mcl_grid_x_steps">
-          <property name="maximum">
-           <number>100</number>
-          </property>
-          <property name="value">
-           <number>3</number>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="3">
-         <widget class="QSpinBox" name="mcl_grid_y_steps">
-          <property name="maximum">
-           <number>100</number>
-          </property>
-          <property name="value">
-           <number>3</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QPushButton" name="preview_grid_cords">
-        <property name="text">
-         <string>Preview grid coordinates</string>
+         <string>Set</string>
         </property>
        </widget>
       </item>
@@ -1620,34 +1540,84 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_piline">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>240</y>
-      <width>241</width>
-      <height>111</height>
+      <x>520</x>
+      <y>300</y>
+      <width>221</width>
+      <height>261</height>
      </rect>
     </property>
     <property name="title">
-     <string>PI rotation controller</string>
+     <string>PI C-867 rotation controller</string>
     </property>
-    <widget class="QWidget" name="gridLayoutWidget_8">
+    <widget class="QWidget" name="gridLayoutWidget_10">
      <property name="geometry">
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>201</width>
-       <height>65</height>
+       <width>185</width>
+       <height>214</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <widget class="QLabel" name="piline_on_label">
+     <layout class="QGridLayout" name="piline_grid_layout">
+      <item row="1" column="0">
+       <widget class="QLabel" name="piline_manual_label">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="text">
-         <string>PI C-867</string>
+         <string>Manual</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QDoubleSpinBox" name="piline_set">
+      <item row="6" column="1">
+       <widget class="QDoubleSpinBox" name="piline_final">
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>0.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>360.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>360.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="piline_grid_label">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Auto</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QDoubleSpinBox" name="piline_initial">
         <property name="decimals">
          <number>2</number>
         </property>
@@ -1665,6 +1635,20 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="piline_steps_label">
+        <property name="text">
+         <string>Steps</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="piline_final_label">
+        <property name="text">
+         <string>Final</string>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="0">
        <widget class="QLabel" name="piline_set_label">
         <property name="text">
@@ -1673,20 +1657,6 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QCheckBox" name="piline_on">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="piline_address_label">
-        <property name="text">
-         <string>Address</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
        <widget class="QLineEdit" name="piline_address">
         <property name="maximumSize">
          <size>
@@ -1714,7 +1684,71 @@ p, li { white-space: pre-wrap; }
          </size>
         </property>
         <property name="text">
-         <string>---       </string>
+         <string>---</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="piline_address_label">
+        <property name="text">
+         <string>Address</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="piline_set">
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>0.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>360.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QPushButton" name="piline_preview">
+        <property name="text">
+         <string>Preview</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QSpinBox" name="piline_steps">
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>3</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QPushButton" name="piline_set_now">
+        <property name="text">
+         <string>Set</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="piline_initial_label">
+        <property name="text">
+         <string>Initial</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="piline_on">
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </item>
@@ -1727,7 +1761,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>977</width>
+     <width>792</width>
      <height>21</height>
     </rect>
    </property>

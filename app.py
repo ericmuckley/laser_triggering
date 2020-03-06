@@ -16,14 +16,15 @@ Created on Feb 3 2020
 """
 
 # --------------------- core GUI libraries --------------------------------
-from PyQt5 import QtWidgets, uic, QtCore  # , QtGui
-from PyQt5.QtWidgets import QMainWindow, QFileDialog
+
 import os
 import sys
 import time
 import numpy as np
-import serial
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
+from PyQt5 import QtWidgets, uic, QtCore  # , QtGui
+from PyQt5.QtWidgets import QMainWindow, QFileDialog
+
 
 
 # -------- import custom modules for contorlling instruments ---------------
@@ -38,6 +39,7 @@ from instr_libs import piline  # for controlling PI C-867 PILine rotator
 
 
 # ------- change matplotlib settings to make plots look nicer --------------
+'''
 plt.rcParams['xtick.labelsize'] = 20
 plt.rcParams['ytick.labelsize'] = 20
 plt.rcParams['axes.linewidth'] = 3
@@ -46,7 +48,7 @@ plt.rcParams['xtick.major.width'] = 3
 plt.rcParams['ytick.minor.width'] = 3
 plt.rcParams['ytick.major.width'] = 3
 plt.rcParams['figure.autolayout'] = True
-
+'''
 
 class Worker(QtCore.QRunnable):
     """Class to start a new worker thread for background tasks.
@@ -85,14 +87,14 @@ class App(QMainWindow):
         self.threadpool = QtCore.QThreadPool()
 
         # create timer which updates fields on GUI (set interval in ms)
-        self.timer = QtCore.QTimer(self)
-        self.timer.timeout.connect(self.update_gui_thread)
-        self.timer.start(500)
+        #self.timer = QtCore.QTimer(self)
+        #self.timer.timeout.connect(self.update_gui_thread)
+        #self.timer.start(500)
 
         # assign actions to top menu items
         # example: self.ui.menu_item_name.triggered.connect(self.func_name)
         self.ui.quit_app.triggered.connect(self.quitapp)
-        self.ui.show_help.triggered.connect(self.show_help)
+        self.ui.show_help.triggered.connect(ops.show_help)
         self.ui.set_filedir.triggered.connect(self.set_filedir)
         self.ui.print_ports.triggered.connect(self.print_ports)
         self.ui.plot_spectra.triggered.connect(self.plot_file_list)
@@ -110,27 +112,27 @@ class App(QMainWindow):
         self.ui.launch_lf.clicked.connect(self.launch_lf_thread)
         self.ui.scope_acquire.clicked.connect(self.scope_acquire)
         self.ui.acquire_raman.clicked.connect(self.acquire_raman)
-        self.ui.analyzer_home.clicked.connect(self.analyzer_home)
-        self.ui.polarizer_home.clicked.connect(self.polarizer_home)
+        self.ui.analyzer_set_now.clicked.connect(self.analyzer_set_now)
+        self.ui.polarizer_set_now.clicked.connect(self.polarizer_set_now)
         self.ui.trigger_pulses.clicked.connect(self.trigger_pulses_thread)
         self.ui.export_scope_trace.clicked.connect(self.export_scope_trace)
         self.ui.preview_grid_cords.clicked.connect(self.preview_grid_cords)
+        self.ui.piline_set_now.clicked.connect(self.piline_set_now_thread)
+        self.ui.piline_preview.clicked.connect(self.piline_preview)
+
+
 
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
         self.ui.mso_on.stateChanged.connect(self.mso_on)
-        self.ui.mcl_on.stateChanged.connect(self.stage_on)
+        self.ui.mcl_on.stateChanged.connect(self.mcl_on_thread)
         self.ui.avacs_on.stateChanged.connect(self.avacs_on)
         self.ui.pulsegen_on.stateChanged.connect(self.pulsegen_on)
         self.ui.piline_on.stateChanged.connect(self.piline_on_thread)
         
         # assign actions to user input fields (text and numeric)
         # example: self.ui.TEXT_FIELD.textChanged.connect(self.FUNCTION_NAME)
-        # example: self.ui.SPIN_BOX.valueChanged.connect(self.FUNCTION_NAME)
-        self.ui.piline_address.textChanged.connect(self.test_text)
-        self.ui.piline_set.valueChanged.connect(self.test_val)
-        
-        
+        # example: self.ui.SPIN_BOX.valueChanged.connect(self.FUNCTION_NAME)      
         
 
         # intialize log file for logging experimental settings
@@ -203,17 +205,17 @@ class App(QMainWindow):
                 'outbox': self.ui.outbox,
                 'a_on': self.ui.analyzer_on,
                 'p_on': self.ui.polarizer_on,
-                'ahome': self.ui.analyzer_home,
-                'phome': self.ui.polarizer_home,
-                'aangle': self.ui.analyzer_angle,
-                'pangle': self.ui.polarizer_angle,
+                'a_set_now': self.ui.analyzer_set_now,
+                'p_set_now': self.ui.polarizer_set_now,
+                'a_set': self.ui.analyzer_set,
+                'p_set': self.ui.polarizer_set,
                 'rotation_end': self.ui.rotation_end,
                 'aaddress': self.ui.analyzer_address,
                 'paddress': self.ui.polarizer_address,
                 'rotation_start': self.ui.rotation_start,
                 'rotation_steps': self.ui.rotation_steps,
-                'curr_pangle_label': self.ui.current_p_angle,
-                'curr_aangle_label': self.ui.current_a_angle,
+                'p_display': self.ui.polarizer_display,
+                'a_display': self.ui.analyzer_display,
                 'seq_polarizer_rot': self.ui.seq_polarizer_rot}
 
         # information related to Marzhauser MCL-3 X-Y stage
@@ -226,7 +228,6 @@ class App(QMainWindow):
                'seq_mcl': self.ui.seq_mcl,
                'set_x': self.ui.mcl_set_x,
                'set_y': self.ui.mcl_set_y,
-               'status': self.ui.stage_status,
                'address': self.ui.mcl_address,
                'show_x': self.ui.mcl_current_x,
                'show_y': self.ui.mcl_current_y,       
@@ -245,6 +246,11 @@ class App(QMainWindow):
             'outbox': self.ui.outbox,
             'set': self.ui.piline_set,
             'seq': self.ui.seq_piline,
+            'initial': self.ui.piline_initial,
+            'final': self.ui.piline_final,
+            'steps': self.ui.piline_steps,
+            'preview': self.ui.piline_preview,
+            'set_now': self.ui.piline_set_now,
             'display': self.ui.piline_display,
             'address': self.ui.piline_address}
 
@@ -269,20 +275,27 @@ class App(QMainWindow):
 
     # %% ============ PI C-867 PILine rotation controller ================
 
-
-
-
     def piline_on(self):
         """Checkbox for piline is checked/unchecked."""
         piline.piline_on(self.piline)
-
 
     def piline_on_thread(self):
         """Connect to PI C-867 PILine in a new thread."""
         worker = Worker(self.piline_on)  # pass other args here
         self.threadpool.start(worker)
 
+    def piline_set_now_thread(self):
+        """Move the piline stage in a new thread."""
+        worker = Worker(self.piline_set_now)  # pass other args here
+        self.threadpool.start(worker)
 
+    def piline_set_now(self):
+        """Move the piline stage."""
+        piline.move(self.piline)
+        
+    def piline_preview(self):
+        """Get preview of sequence of angles to sample."""
+        piline.preview_angles(self.piline)
 
     # %% ======= experimental sequence control functions =================
 
@@ -300,6 +313,22 @@ class App(QMainWindow):
         self.initialize_sequence()
         
         
+        
+        if self.seq_piline.isChecked():
+            piline_angles = piline.get_angles(self.piline)
+        
+            for angle in piline_angles:
+                
+                self.ui.piline_set.setValue(float(angle)) 
+                time.sleep(0.1)
+                self.piline_set_now()
+                
+                time.sleep(2)
+            
+            
+        
+        
+        '''
         
         # get MCL-3 stage grid coordinates
         if self.ui.seq_mcl.isChecked():
@@ -376,7 +405,7 @@ class App(QMainWindow):
                         self.acquire_raman()
                     self.log_to_file()
                     time.sleep(self.ui.pause_between_cycles.value())
-
+        '''
         self.finalize_sequence()
 
     def enable_during_seq(self, enabled):
@@ -414,9 +443,14 @@ class App(QMainWindow):
         self.abort_seq = True
 
 
-    # %% ========= Thorlabs KDC101 servo motor controllers= ==============    
+    # %% ============ Marzhauser MCL-3 stage controller ==================    
 
-    def stage_on(self):
+    def mcl_on_thread(self):
+        """Open Marzhauser MCL-3 stage controller in a new thread."""
+        worker = Worker(self.mcl_on)  # pass other args here
+        self.threadpool.start(worker)
+
+    def mcl_on(self):
         """Checkbox for MCL stage controller is checked/unchecked."""
         mcl.stage_on(self.mcl)
     
@@ -435,21 +469,25 @@ class App(QMainWindow):
         """Checkbox for polarizer controller is checked/unchecked."""
         kcube.polarizer_on(self.kcube)
 
-    def analyzer_move_to(self):
-        """Move the analyzer to specified angle."""
-        kcube.analyzer_move_to(self.kcube)
+    def analyzer_set_now_thread(self):
+        """Move the analyzer to specified angle in a new thread."""
+        worker = Worker(self.analyzer_set_now)  # pass other args here
+        self.threadpool.start(worker)
 
-    def polarizer_move_to(self):
-        """Move the polarizer to specified angle."""
-        kcube.polarizer_move_to(self.kcube)
-
-    def polarizer_home(self):
-        """Move the polarizer to its home position."""
-        kcube.polarizer_home(self.kcube)
-
-    def analyzer_home(self):
+    def analyzer_set_now(self):
         """Move the analizer to its home position."""
-        kcube.analyzer_home(self.kcube)
+        kcube.analyzer_set_now(self.kcube)
+
+    def polarizer_set_now_thread(self):
+        """Move the polarizer to specified angle in a new thread."""
+        worker = Worker(self.polarizer_set_now)  # pass other args here
+        self.threadpool.start(worker)
+
+    def polarizer_set_now(self):
+        """Move the polarizer to its home position."""
+        kcube.polarizer_set_now(self.kcube)
+
+
 
 
 
@@ -516,6 +554,7 @@ class App(QMainWindow):
 
     # %% ============ system control functions =============================
 
+    '''
     def update_gui_thread(self):
         """Update the GUI objects in a new thread."""
         if self.ops['gui_update_finished']:
@@ -540,7 +579,7 @@ class App(QMainWindow):
             except serial.SerialException:
                 pass
         self.ops['gui_update_finished'] = True 
-
+    '''
 
     def set_filedir(self):
         # set the directory for saving data files
@@ -571,9 +610,9 @@ class App(QMainWindow):
         """Print a list of available serial and VISA ports."""
         ops.print_ports(self.ops)
 
-    def show_help():
-        """Show the help window as an HTML popup."""
-        ops.show_help()
+    #def show_help():
+    #    """Show the help window as an HTML popup."""
+    #    ops.show_help()
 
     def quitapp(self):
         """Quit the application."""
@@ -590,7 +629,7 @@ class App(QMainWindow):
         # kill the process which opens LightField if its already running
         # os.system("taskkill /f /im AddInProcess.exe")
         # stop timer
-        self.timer.stop()
+        #self.timer.stop()
         # close app window
         self.deleteLater()
         self.close()

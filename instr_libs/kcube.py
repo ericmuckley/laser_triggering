@@ -14,9 +14,9 @@ import numpy as np
 
 def enable_polarizer(kcube, enable):
     """Enable/disable buttons related to polarizer controller."""
-    kcube['phome'].setEnabled(enable)
-    kcube['pangle'].setEnabled(enable)
-    kcube['curr_pangle_label'].setEnabled(enable)
+    kcube['p_set_now'].setEnabled(enable)
+    kcube['p_set'].setEnabled(enable)
+    kcube['p_display'].setEnabled(enable)
     kcube['seq_polarizer_rot'].setEnabled(enable)
     kcube['rotation_end'].setEnabled(enable)
     kcube['rotation_start'].setEnabled(enable)
@@ -28,9 +28,9 @@ def enable_polarizer(kcube, enable):
 
 def enable_analyzer(kcube, enable):
     """Enable/disable buttons related to analyzer controller."""
-    kcube['ahome'].setEnabled(enable)
-    kcube['aangle'].setEnabled(enable)
-    kcube['curr_aangle_label'].setEnabled(enable)
+    kcube['a_set_now'].setEnabled(enable)
+    kcube['a_set'].setEnabled(enable)
+    kcube['a_display'].setEnabled(enable)
     kcube['seq_polarizer_rot'].setEnabled(enable)
     kcube['rotation_end'].setEnabled(enable)
     kcube['rotation_start'].setEnabled(enable)

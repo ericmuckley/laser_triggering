@@ -64,15 +64,16 @@ def stage_on(mcl):
                     timeout=1,
                     stopbits=serial.STOPBITS_TWO)
             mcl['dev'] = dev
-            mcl['outbox'].append('Marzhauser MCL-3 stage connected.')
+            mcl['outbox'].append('Configuring Marzhauser MCL-3 stage...')
             clear_stage_buffer(dev)
             mcl['outbox'].append('Stage status: {}'.format(get_status(dev)))
-            enable_stage(mcl, True)
             x, y = get_x_pos(mcl['dev']), get_y_pos(mcl['dev'])
             mcl['show_x'].setText(str(round(x, 2)))
             mcl['show_y'].setText(str(round(y, 2)))
             mcl['set_x'].setValue(float(x))
             mcl['set_y'].setValue(float(y))
+            enable_stage(mcl, True)
+            mcl['outbox'].append('Marzhauser MCL-3 stage connected.')
         except:
             mcl['outbox'].append('Stage could not connect.')
             mcl['outbox'].append('Make sure it is "auto" mode.')
@@ -127,11 +128,6 @@ def update_position(mcl):
     else:
         mcl['outbox'].append(
                 'Stage moved to ({}, {})'.format(current_x, current_y))
-
-    if mcl['moving'] is True:
-        mcl['status'].setText('IN MOTION')
-    else:
-        mcl['status'].setText('READY')
 
     # reset the previous position
     mcl['prev_position'] = (current_x, current_y)
