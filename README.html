@@ -1,5 +1,7 @@
 <h1>Laser triggering: an application for high-throughput laser processing and characterization</h1>
 <p>This respository contains code for an application which allows in situ spectroscopic characterization of materials during automated laser processing. The application controls triggering of laser pulses, acquisition of Raman spectra, acquisition of traces from an oscilloscope, and motorized control of optical polarizer/analyzer systems.</p>
+<p>A screenshot of the user interface is shown below.
+<img alt="Screenshot of the GUI" src="./img/gui.jpg" /></p>
 <h1>Use</h1>
 <p>The application can be started by opening a Python code editor running the <code>app.py</code> file. Alternatively, the software can be started using the <code>RUN_LASER_TRIGGERING.bat</code> Windows BAT file.</p>
 <h2>Connecting to instruments</h2>
@@ -46,6 +48,7 @@
 </li>
 <li><strong>logs</strong>: default directory for saving experiment configuration files and logging experimental data</li>
 <li><strong>support_files</strong>: directory for storing supporting files (<em>APT.dll</em>, <em>APTAPI.h</em>, <em>ATP.lib</em>) and other unused depreciated files</li>
+<li><strong>img</strong>: directory for storing images which are embedded in the README.md file</li>
 </ul>
 <h1>Editing the software</h1>
 <p>To edit the user interface, use <em>QT Designer</em>. This installed by default with <em>Anaconda</em>. After <em>Anaconda</em> is installed, open the <em>Anaconda prompt</em>. In the command prompt, type <code>designer</code> and hit <em>enter</em>. The program <em>QT Designer</em> will open. Next, open the file <em>ui.ui</em> which is the unser-interface design file in this directory. The user interface can now be edited. Each widget on the user-interface can be named with a custom name, and this name will be called by the <em>app.py</em> file to assign functionality to the widget.</p>
