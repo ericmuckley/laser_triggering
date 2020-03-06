@@ -1045,13 +1045,6 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QSpinBox" name="polarizer_set">
-        <property name="maximum">
-         <number>359</number>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="2">
        <widget class="QLabel" name="polarizer_display">
         <property name="minimumSize">
@@ -1091,13 +1084,6 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="placeholderText">
          <string>27255929</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QSpinBox" name="analyzer_set">
-        <property name="maximum">
-         <number>359</number>
         </property>
        </widget>
       </item>
@@ -1186,23 +1172,6 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="9" column="1">
-       <widget class="QSpinBox" name="rotation_start">
-        <property name="maximum">
-         <number>359</number>
-        </property>
-       </widget>
-      </item>
-      <item row="10" column="1">
-       <widget class="QSpinBox" name="rotation_end">
-        <property name="maximum">
-         <number>359</number>
-        </property>
-        <property name="value">
-         <number>15</number>
-        </property>
-       </widget>
-      </item>
       <item row="11" column="1">
        <widget class="QSpinBox" name="rotation_steps">
         <property name="maximum">
@@ -1210,6 +1179,49 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="value">
          <number>3</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="polarizer_set">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>360.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QDoubleSpinBox" name="analyzerset">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>360.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QDoubleSpinBox" name="rotation_start">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>360.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="1">
+       <widget class="QDoubleSpinBox" name="rotation_end">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>360.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>90.000000000000000</double>
         </property>
        </widget>
       </item>

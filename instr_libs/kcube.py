@@ -11,32 +11,24 @@ Created on Wed Feb 19 10:07:30 2020
 
 import thorlabs_apt as apt
 import numpy as np
+import time
 
 def enable_polarizer(kcube, enable):
     """Enable/disable buttons related to polarizer controller."""
-    kcube['p_set_now'].setEnabled(enable)
-    kcube['p_set'].setEnabled(enable)
-    kcube['p_display'].setEnabled(enable)
-    kcube['seq_polarizer_rot'].setEnabled(enable)
-    kcube['rotation_end'].setEnabled(enable)
-    kcube['rotation_start'].setEnabled(enable)
-    kcube['rotation_steps'].setEnabled(enable)
-    kcube['seq_polarizer_rot'].setEnabled(enable)
+    items = ['p_set_now', 'p_set', 'p_display', 'seq_polarizer_rot',
+             'rotation_end', 'rotation_start', 'rotation_steps',
+             'seq_polarizer_rot']
+    [kcube[i].setEnabled(enable) for i in items]
     kcube['paddress'].setEnabled(not enable)
     
 
 
 def enable_analyzer(kcube, enable):
     """Enable/disable buttons related to analyzer controller."""
-    kcube['a_set_now'].setEnabled(enable)
-    kcube['a_set'].setEnabled(enable)
-    kcube['a_display'].setEnabled(enable)
-    kcube['seq_polarizer_rot'].setEnabled(enable)
-    kcube['rotation_end'].setEnabled(enable)
-    kcube['rotation_start'].setEnabled(enable)
-    kcube['rotation_steps'].setEnabled(enable)
-    kcube['seq_polarizer_rot'].setEnabled(enable)
+    items = ['a_set_now', 'a_set', 'a_display']
+    [kcube[i].setEnabled(enable) for i in items]
     kcube['aaddress'].setEnabled(not enable)
+    
 
 
 def polarizer_on(kcube):
@@ -52,18 +44,21 @@ def polarizer_on(kcube):
             # this allows rotation in both directions
             kcube['pdev'].set_hardware_limit_switches(1,1)
             # set initial angle to be current angle when program started
-            kcube['p_set'].setValue(round(kcube['pdev'].position))
+            current_position = round(kcube['pdev'].position)
+            print(current_position)
+            kcube['p_set'].setValue(current_position)
         except:
+            raise
             kcube['outbox'].append('Polarizer controller could not connect.')
             enable_polarizer(kcube, False)
             kcube['p_on'].setChecked(False)
             kcube['pdev'] = None
-            kcube['p_display'].setText('---   ')
+            kcube['p_display'].setText('---')
     if not kcube['p_on'].isChecked():
         kcube['pdev'] = None
         enable_polarizer(kcube, False)
         kcube['p_on'].setChecked(False)
-        kcube['p_display'].setText('---   ')
+        kcube['p_display'].setText('---')
         kcube['outbox'].append('Polarizer controller closed.')
         
 
@@ -80,37 +75,54 @@ def analyzer_on(kcube):
             # this allows rotation in both directions
             kcube['adev'].set_hardware_limit_switches(1,1)
             # set initial angle to be current angle when program started
-            kcube['a_set'].setValue(round(kcube['adev'].position))
+            current_position = round(kcube['adev'].position)
+            kcube['a_set'].setValue(current_position)
         except:
             kcube['outbox'].append('Analyzer controller could not connect.')
             enable_analyzer(kcube, False)
             kcube['a_on'].setChecked(False)
             kcube['adev'] = None
-            kcube['a_display'].setText('---   ')
+            kcube['a_display'].setText('---')
     if not kcube['a_on'].isChecked():
         kcube['adev'] = None
         enable_analyzer(kcube, False)
         kcube['a_on'].setChecked(False)
-        kcube['a_display'].setText('---   ')
+        kcube['a_display'].setText('---')
         kcube['outbox'].append('Analyzer controller closed.')
+
+
 
 
 
 def polarizer_set_now(kcube):
     """Set angle of the polarizer."""
     kcube['p_set_now'].setEnabled(False)
+    kcube['p_display'].setText('moving')
+    # get the target angle and set it
+    setpoint = round(kcube['p_set'].value(), 1)
+    kcube['pdev'].move_to(setpoint)
     kcube['outbox'].append(
-        'Setting polarizer to {} deg...'.format(kcube['p_set']))
+        'Setting polarizer to {} deg...'.format(kcube['p_set'].value()))
     
+    # keep moving until rotation reaches setpoint
+    position = round(kcube['dev'].position, 1)
+    while setpoint != position:
+        time.sleep(1)
+        position = round(kcube['dev'].position, 1)
     
+    kcube['outbox'].append(
+        'Polarizer at {} deg...'.format(position))
     kcube['p_set_now'].setEnabled(True)
-    
+    kcube['p_display'].setText(str(position))
+
+
+
     
 def analyzer_set_now(kcube):
      """Set angle of the analyzer."""
      kcube['a_set_now'].setEanbled(False)
      kcube['outbox'].append(
-        'Setting analyzer to {} deg...'.format(kcube['a_set']))
+        'Setting analyzer to {} deg...'.format(kcube['a_set'].value()))
      
      kcube['a_set_now'].setEnabled(True)
 
@@ -155,8 +167,6 @@ def analyzer_move_to(kcube):
 
 
 if __name__ == '__main__':
-    
-    print(apt.list_available_devices())
 
     dev = apt.Motor(27255762)
     

@@ -99,8 +99,6 @@ class App(QMainWindow):
         self.ui.launch_lf.clicked.connect(self.launch_lf_thread)
         self.ui.scope_acquire.clicked.connect(self.scope_acquire)
         self.ui.acquire_raman.clicked.connect(self.acquire_raman)
-        self.ui.analyzer_set_now.clicked.connect(self.analyzer_set_now)
-        self.ui.polarizer_set_now.clicked.connect(self.polarizer_set_now)
         self.ui.trigger_pulses.clicked.connect(self.trigger_pulses_thread)
         self.ui.export_scope_trace.clicked.connect(self.export_scope_trace)
         self.ui.preview_grid_cords.clicked.connect(self.preview_grid_cords)
