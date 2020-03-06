@@ -98,7 +98,7 @@ def export_settings(ops):
     ops['outbox'].append('Exporting experiment settings...')
     # create filepath for saved settings
     settings_filepath = os.path.join(
-                    ops['filedir'],
+                    ops['logdir'],
                     ops['starttime']+'_experiment_settings.ini')
     # save the name of the settigns filepath
     ops['app_settings_filename'] = settings_filepath

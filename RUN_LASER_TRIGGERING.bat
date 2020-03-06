@@ -1,5 +1,3 @@
-CALL C:\ProgramData\Anaconda3\Scripts\activate.bat C:\Users\a6q\.conda\envs\py3
-cd C:\Users\a6q\laser_triggering
-python laser_triggering.py
-
-
+CALL C:\ProgramData\Anaconda3\Scripts\activate.bat C:\ProgramData\Anaconda3\envs\raman_env
+cd C:\Users\Administrator\Desktop\eric\laser_triggering
+python app.py
