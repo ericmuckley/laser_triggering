@@ -15,6 +15,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import cm
+from PyQt5.QtWidgets import QFileDialog
 
 
 import clr  # the .NET class library
@@ -36,25 +37,25 @@ from PrincetonInstruments.LightField.AddIns import ExperimentSettings
 from PrincetonInstruments.LightField.AddIns import DeviceType 
 
 # ------- change matplotlib settings to make plots look nicer --------------
-'''
-plt.rcParams['xtick.labelsize'] = 20
-plt.rcParams['ytick.labelsize'] = 20
+
+plt.rcParams['xtick.labelsize'] = 14
+plt.rcParams['ytick.labelsize'] = 14
 plt.rcParams['axes.linewidth'] = 3
 plt.rcParams['xtick.minor.width'] = 3
 plt.rcParams['xtick.major.width'] = 3
 plt.rcParams['ytick.minor.width'] = 3
 plt.rcParams['ytick.major.width'] = 3
 plt.rcParams['figure.autolayout'] = True
-'''
+
 
 def launch_lf(lf):
     """Launch LightField software."""
     # kill the process which opens LightField if its already running
-    os.system("taskkill /f /im AddInProcess.exe")
+    #os.system("taskkill /f /im AddInProcess.exe")
     # create a C# compatible List of type String object
     lf_exp_list = List[String]()
     # add the command line option for an empty experiment
-    lf_exp_list.Add("Default_Python_Experiment")#("/empty")
+    lf_exp_list.Add("/empty")#("Default_Python_Experiment")#
     # create the LightField Application (true for visible)
     # the 2nd parameter is the experiment name to load 
     lf['app'] = Automation(True, List[String](lf_exp_list))
@@ -131,14 +132,15 @@ def plot_file_list(lf):
             df = pd.read_csv(p+str(f))
             plt.plot(df['Wavelength'], df['Intensity'], label=fi,
                      c=colors[fi], lw=1)
-        plot_setup(labels=('Wavelength (nm)', 'Intensity (counts)'))
+        plot_setup(labels=('Wavelength (nm)', 'Intensity (counts)'),
+                   legend=False)
         fig.canvas.set_window_title('Spectra')
         plt.draw()
 
 
 
-def plot_setup(labels=['X', 'Y'], fsize=20, setlimits=False,
-               title=None, legend=True, limits=(0,1,0,1)):
+def plot_setup(labels=['X', 'Y'], fsize=14, setlimits=False,
+               title=None, legend=True, limits=(0,1,0,1), colorbar=False):
     """Creates a custom plot configuration to make graphs look nice.
     This can be called with matplotlib for setting axes labels,
     titles, axes ranges, and the font size of plot labels.
@@ -154,5 +156,102 @@ def plot_setup(labels=['X', 'Y'], fsize=20, setlimits=False,
     if setlimits:
         plt.xlim((limits[0], limits[1]))
         plt.ylim((limits[2], limits[3]))
+    if colorbar:
+        plt.colorbar()
+
+
+def stack_spectra(filelist):
+    """Get a 2D array of stacked spectra and metadata in a dictionary."""
+    d = {
+        'colors': cm.jet(np.linspace(0, 1, len(filelist))),
+        'labels': []}
+    # loop over each spectrum and stack it into 2D array
+    for fi, f in enumerate(filelist):
+        df = pd.read_csv(f)
+        d['labels'].append(os.path.split(f)[1].split('.csv')[0])
+        # stack spectra together in a single matrix
+        if fi == 0:
+            d['spec_mat'] = np.array(df['Intensity'])
+        else:
+            d['spec_mat'] = np.column_stack((d['spec_mat'], df['Intensity']))
+        d['wavelength'] = np.array(df['Wavelength'])
+    return d
+
+
+def plot_raman_files_from_selection(lf):
+    """Plot Raman data from files selected using a user dialog."""
+    qfd = QFileDialog()
+    qfd.setFileMode(QFileDialog.ExistingFiles)
+    filenames = qfd.getOpenFileNames(
+        qfd,
+        caption='Select Raman CSV files',
+        filter='CSV (*.csv)')[0]
+    
+    # get array of spectral information
+    d = stack_spectra(filenames)
+
+    # plot Raman spectra as lines
+    plt.ion()
+    fig = plt.figure(1)
+    fig.clf()
+    
+    
+    if len(list(d['labels'])) < 2:
+        plt.plot(d['wavelength'], d['spec_mat'], lw=1)
+        plot_setup(
+            labels=('Wavelength (nm)', 'Intensity (counts)'),
+            legend=False)
+        fig.canvas.set_window_title('Raman spectra')
+        plt.draw()
+    else:
+        for i in range(np.shape(d['spec_mat'])[1]):
+            plt.plot(
+                d['wavelength'], d['spec_mat'][:, i],
+                label=d['labels'][i], c=d['colors'][i], lw=1)
+
+        plot_setup(labels=('Wavelength (nm)', 'Intensity (counts)'),
+                       legend=True)
+        fig.canvas.set_window_title('Raman spectra')
+        plt.draw()
+
+        # plot Raman spectra as heatmap
+        plt.ion()
+        fig = plt.figure(2)
+        fig.clf()
+        plot_extent = [0, len(d['labels']),
+            np.min(d['wavelength']),
+            np.max(d['wavelength'])]
+        plt.imshow(
+            d['spec_mat'],
+            aspect='auto',
+            origin='lower',
+            cmap='jet',    extent=plot_extent,
+            vmin=np.min(d['spec_mat']),
+            vmax=np.max(d['spec_mat']))
+        plot_setup(
+            colorbar=True, legend=False,
+            title='Raman counts over time',
+            labels=('Spectrum number', 'Wavelength (nm)'))
+        fig.canvas.set_window_title('Raman spectra over time')
+        plt.draw()
 
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

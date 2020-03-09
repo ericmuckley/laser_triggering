@@ -14,15 +14,15 @@
    <string>Laser triggering</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">/*
+   <string notr="true">
 QMainWindow{
-background-color: rgb(50, 50, 50);
+background-color: rgb(100,100,100);
 color: white;}
 
 
 QGroupBox{
-border: 1px solid white;
-border-radius: 2px;
+border: 1px solid black;
+border-radius: 3px;
 margin-top: 0.5em;
 font-size: 14px;
 color: white;}
@@ -31,15 +31,40 @@ subcontrol-position: top center;
 subcontrol-origin: margin;
 padding: 0 3px 0 3px;}
 
+
 QLabel{
 color: white;}
 
 
 QTextBrowser{
-border-radius: 2px;
+border-radius: 3px;
 border: 1px solid black;
-background-color: rgb(150, 150, 150);
-color: black;}
+background-color: rgb(60, 60, 60);
+color: white;}
+
+
+QMenuBar{
+background: rgb(40, 40, 40);
+spacing: 12px;
+color: white;
+font-size:16px;}
+QMenuBar::item{
+spacing: 3px; 
+padding: 1px 4px;
+border-radius: 3px;}
+QMenuBar::item:selected{
+background: rgb(80,80,80);}
+
+
+QMenu {
+border: 2px solid black;
+color: white;
+background: rgb(60,60,60);}
+
+QMenu::item:selected { 
+background: white;
+background: rgb(100, 100, 100);}
+
 
 
 
@@ -47,139 +72,27 @@ color: black;}
 
 
 QLineEdit, QSpinBox, QDoubleSpinBox {
-border-radius: 1px;
-background-color: rgb(70, 70, 70);
+border-radius: 3px;
+background-color: rgb(80,80,80);
 border: 1px solid black;
 color: white;}
 QLineEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover{
 border: 1px solid black;
-background-color: rgb(90, 90, 90);
-}
-
-QPushButton{
-color: white;
-min-height: 25px;
-border-radius: 1px;
-border: 1px solid black;
-background-color: rgb(70, 70, 70);}
-QPushButton:hover{
-background-color: rgb(90, 90,90);}
-QPushButton:pressed{
-color: black;
-background-color: white;}
-
-
-
-
-
-QMenu {
-border: 2px solid black;
-color: white;
-background: rgb(30, 30, 30);}
-QMenu::item:hover { 
-color: black;
-background: rgb(90, 120, 90);}
-QMenu::item:selected { 
-background: rgb(90, 120, 90);
-color:black;}
-QMenuBar{
-background: rgb(30, 30, 30);
-spacing: 12px;
-color: white;
-font-size:16px;}
-QMenuBar::item{
-spacing: 3px; 
-padding: 1px 4px;
-border-radius: 1px;}
-QMenuBar::item:selected{
-background: rgb(90, 120, 90);}
-
-
-
-
-/*
-
-QMenu {
-border: 2px solid black;
-font-size: 12px;
-color: white;
-background: rgb(20, 20, 20);}
-QMenu::item:hover { 
-color: black;
-background: rgb(90, 120, 90);}
-QMenu::item:selected { 
-background: rgb(90, 120, 90);
-color:black;}
-QMenuBar{
-background: rgb(20, 20, 20);
-spacing: 12px;
-color: white;
-font-size:16px;}
-QMenuBar::item{
-spacing: 3px; 
-padding: 1px 4px;
-border-radius: 2px;}
-QMenuBar::item:selected{
-background: rgb(90, 120, 90);}
-
-
-
-
-
-
-
-
-
-
-
-QGroupBox{
-border: 1px solid white;
-border-radius: 0px;
-margin-top: 0.5em;
-font-size: 14px;
-color: white;}
-QGroupBox::title{
-subcontrol-position: top center;
-subcontrol-origin: margin;
-padding: 0 3px 0 3px;}
-
-QLabel{
-color: white;
-font-size: 12px;}
-
-QTextBrowser{
-border-radius: 0px;
-border: 1px solid white;
-font-size: 14px;
 background-color: black;
-color: white;}
-
-
-QLineEdit, QSpinBox, QDoubleSpinBox {
-border-radius: 0px;
-font-size: 12px;
-background-color: rgb(40, 40, 40);
-border: 1px solid black;
-color: white;}
-QLineEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover{
-border: 1px solid black;
-background-color: rgb(80, 80, 80);
 }
 
-
-
 QPushButton{
-font-size: 12px;
 color: white;
-background-color: rgb(40, 40, 40);}
-QPushButton:hover{
+min-height: 22px;
+min-width: 60px;
+border-radius: 3px;
+border: 1px solid black;
 background-color: rgb(80, 80, 80);}
+QPushButton:hover{
+background-color: black}
 QPushButton:pressed{
 color: black;
 background-color: white;}
-
-
-
 
 
 
@@ -187,40 +100,35 @@ background-color: white;}
 QRadioButton::indicator, QCheckBox::indicator {
 width: 13px;
 height: 13px;
-border-radius: 0px;
+border-radius: 3px;
 border:1px solid black;
-background: rgb(40, 40, 40);}
-
-QRadioButton::indicator:unchecked:hover, QCheckBox::indicator:unchecked:hover {
 background: rgb(80, 80, 80);}
 
+QRadioButton::indicator:unchecked:hover, QCheckBox::indicator:unchecked:hover {
+background: black;}
+
+QRadioButton::indicator::checked:hover, QCheckBox::indicator::checked:hover {
+background: rgb(45, 215, 85);}
+
+QRadioButton::indicator:checked:pressed, QCheckBox::indicator:checked:pressed {
+background: white;}
+
 QRadioButton::indicator:unchecked:pressed, QCheckBox::indicator:unchecked:pressed {
-background: rgb(85, 255, 125);
-border: 1px solid white;}
+background: white;}
 
 QRadioButton::indicator::checked, QCheckBox::indicator::checked {
 background: rgb(85, 255, 125);}
 
-QRadioButton::indicator::checked:hover, QCheckBox::indicator::checked:hover {
-background: rgb(85, 255, 125);
-border-color: black;}
-
-QRadioButton::indicator:checked:pressed, QCheckBox::indicator:checked:pressed {
-background: rgb(85, 255, 125);
-border: 1px solid white;}
 
 
 
 
 
-
-
-
-
-
-
-/*
-
+QLineEdit::disabled, QSpinBox::disabled, QDoubleSpinBox::disabled, QPushButton::disabled, QRadioButton::disabled, QCheckBox::indicator::disabled{
+background: rgb(100, 100, 100);
+color: black}
+QLabel::disabled{
+color: black;}
 
 
 
@@ -230,163 +138,7 @@ border-radius: 0px;
 border: 1px solid rgb(100, 100, 100);
 box-shape: plain;
 }
-
-
-
-
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-QMainWindow{
-background-color: rgb(40, 40, 40);}
-
-QLabel{
-color: white;
-font-size: 12px;}
-
-.QFrame{
-border-radius: 0px;
-border: 1px solid rgb(90, 120, 90);
-}
-
-
-QMenu {
-border: 2px solid black;
-font-size: 12px;
-color: white;
-background: rgb(20, 20, 20);}
-QMenu::item:hover { 
-color: black;
-background: rgb(90, 120, 90);}
-QMenu::item:selected { 
-background: rgb(90, 120, 90);
-color:black;}
-QMenuBar{
-background: rgb(20, 20, 20);
-spacing: 12px;
-color: white;
-font-size:16px;}
-QMenuBar::item{
-spacing: 3px; 
-padding: 1px 4px;
-border-radius: 2px;}
-QMenuBar::item:selected{
-background: rgb(90, 120, 90);}
-
-
-
-QGroupBox{
-border: 1px solid rgb(90, 120, 90);
-color: white;
-border-radius: 0px;
-margin-top: 0.5em;
-font-size: 16px;}
-QGroupBox::title{
-subcontrol-position: top center;
-subcontrol-origin: margin;
-padding: 0 3px 0 3px;}
-
-
-QPushButton{
-border-radius: 0px;
-color: white;
-font-size: 12px;
-border: 1px solid black;
-background-color: rgb(90, 90, 90);}
-QPushButton:hover{
-background-color: rgb(90, 120, 90);}
-QPushButton:pressed{
-color: black;
-background-color: rgb(85, 255, 125);}
-
-
-
-
-QLineEdit, QSpinBox, QDoubleSpinBox {
-border-radius: 0px;
-font-size: 12px;
-background-color: rgb(90, 90, 90);
-border: 1px solid black;
-color: white;}
-QLineEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover{
-background-color: rgb(90, 120, 90);}
-
-
-
-
-QTextBrowser{
-border-radius: 0px;
-border: 1px solid black;
-font-size: 14px;
-background-color: rgb(120, 120, 120);
-color: black;}
-
-
-
-QComboBox{
-border: 1px solid black;
-background-color: black;
-font-size: 12px;
-color: white;}
-QComboBox:hover{
-border: 1px solid white;}
-QComboBox QAbstractItemView {
-border: 1px solid black;
-selection-background-color: rgb(0, 0, 0);
-}
-QComboBox::drop-down {}
-
-
-
-
-
-
-
-QRadioButton::indicator, QCheckBox::indicator {
-width: 13px;
-height: 13px;
-border-radius: 0px;
-border:1px solid black;
-background: rgb(90, 90, 90);}
-
-QRadioButton::indicator:unchecked:hover, QCheckBox::indicator:unchecked:hover {
-background: rgb(90, 120, 90);}
-
-QRadioButton::indicator:unchecked:pressed, QCheckBox::indicator:unchecked:pressed {
-background: rgb(85, 255, 125);
-border: 1px solid white;}
-
-QRadioButton::indicator::checked, QCheckBox::indicator::checked {
-background: rgb(85, 255, 125);}
-
-QRadioButton::indicator::checked:hover, QCheckBox::indicator::checked:hover {
-background: rgb(85, 255, 125);
-border-color: black;}
-
-QRadioButton::indicator:checked:pressed, QCheckBox::indicator:checked:pressed {
-background: rgb(85, 255, 125);
-border: 1px solid white;}
-
-
-
-
-QLineEdit::disabled, QSpinBox::disabled, QDoubleSpinBox::disabled, QPushButton::disabled, QRadioButton::disabled, QCheckBox::indicator::disabled{
-background: rgb(60, 60, 60);
-color: rgb(120, 120, 120)}
-QLabel::disabled{
-color: rgb(120, 120, 120);}</string>
+</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBox_configurepulses">
@@ -402,7 +154,9 @@ color: rgb(120, 120, 120);}</string>
      </rect>
     </property>
     <property name="font">
-     <font/>
+     <font>
+      <pointsize>-1</pointsize>
+     </font>
     </property>
     <property name="title">
      <string>SRS DG645 pulse generator</string>
@@ -583,7 +337,9 @@ color: rgb(120, 120, 120);}</string>
      </rect>
     </property>
     <property name="font">
-     <font/>
+     <font>
+      <pointsize>-1</pointsize>
+     </font>
     </property>
     <property name="title">
      <string>Output</string>
@@ -630,7 +386,9 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="font">
-     <font/>
+     <font>
+      <pointsize>-1</pointsize>
+     </font>
     </property>
     <property name="title">
      <string>Configure LightField</string>
@@ -690,7 +448,7 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QGroupBox" name="groupBox_seq">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -701,7 +459,9 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="font">
-     <font/>
+     <font>
+      <pointsize>-1</pointsize>
+     </font>
     </property>
     <property name="title">
      <string>Experimental sequence</string>
@@ -712,7 +472,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>191</width>
-       <height>172</height>
+       <height>179</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout">
@@ -1052,6 +812,9 @@ p, li { white-space: pre-wrap; }
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_thorlabs">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>270</x>
@@ -1854,18 +1617,14 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>817</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>Menu</string>
     </property>
-    <addaction name="plot_spectra"/>
-    <addaction name="separator"/>
     <addaction name="print_ports"/>
-    <addaction name="show_file_list"/>
-    <addaction name="show_log_path"/>
     <addaction name="separator"/>
     <addaction name="set_filedir"/>
     <addaction name="separator"/>
@@ -1880,7 +1639,19 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="show_help"/>
    </widget>
+   <widget class="QMenu" name="menuData">
+    <property name="title">
+     <string>Data</string>
+    </property>
+    <addaction name="show_log_path"/>
+    <addaction name="show_file_list"/>
+    <addaction name="separator"/>
+    <addaction name="plot_spectra"/>
+    <addaction name="separator"/>
+    <addaction name="select_spectra"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuData"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="print_ports">
@@ -1910,7 +1681,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="plot_spectra">
    <property name="text">
-    <string>Plot spectra</string>
+    <string>Plot all Raman spectra</string>
    </property>
   </action>
   <action name="export_settings">
@@ -1926,6 +1697,16 @@ p, li { white-space: pre-wrap; }
   <action name="set_filedir">
    <property name="text">
     <string>Set file save directory</string>
+   </property>
+  </action>
+  <action name="actionPlot_Raman_spectra_as_2D_heatmap">
+   <property name="text">
+    <string>Plot Raman spectra as 2D heatmap</string>
+   </property>
+  </action>
+  <action name="select_spectra">
+   <property name="text">
+    <string>Select Raman spectra</string>
    </property>
   </action>
  </widget>

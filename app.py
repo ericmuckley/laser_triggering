@@ -63,6 +63,9 @@ class App(QMainWindow):
     # load Qt designer XML .ui GUI file
     Ui_MainWindow, QtBaseClass = uic.loadUiType('ui.ui')
 
+    # kill the process which opens LightField if its already running
+    os.system("taskkill /f /im AddInProcess.exe")
+
     def __init__(self):
 
         # create application instance
@@ -89,6 +92,7 @@ class App(QMainWindow):
         self.ui.show_file_list.triggered.connect(self.show_file_list)
         self.ui.export_settings.triggered.connect(self.export_settings)
         self.ui.import_settings.triggered.connect(self.import_settings)
+        self.ui.select_spectra.triggered.connect(self.select_spectra)
         
         # assign actions to GUI buttons
         # example: self.ui.BUTTON_NAME.clicked.connect(self.FUNCTION_NAME)
@@ -298,11 +302,33 @@ class App(QMainWindow):
 
     def run_seq(self):
         """Run an experimental sequence."""
+        
         self.initialize_sequence()
+        tot_cycles = self.ui.set_seq_cycles.value()
+        
+        # loop over each experimental cycle
+        for c in range(tot_cycles):  
+            self.ui.outbox.append(
+                    'starting cycle {}/{}...'.format(c+1, tot_cycles))
+            
+            
+            # if sequence is aborted, then stop
+            if self.abort_seq is True:
+                break
+            
+            # acquire raman spectrum
+            if self.ui.seq_raman_acquisition.isChecked():
+                self.acquire_raman()
+        
+            # save information to the log file
+            self.log_to_file()
+            
+            # pause a few seconds between cycles
+            time.sleep(self.ui.pause_between_cycles.value())
         
         
-        
-        if self.seq_piline.isChecked():
+        '''
+        if self.ui.seq_piline.isChecked():
             piline_angles = piline.get_angles(self.piline)
         
             for angle in piline_angles:
@@ -313,7 +339,7 @@ class App(QMainWindow):
                 
                 time.sleep(2)
             
-            
+        '''
         
         
         '''
@@ -488,6 +514,10 @@ class App(QMainWindow):
 
     # %% ========= Princeton Instruments LightField control ==============
 
+    def select_spectra(self):
+        """Plot Raman files based on user selection."""
+        lf.plot_raman_files_from_selection(self.lf)
+
     def launch_lf_thread(self):
         """Launch LightField software in a new thread."""
         worker = Worker(self.launch_lf)  # pass other args here
@@ -609,7 +639,7 @@ class App(QMainWindow):
         if self.piline['dev'] is not None:
             self.piline['dev'].close()
         # kill the process which opens LightField if its already running
-        # os.system("taskkill /f /im AddInProcess.exe")
+        os.system("taskkill /f /im AddInProcess.exe")
         # stop timer
         #self.timer.stop()
         # close app window

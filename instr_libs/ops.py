@@ -56,7 +56,7 @@ def get_log_row_data(srs, lf, kcube, mcl):
          'pulse_number': srs['number'].value(),
          'x_position': mcl['show_x'].text(),
          'y_position': mcl['show_y'].text(),
-         'polarizer_angle_deg': kcube['pangle'].value(),
+         'polarizer_angle_deg': kcube['p_set'].value(),
          'notes': lf['notes'].text().replace(',','__').replace('\t', '__'),
          'recent_raman_file': lf['recent_file']}
     return d
