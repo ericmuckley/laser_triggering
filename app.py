@@ -214,6 +214,7 @@ class App(QMainWindow):
         # information related to Marzhauser MCL-3 X-Y stage
         self.mcl = {
                'dev': None,
+               'busy': False,
                'on': self.ui.mcl_on,
                'outbox': self.ui.outbox,
                'seq_mcl': self.ui.seq_mcl,
@@ -291,14 +292,6 @@ class App(QMainWindow):
 
     # %% ======= experimental sequence control functions =================
 
-    def test_text(self):
-        self.ui.outbox.append('txt changed')
-
-    def test_val(self):
-        self.ui.outbox.append('val changed')
-
-
-
 
     def run_seq(self):
         """Run an experimental sequence."""
@@ -306,26 +299,54 @@ class App(QMainWindow):
         self.initialize_sequence()
         tot_cycles = self.ui.set_seq_cycles.value()
         
+        
+        # get MCL-3 stage grid coordinates
+        if self.ui.seq_mcl.isChecked():
+            grid = mcl.get_grid(self.mcl)
+            self.ui.outbox.append('Grid to sample: {}'.format(grid))
+        else:
+            grid = np.array([[float(self.mcl['show_x'].text()),
+                              float(self.mcl['show_y'].text())]])        
+        
         # loop over each experimental cycle
         for c in range(tot_cycles):  
             self.ui.outbox.append(
                     'starting cycle {}/{}...'.format(c+1, tot_cycles))
             
             
-            # if sequence is aborted, then stop
+            
             if self.abort_seq is True:
                 break
+
+
+            # loop over each position across the X-Y grid
+            for g in grid:
+    
+                if self.ui.seq_mcl.isChecked():
+                    self.mcl['set_x'].setValue(g[0])
+                    self.mcl['set_y'].setValue(g[1])
+                    self.mcl_set_now()
+                    time.sleep(0.1)
+                    while self.mcl['busy']:
+                        
+                        if self.abort_seq is True:
+                            break
+    
+                        time.sleep(.5)
+    
+    
+                    # acquire raman spectrum
+                    if self.ui.seq_raman_acquisition.isChecked():
+                        time.sleep(0.1)
+                        self.acquire_raman()
             
-            # acquire raman spectrum
-            if self.ui.seq_raman_acquisition.isChecked():
-                self.acquire_raman()
-        
-            # save information to the log file
-            self.log_to_file()
-            
-            # pause a few seconds between cycles
-            time.sleep(self.ui.pause_between_cycles.value())
-        
+                    # save information to the log file
+                    self.log_to_file()
+                    
+                    # pause a few seconds between cycles
+                    time.sleep(self.ui.pause_between_cycles.value())
+    
+        self.finalize_sequence()
         
         '''
         if self.ui.seq_piline.isChecked():
@@ -420,7 +441,7 @@ class App(QMainWindow):
                     self.log_to_file()
                     time.sleep(self.ui.pause_between_cycles.value())
         '''
-        self.finalize_sequence()
+
 
     def enable_during_seq(self, enabled):
         """Enable/disable GUI objects while a sequence is running."""

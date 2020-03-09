@@ -27,11 +27,11 @@ def pulsegen_on(srs):
                 raise Exception    
             else:
                 srs['outbox'].append(message)
-                enable_pulse_gen_buttons(srs, True)
+                enable_srs(srs, True)
         except serial.SerialException:
             srs['outbox'].append('Pulse generator could not connect.')
             srs['on'].setChecked(False)
-            enable_pulse_gen_buttons(srs, False)
+            enable_srs(srs, False)
             srs['dev'] = None
     if not srs['on'].isChecked():
         try:
@@ -41,7 +41,7 @@ def pulsegen_on(srs):
         srs['dev'] = None
         srs['outbox'].append('Pulse generator closed.')
         srs['on'].setChecked(False)
-        enable_pulse_gen_buttons(srs, False)
+        enable_srs(srs, False)
   
     
 def enable_srs(srs, enable):

@@ -87,7 +87,7 @@ def stage_on(mcl):
  
 def set_now(mcl):
     """Set the stage to a new position."""
-    
+    mcl['busy'] = True
     mcl['set_now'].setEnabled(False)
     mcl['show_x'].setText('moving')
     mcl['show_y'].setText('moving')
@@ -120,6 +120,7 @@ def set_now(mcl):
     mcl['show_x'].setText(str(current_x))
     mcl['show_y'].setText(str(current_y))
     mcl['set_now'].setEnabled(True)
+    mcl['busy'] = False
 
 
 

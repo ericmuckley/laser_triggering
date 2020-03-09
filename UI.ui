@@ -16,12 +16,12 @@
   <property name="styleSheet">
    <string notr="true">
 QMainWindow{
-background-color: rgb(100,100,100);
+background-color: rgb(50,50,50);
 color: white;}
 
 
 QGroupBox{
-border: 1px solid black;
+border: 1px solid white;
 border-radius: 3px;
 margin-top: 0.5em;
 font-size: 14px;
@@ -39,7 +39,7 @@ color: white;}
 QTextBrowser{
 border-radius: 3px;
 border: 1px solid black;
-background-color: rgb(60, 60, 60);
+background-color: rgb(40, 40, 40);
 color: white;}
 
 
@@ -77,8 +77,10 @@ background-color: rgb(80,80,80);
 border: 1px solid black;
 color: white;}
 QLineEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover{
-border: 1px solid black;
+border: 1px solid rgb(85, 255, 125);
 background-color: black;
+color: white;
+
 }
 
 QPushButton{
@@ -87,12 +89,12 @@ min-height: 22px;
 min-width: 60px;
 border-radius: 3px;
 border: 1px solid black;
-background-color: rgb(80, 80, 80);}
+background-color: rgb(80,80,80);}
 QPushButton:hover{
-background-color: black}
+background-color: rgb(100,100,100)}
 QPushButton:pressed{
 color: black;
-background-color: white;}
+background-color: rgb(85, 255, 125);}
 
 
 
@@ -108,7 +110,8 @@ QRadioButton::indicator:unchecked:hover, QCheckBox::indicator:unchecked:hover {
 background: black;}
 
 QRadioButton::indicator::checked:hover, QCheckBox::indicator::checked:hover {
-background: rgb(45, 215, 85);}
+background: rgb(85, 255, 125);
+border: 1px solid white;}
 
 QRadioButton::indicator:checked:pressed, QCheckBox::indicator:checked:pressed {
 background: white;}
@@ -125,10 +128,13 @@ background: rgb(85, 255, 125);}
 
 
 QLineEdit::disabled, QSpinBox::disabled, QDoubleSpinBox::disabled, QPushButton::disabled, QRadioButton::disabled, QCheckBox::indicator::disabled{
-background: rgb(100, 100, 100);
-color: black}
+background: rgb(50, 50, 50);
+color: white}
 QLabel::disabled{
-color: black;}
+color: white;}
+QCheckBox::indicator::checked::disabled{
+background: rgb(85, 255, 125);
+border: 1px solid black;}
 
 
 
@@ -493,10 +499,13 @@ p, li { white-space: pre-wrap; }
       <item row="4" column="1">
        <widget class="QCheckBox" name="seq_polarizer_rot">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string/>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -510,7 +519,7 @@ p, li { white-space: pre-wrap; }
       <item row="5" column="1">
        <widget class="QCheckBox" name="seq_mcl">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string/>
@@ -520,7 +529,7 @@ p, li { white-space: pre-wrap; }
       <item row="6" column="1">
        <widget class="QCheckBox" name="seq_piline">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string/>
@@ -604,7 +613,7 @@ p, li { white-space: pre-wrap; }
       <item row="3" column="1">
        <widget class="QCheckBox" name="seq_raman_acquisition">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string/>
@@ -614,7 +623,7 @@ p, li { white-space: pre-wrap; }
       <item row="2" column="1">
        <widget class="QCheckBox" name="seq_laser_trigger">
         <property name="enabled">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
         <property name="text">
          <string/>
@@ -1343,7 +1352,7 @@ p, li { white-space: pre-wrap; }
          <number>2</number>
         </property>
         <property name="minimum">
-         <double>0.000000000000000</double>
+         <double>-5.000000000000000</double>
         </property>
         <property name="maximum">
          <double>5.000000000000000</double>
@@ -1710,6 +1719,68 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>set_seq_cycles</tabstop>
+  <tabstop>pause_between_cycles</tabstop>
+  <tabstop>seq_laser_trigger</tabstop>
+  <tabstop>seq_raman_acquisition</tabstop>
+  <tabstop>seq_polarizer_rot</tabstop>
+  <tabstop>seq_mcl</tabstop>
+  <tabstop>seq_piline</tabstop>
+  <tabstop>run_seq</tabstop>
+  <tabstop>abort_seq</tabstop>
+  <tabstop>pulsegen_address</tabstop>
+  <tabstop>pulsegen_on</tabstop>
+  <tabstop>pulse_width</tabstop>
+  <tabstop>pulse_delay</tabstop>
+  <tabstop>pulse_amplitude</tabstop>
+  <tabstop>pulse_number</tabstop>
+  <tabstop>trigger_pulses</tabstop>
+  <tabstop>mcl_address</tabstop>
+  <tabstop>mcl_on</tabstop>
+  <tabstop>mcl_set_x</tabstop>
+  <tabstop>mcl_set_y</tabstop>
+  <tabstop>mcl_set_now</tabstop>
+  <tabstop>mcl_grid_x_start</tabstop>
+  <tabstop>mcl_grid_x_end</tabstop>
+  <tabstop>mcl_grid_x_steps</tabstop>
+  <tabstop>mcl_grid_y_start</tabstop>
+  <tabstop>mcl_grid_y_end</tabstop>
+  <tabstop>mcl_grid_y_steps</tabstop>
+  <tabstop>preview_grid_cords</tabstop>
+  <tabstop>raman_filename_notes</tabstop>
+  <tabstop>launch_lf</tabstop>
+  <tabstop>acquire_raman</tabstop>
+  <tabstop>polarizer_on</tabstop>
+  <tabstop>polarizer_address</tabstop>
+  <tabstop>polarizer_set</tabstop>
+  <tabstop>polarizer_set_now</tabstop>
+  <tabstop>analyzer_on</tabstop>
+  <tabstop>analyzer_address</tabstop>
+  <tabstop>analyzer_set</tabstop>
+  <tabstop>analyzer_set_now</tabstop>
+  <tabstop>rotation_start</tabstop>
+  <tabstop>rotation_end</tabstop>
+  <tabstop>rotation_steps</tabstop>
+  <tabstop>outbox</tabstop>
+  <tabstop>mso_address</tabstop>
+  <tabstop>mso_on</tabstop>
+  <tabstop>mso_downsample</tabstop>
+  <tabstop>scope_acquire</tabstop>
+  <tabstop>export_scope_trace</tabstop>
+  <tabstop>avacs_address</tabstop>
+  <tabstop>avacs_on</tabstop>
+  <tabstop>avacs_set</tabstop>
+  <tabstop>avacs_set_now</tabstop>
+  <tabstop>piline_address</tabstop>
+  <tabstop>piline_on</tabstop>
+  <tabstop>piline_set</tabstop>
+  <tabstop>piline_set_now</tabstop>
+  <tabstop>piline_initial</tabstop>
+  <tabstop>piline_final</tabstop>
+  <tabstop>piline_steps</tabstop>
+  <tabstop>piline_preview</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
