@@ -102,9 +102,7 @@ def acquire_raman(lf):
     experiment = lf['app'].LightFieldApplication.Experiment
     # check for device and inform user if one is needed
     if (device_found(experiment)==True):        
-        # check this location for saved spe after running
-        #notes = lf['notes'].text().replace(',','__').replace('\t', '__')
-        file_name = time.strftime('%Y-%m-%d_%H-%M-%S')#+'___'+notes
+        file_name = time.strftime('%Y-%m-%d_%H-%M-%S')
         lf['recent_file'] = file_name
         lf['file_list'].append(file_name+'.csv')
         # pass location of saved file
@@ -195,15 +193,16 @@ def plot_raman_files_from_selection(lf):
     fig = plt.figure(1)
     fig.clf()
     
-    
-    if len(list(d['labels'])) < 2:
+    if len(list(d['labels'])) == 0:
+        lf['outbox'].append('No spectra selected.')
+    if len(list(d['labels'])) == 1:
         plt.plot(d['wavelength'], d['spec_mat'], lw=1)
         plot_setup(
             labels=('Wavelength (nm)', 'Intensity (counts)'),
             legend=False)
         fig.canvas.set_window_title('Raman spectra')
         plt.draw()
-    else:
+    if len(list(d['labels'])) > 1:
         for i in range(np.shape(d['spec_mat'])[1]):
             plt.plot(
                 d['wavelength'], d['spec_mat'][:, i],
@@ -237,18 +236,54 @@ def plot_raman_files_from_selection(lf):
 
     
 
+def plot_grid_intensity(lf):
+    """Plot max raman intensity across the sampled grid."""
+    # get report which matches raman spectra with log file
+    d = create_raman_report(lf['logdir'], raman_dir=lf['raman_dir'])
+
+
+    # plot max intensity across grid
+    plt.ion()
+    fig = plt.figure(3)
+    fig.clf()
+    plt.scatter(d['log']['x_position'],
+                d['log']['y_position'],
+                s=d['log']['max_intensity']/50)
+    plot_setup(colorbar=False, legend=False,
+               title='Max. Raman intensity accross grid',
+            labels=('X position (cm)', 'Y position (cm)'))
+    fig.canvas.set_window_title('Max. Raman intensity across grid')
+    plt.draw()
 
 
 
-
-
-
-
-
-
-
-
-
+def create_raman_report(
+        logfilename, raman_dir='C:\\Users\\Administrator\\Documents\\'
+                                'LightField\\csv_files'):
+    """Create a dictionary which holds all Raman data and metadata from
+    an experiment. The inputs should be the filename of the log file,
+    and the directory in which Raman data is stored in .csv form."""
+    # read log file
+    log = pd.read_csv(logfilename)
+    # create dictionary to hold all results, metadata, and statistics
+    d = {'df': {}, 'log': log}
+    max_int_list = []
+    max_int_wl_list = []
+    
+    # loop over each raman file and save to dictionary
+    for ri, r in enumerate(log['recent_raman_file']):
+        # read raman data file
+        df = pd.read_csv(os.path.join(raman_dir, r+'.csv'),
+                         usecols=['Wavelength', 'Intensity'])
+        # rename columns and add dataframe to dictionary
+        df.columns = ['wl', 'int']
+        d['df'][r] = df 
+        # calculate some statistics and add to dictionary
+        max_int_list.append(float(df['int'].max()))
+        max_int_wl_list.append(float(df['wl'].iloc[df['int'].idxmax()]))
+    d['log']['max_intensity'] = max_int_list
+    d['log']['max_intensity_wavelength'] = max_int_wl_list
+    return d 
 
 
 

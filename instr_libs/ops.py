@@ -68,7 +68,7 @@ def log_to_file(ops, srs, lf, kcube, mcl):
     d = get_log_row_data(srs, lf, kcube, mcl)
     # assign most recent row to last row in log data
     ops['data'][ops['row_counter']] = list(d.values())
-    # convert log dtaa to Pandas DataFrame
+    # convert log data to Pandas DataFrame
     df = pd.DataFrame(columns=list(d.keys()), data=ops['data'])
     # remove empty rows before saving
     df.replace('', np.nan, inplace=True)
@@ -77,6 +77,8 @@ def log_to_file(ops, srs, lf, kcube, mcl):
     df.to_csv(ops['logpath'], index=False)
     ops['outbox'].append('Log file appended.')
     ops['row_counter'] += 1
+    # enable plotting Raman intensity across the grid
+    #lf['plot_grid_intensity'].setEnabled(True)
 
 
 

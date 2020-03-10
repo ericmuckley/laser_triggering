@@ -22,7 +22,7 @@ def enable_piline(piline, enable):
     """Enable/disable GUI widgets related to the PI
     PILine C-1867 rotation controller."""
     piline['address'].setEnabled(not enable)
-    items = ['set', 'display', 'seq', 'initial',
+    items = ['set', 'display', 'seq', 'initial', 'seq',
              'set_now', 'final', 'steps', 'preview']
     [piline[i].setEnabled(enable) for i in items]
 
@@ -44,6 +44,7 @@ def piline_on(piline):
             piline['outbox'].append('PI C-867 could not connect.')
             piline['dev'] = None
             piline['on'].setChecked(False)
+            piline['seq'].setChecked(False)
     if not piline['on'].isChecked():
         try:
             piline['dev'].close()
@@ -54,6 +55,7 @@ def piline_on(piline):
         piline['dev'] = None
         piline['display'].setText('---')
         piline['on'].setChecked(False)
+        piline['seq'].setChecked(False)
 
 
 def initialize(piline):

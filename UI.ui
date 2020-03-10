@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>806</width>
-    <height>919</height>
+    <height>874</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -124,11 +124,15 @@ background: rgb(85, 255, 125);}
 
 
 
-QLineEdit::disabled, QSpinBox::disabled, QDoubleSpinBox::disabled, QPushButton::disabled, QRadioButton::disabled, QCheckBox::indicator::disabled{
+QLineEdit::disabled,
+QSpinBox::disabled,
+QLabel::disabled,
+QDoubleSpinBox::disabled,
+QPushButton::disabled,
+QRadioButton::disabled,
+QCheckBox::indicator::disabled{
 background: rgb(70, 70, 70);
-color: white}
-QLabel::disabled{
-color: white;}
+color: black}
 QCheckBox::indicator::checked::disabled{
 background: rgb(85, 255, 125);
 border: 1px solid black;}
@@ -335,9 +339,9 @@ box-shape: plain;
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>610</y>
+      <y>570</y>
       <width>521</width>
-      <height>241</height>
+      <height>271</height>
      </rect>
     </property>
     <property name="font">
@@ -351,10 +355,10 @@ box-shape: plain;
     <widget class="QTextBrowser" name="outbox">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>10</x>
        <y>30</y>
-       <width>481</width>
-       <height>191</height>
+       <width>501</width>
+       <height>231</height>
       </rect>
      </property>
      <property name="font">
@@ -371,12 +375,12 @@ box-shape: plain;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Welcome to the laser triggering application. To connect to an instrument, input the instrument's address and select the square checkbox next to that instrument's name. &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;This is an application for automated laser triggering, stage control, and Raman acquisition. To connect to an instrument, navigate to the panel for that instrument, input the instrument's address, and select the checkbox next to the address field. To check whether an instrument address is available, navigate to &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;Menu&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; -&amp;gt;&lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt; Show avilable instrument ports&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;. The availble addresses will be printed in this box.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;To acquire Raman spectra, first launch LightField software using the &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Launch LF&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; button. Once LightField has loaded, open the &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;Default_Python_Experiment&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; in LightField. Then acquire spectra using the &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Acquire&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; button above.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;For more information, navigate to Help -&amp;gt; Show help.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;--------------------------------------------------------------------&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;To begin an automated experimental procedure, use settings in the &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;Experimental Sequence&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; panel. For more information, navigate to &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;Help&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; -&amp;gt; &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;Show help&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;. Full code and documentaion for this application are available at: &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;http://github.com/ericmuckley/laser_triggering&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; --------------------------------------------------------------------------------------------------------------&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </widget>
@@ -414,7 +418,24 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lf_notes_label">
+        <property name="text">
+         <string>File notes</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="1">
+       <widget class="QPushButton" name="launch_lf">
+        <property name="text">
+         <string>Launch LF</string>
+        </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
        <widget class="QPushButton" name="acquire_raman">
         <property name="text">
          <string>Acquire</string>
@@ -426,23 +447,6 @@ p, li { white-space: pre-wrap; }
          <bool>false</bool>
         </property>
         <property name="flat">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="lf_notes_label">
-        <property name="text">
-         <string>File notes</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QPushButton" name="launch_lf">
-        <property name="text">
-         <string>Launch LF</string>
-        </property>
-        <property name="default">
          <bool>false</bool>
         </property>
        </widget>
@@ -724,7 +728,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>530</x>
-      <y>170</y>
+      <y>150</y>
       <width>261</width>
       <height>121</height>
      </rect>
@@ -820,14 +824,14 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QGroupBox" name="groupBox_thorlabs">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>170</y>
+      <y>150</y>
       <width>241</width>
-      <height>411</height>
+      <height>401</height>
      </rect>
     </property>
     <property name="title">
@@ -839,7 +843,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>201</width>
-       <height>351</height>
+       <height>361</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="polarizer_grid">
@@ -1080,7 +1084,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>480</y>
+      <y>470</y>
       <width>231</width>
       <height>371</height>
      </rect>
@@ -1403,7 +1407,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>530</x>
-      <y>320</y>
+      <y>290</y>
       <width>261</width>
       <height>261</height>
      </rect>
@@ -1417,7 +1421,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>221</width>
-       <height>221</height>
+       <height>224</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="piline_grid_layout">
@@ -1656,6 +1660,8 @@ p, li { white-space: pre-wrap; }
     <addaction name="plot_spectra"/>
     <addaction name="separator"/>
     <addaction name="select_spectra"/>
+    <addaction name="separator"/>
+    <addaction name="grid_intensity"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuData"/>
@@ -1716,6 +1722,11 @@ p, li { white-space: pre-wrap; }
     <string>Select Raman spectra</string>
    </property>
   </action>
+  <action name="grid_intensity">
+   <property name="text">
+    <string>Plot max intensity across grid</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>set_seq_cycles</tabstop>
@@ -1747,8 +1758,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>mcl_grid_y_steps</tabstop>
   <tabstop>preview_grid_cords</tabstop>
   <tabstop>raman_filename_notes</tabstop>
-  <tabstop>launch_lf</tabstop>
-  <tabstop>acquire_raman</tabstop>
   <tabstop>polarizer_on</tabstop>
   <tabstop>polarizer_address</tabstop>
   <tabstop>polarizer_set</tabstop>

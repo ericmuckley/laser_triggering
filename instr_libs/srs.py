@@ -33,6 +33,7 @@ def pulsegen_on(srs):
             srs['on'].setChecked(False)
             enable_srs(srs, False)
             srs['dev'] = None
+            srs['seq_laser_trigger'].setChecked(False)
     if not srs['on'].isChecked():
         try:
             srs['dev'].close()
@@ -42,6 +43,7 @@ def pulsegen_on(srs):
         srs['outbox'].append('Pulse generator closed.')
         srs['on'].setChecked(False)
         enable_srs(srs, False)
+        srs['seq_laser_trigger'].setChecked(False)
   
     
 def enable_srs(srs, enable):

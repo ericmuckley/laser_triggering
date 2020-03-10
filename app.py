@@ -76,11 +76,6 @@ class App(QMainWindow):
         # initialize multithreading
         self.threadpool = QtCore.QThreadPool()
 
-        # create timer which updates fields on GUI (set interval in ms)
-        #self.timer = QtCore.QTimer(self)
-        #self.timer.timeout.connect(self.update_gui_thread)
-        #self.timer.start(500)
-
         # assign actions to top menu items
         # example: self.ui.menu_item_name.triggered.connect(self.func_name)
         self.ui.quit_app.triggered.connect(self.quitapp)
@@ -93,6 +88,7 @@ class App(QMainWindow):
         self.ui.export_settings.triggered.connect(self.export_settings)
         self.ui.import_settings.triggered.connect(self.import_settings)
         self.ui.select_spectra.triggered.connect(self.select_spectra)
+        self.ui.grid_intensity.triggered.connect(self.grid_intensity)
         
         # assign actions to GUI buttons
         # example: self.ui.BUTTON_NAME.clicked.connect(self.FUNCTION_NAME)
@@ -132,6 +128,13 @@ class App(QMainWindow):
         self.logdir = self.filedir + '\\logs\\'
         if not os.path.exists(self.logdir):
             os.makedirs(self.logdir)
+        self.raman_path = 'C:\\Users\\Administrator\\Documents\\LightField\\'
+        self.raman_folder = 'csv_files'
+        self.raman_dir = self.raman_path + self.raman_folder
+        if not os.path.exists(self.raman_dir):
+            os.makedirs(self.raman_dir)
+            
+            
         self.starttime = time.strftime('%Y-%m-%d_%H-%M-%S')    
         
         # information related to operations of the application
@@ -184,12 +187,15 @@ class App(QMainWindow):
         # information related to Princeton Instruments LightField software
         self.lf = {
                 'app': None,
-                'recent_file': None,
                 'file_list': [],
+                'recent_file': None,
+                'logdir': self.logdir,
                 'outbox': self.ui.outbox,
+                'raman_dir': self.raman_dir,
                 'acquire': self.ui.acquire_raman,
                 'notes': self.ui.raman_filename_notes,
-                'seq': self.ui.seq_raman_acquisition}
+                'seq': self.ui.seq_raman_acquisition,
+                'plot_grid_intensity': self.ui.grid_intensity,}
 
         # information related to Thorlabs K-Cube KDC101 rotation controllers
         self.kcube = {
@@ -258,11 +264,12 @@ class App(QMainWindow):
         mso.enable_mso(self.mso, False)
         piline.enable_piline(self.piline, False)
         avacs.enable_avacs(self.avacs, False)
-        self.items_to_deactivate = [
+        self.items_to_disable = [
                 self.ui.abort_seq,
                 self.ui.acquire_raman,
+                self.ui.grid_intensity,
                 self.ui.seq_raman_acquisition]
-        [i.setEnabled(False) for i in self.items_to_deactivate]
+        [i.setEnabled(False) for i in self.items_to_disable]
 
 
 
@@ -562,6 +569,11 @@ class App(QMainWindow):
         format as specified by the Default_Python_Experiment file
         in LightField."""
         lf.plot_file_list(self.lf)
+        
+    def grid_intensity(self):
+        """Plot maximum Raman instensity across the sampled grid."""
+        lf.plot_grid_intensity(self.lf)
+
 
     # %% ========= Tektronix MSO64 mixed signal oscilloscope ==============
 
@@ -661,8 +673,6 @@ class App(QMainWindow):
             self.piline['dev'].close()
         # kill the process which opens LightField if its already running
         os.system("taskkill /f /im AddInProcess.exe")
-        # stop timer
-        #self.timer.stop()
         # close app window
         self.deleteLater()
         self.close()

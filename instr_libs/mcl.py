@@ -43,24 +43,23 @@ def enable_stage(mcl, enabled):
 def stage_on(mcl):
     "Run this function when MCL-3 stage checkbox is checked."""
     if mcl['on'].isChecked():
-        #try:
-        dev = serial.Serial(
-                port=mcl['address'].text(),
-                timeout=1,
-                stopbits=serial.STOPBITS_TWO)
-        mcl['dev'] = dev
-        mcl['outbox'].append('Configuring Marzhauser MCL-3 stage...')
-        clear_stage_buffer(dev)
-        mcl['outbox'].append('Stage status: {}'.format(get_status(dev)))
-        x, y = get_x_pos(mcl['dev']), get_y_pos(mcl['dev'])
-        mcl['show_x'].setText(str(x))
-        mcl['show_y'].setText(str(y))
-        mcl['set_x'].setValue(float(x))
-        mcl['set_y'].setValue(float(y))
-        set_now(mcl)
-        enable_stage(mcl, True)
-        mcl['outbox'].append('Marzhauser MCL-3 stage connected.')
-        '''
+        try:
+            dev = serial.Serial(
+                    port=mcl['address'].text(),
+                    timeout=1,
+                    stopbits=serial.STOPBITS_TWO)
+            mcl['dev'] = dev
+            mcl['outbox'].append('Configuring Marzhauser MCL-3 stage...')
+            clear_stage_buffer(dev)
+            mcl['outbox'].append('Stage status: {}'.format(get_status(dev)))
+            x, y = get_x_pos(mcl['dev']), get_y_pos(mcl['dev'])
+            mcl['show_x'].setText(str(x))
+            mcl['show_y'].setText(str(y))
+            mcl['set_x'].setValue(float(x))
+            mcl['set_y'].setValue(float(y))
+            set_now(mcl)
+            enable_stage(mcl, True)
+            mcl['outbox'].append('Marzhauser MCL-3 stage connected.')
         except:
             mcl['outbox'].append('Stage could not connect.')
             mcl['outbox'].append('Make sure it is "auto" mode.')
@@ -69,7 +68,7 @@ def stage_on(mcl):
             mcl['on'].setChecked(False)
             mcl['show_x'].setText('---')
             mcl['show_y'].setText('---')
-        '''
+            mcl['seq_mcl'].setChecked(False)
     if not mcl['on'].isChecked():
         try:
             mcl['dev'].close()
@@ -81,6 +80,7 @@ def stage_on(mcl):
         mcl['show_x'].setText('---')
         mcl['show_y'].setText('---')
         mcl['dev'] = None
+        mcl['seq_mcl'].setChecked(False)
 
 
 

@@ -53,11 +53,13 @@ def polarizer_on(kcube):
             kcube['p_on'].setChecked(False)
             kcube['pdev'] = None
             kcube['p_display'].setText('---')
+            kcube['seq_polarizer_rot'].setChecked(False)
     if not kcube['p_on'].isChecked():
         kcube['pdev'] = None
         enable_polarizer(kcube, False)
         kcube['p_on'].setChecked(False)
         kcube['p_display'].setText('---')
+        kcube['seq_polarizer_rot'].setChecked(False)
         kcube['outbox'].append('Polarizer controller closed.')
         
 
