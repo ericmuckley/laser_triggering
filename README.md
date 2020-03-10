@@ -30,6 +30,10 @@ These controllers cannot be found by the computer if the ```import thorlabs_apt 
 ## Connecting to Marzhauser MCL-3 stage controler
 Make sure the "Joystick" knob on the front panel of the MCL-3 is in the "Auto" position. In the "Man" position, serial communication is disabled.
 
+## Connecting to Laseroptik AVACS beam attenuator
+The AVACS beam atenuator will not communicate with the PC unless the *Mode* is set to *Remote* on the top panel of the AVACS unit. 
+
+
 ## Connecting to LightField
 To acquire Raman spectra using Princeton Instruments LightField software, LightField must be opened from the GUI by clicking **Launch LightField**. Once LightField loads, the user should load the LightField experiment called **Default Python Experiment**. After the experiment is loaded, settings can be modified in LightField. Raman spectra can be acquired by clicking the **Acquire Raman spectrum*** button the the GUI.
 
