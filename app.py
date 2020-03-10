@@ -82,13 +82,12 @@ class App(QMainWindow):
         self.ui.show_help.triggered.connect(ops.show_help)
         self.ui.set_filedir.triggered.connect(self.set_filedir)
         self.ui.print_ports.triggered.connect(self.print_ports)
-        self.ui.plot_spectra.triggered.connect(self.plot_file_list)
         self.ui.show_log_path.triggered.connect(self.show_log_path)
         self.ui.show_file_list.triggered.connect(self.show_file_list)
+        self.ui.select_spectra.triggered.connect(self.select_spectra)   
+        self.ui.generate_report.triggered.connect(self.generate_report)
         self.ui.export_settings.triggered.connect(self.export_settings)
         self.ui.import_settings.triggered.connect(self.import_settings)
-        self.ui.select_spectra.triggered.connect(self.select_spectra)
-        self.ui.grid_intensity.triggered.connect(self.grid_intensity)
         
         # assign actions to GUI buttons
         # example: self.ui.BUTTON_NAME.clicked.connect(self.FUNCTION_NAME)
@@ -99,23 +98,22 @@ class App(QMainWindow):
         self.ui.launch_lf.clicked.connect(self.launch_lf_thread)
         self.ui.scope_acquire.clicked.connect(self.scope_acquire)
         self.ui.acquire_raman.clicked.connect(self.acquire_raman)
+        self.ui.piline_preview.clicked.connect(self.piline_preview)
+        self.ui.mcl_set_now.clicked.connect(self.mcl_set_now_thread)
+        self.ui.analyzer_set_now.clicked.connect(self.a_set_now_thread)
+        self.ui.avacs_set_now.clicked.connect(self.avacs_set_now_thread)
+        self.ui.polarizer_set_now.clicked.connect(self.p_set_now_thread)
         self.ui.trigger_pulses.clicked.connect(self.trigger_pulses_thread)
+        self.ui.piline_set_now.clicked.connect(self.piline_set_now_thread)        
         self.ui.export_scope_trace.clicked.connect(self.export_scope_trace)
         self.ui.preview_grid_cords.clicked.connect(self.preview_grid_cords)
-        self.ui.piline_set_now.clicked.connect(self.piline_set_now_thread)
-        self.ui.piline_preview.clicked.connect(self.piline_preview)
-        self.ui.avacs_set_now.clicked.connect(self.avacs_set_now_thread)
-        self.ui.mcl_set_now.clicked.connect(self.mcl_set_now_thread)
-        self.ui.polarizer_set_now.clicked.connect(self.p_set_now_thread)
-        self.ui.analyzer_set_now.clicked.connect(self.a_set_now_thread)
-
 
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
         self.ui.mso_on.stateChanged.connect(self.mso_on)
         self.ui.mcl_on.stateChanged.connect(self.mcl_on_thread)
-        self.ui.avacs_on.stateChanged.connect(self.avacs_on_thread)
         self.ui.pulsegen_on.stateChanged.connect(self.pulsegen_on)
+        self.ui.avacs_on.stateChanged.connect(self.avacs_on_thread)
         self.ui.piline_on.stateChanged.connect(self.piline_on_thread)
         
         # assign actions to user input fields (text and numeric)
@@ -124,13 +122,11 @@ class App(QMainWindow):
         
 
         # intialize log file for logging experimental settings
-        self.filedir = os.getcwd()
-        self.logdir = self.filedir + '\\logs\\'
+        self.logdir = os.path.join(os.getcwd(), 'logs\\')
         if not os.path.exists(self.logdir):
             os.makedirs(self.logdir)
         self.raman_path = 'C:\\Users\\Administrator\\Documents\\LightField\\'
-        self.raman_folder = 'csv_files'
-        self.raman_dir = self.raman_path + self.raman_folder
+        self.raman_dir = os.path.join(self.raman_path, 'csv_files\\')
         if not os.path.exists(self.raman_dir):
             os.makedirs(self.raman_dir)
             
@@ -142,8 +138,8 @@ class App(QMainWindow):
                 'app': self.ui,
                 'row_counter': 0,
                 'logdir': self.logdir,
-                'filedir': self.filedir,
                 'outbox': self.ui.outbox,
+                'raman_dir': self.raman_dir,
                 'starttime': self.starttime,
                 'gui_update_finished': True,
                 'data': np.full((1000, 11), '', dtype=object),
@@ -194,8 +190,7 @@ class App(QMainWindow):
                 'raman_dir': self.raman_dir,
                 'acquire': self.ui.acquire_raman,
                 'notes': self.ui.raman_filename_notes,
-                'seq': self.ui.seq_raman_acquisition,
-                'plot_grid_intensity': self.ui.grid_intensity,}
+                'seq': self.ui.seq_raman_acquisition}
 
         # information related to Thorlabs K-Cube KDC101 rotation controllers
         self.kcube = {
@@ -267,35 +262,10 @@ class App(QMainWindow):
         self.items_to_disable = [
                 self.ui.abort_seq,
                 self.ui.acquire_raman,
-                self.ui.grid_intensity,
                 self.ui.seq_raman_acquisition]
         [i.setEnabled(False) for i in self.items_to_disable]
 
 
-
-    # %% ============ PI C-867 PILine rotation controller ================
-
-    def piline_on(self):
-        """Checkbox for piline is checked/unchecked."""
-        piline.piline_on(self.piline)
-
-    def piline_on_thread(self):
-        """Connect to PI C-867 PILine in a new thread."""
-        worker = Worker(self.piline_on)  # pass other args here
-        self.threadpool.start(worker)
-
-    def piline_set_now_thread(self):
-        """Move the piline stage in a new thread."""
-        worker = Worker(self.piline_set_now)  # pass other args here
-        self.threadpool.start(worker)
-
-    def piline_set_now(self):
-        """Move the piline stage."""
-        piline.move(self.piline)
-        
-    def piline_preview(self):
-        """Get preview of sequence of angles to sample."""
-        piline.preview_angles(self.piline)
 
     # %% ======= experimental sequence control functions =================
 
@@ -347,8 +317,7 @@ class App(QMainWindow):
                         time.sleep(0.1)
                         self.acquire_raman()
             
-                    # save information to the log file
-                    self.log_to_file()
+
                     
                     # pause a few seconds between cycles
                     time.sleep(self.ui.pause_between_cycles.value())
@@ -485,6 +454,31 @@ class App(QMainWindow):
         self.abort_seq = True
 
 
+    # %% ============ PI C-867 PILine rotation controller ================
+
+    def piline_on(self):
+        """Checkbox for piline is checked/unchecked."""
+        piline.piline_on(self.piline)
+
+    def piline_on_thread(self):
+        """Connect to PI C-867 PILine in a new thread."""
+        worker = Worker(self.piline_on)  # pass other args here
+        self.threadpool.start(worker)
+
+    def piline_set_now_thread(self):
+        """Move the piline stage in a new thread."""
+        worker = Worker(self.piline_set_now)  # pass other args here
+        self.threadpool.start(worker)
+
+    def piline_set_now(self):
+        """Move the piline stage."""
+        piline.move(self.piline)
+        
+    def piline_preview(self):
+        """Get preview of sequence of angles to sample."""
+        piline.preview_angles(self.piline)
+
+
     # %% ============ Marzhauser MCL-3 stage controller ==================    
 
 
@@ -563,16 +557,8 @@ class App(QMainWindow):
     def acquire_raman(self):
         """Acquire Raman spectra using an opened instance of LightField."""
         lf.acquire_raman(self.lf)
-
-    def plot_file_list(self):
-        """Plot the Raman acquisition spectra. They should be in csv
-        format as specified by the Default_Python_Experiment file
-        in LightField."""
-        lf.plot_file_list(self.lf)
-        
-    def grid_intensity(self):
-        """Plot maximum Raman instensity across the sampled grid."""
-        lf.plot_grid_intensity(self.lf)
+        # save metadata information to the log file
+        self.log_to_file()
 
 
     # %% ========= Tektronix MSO64 mixed signal oscilloscope ==============
@@ -626,8 +612,13 @@ class App(QMainWindow):
 
     # %% ============ system control functions =============================
 
+    def generate_report(self):
+        """Generate a report which links each Raman spectra with its
+        metadata which is stored in the log file."""
+        ops.generate_report(self.ops)
+
     def set_filedir(self):
-        # set the directory for saving data files
+        """Change the directory for saving log data files."""
         self.ops['logdir'] = str(QFileDialog.getExistingDirectory(
                 self, 'Create or select directory for data files.'))
         self.ui.outbox.append('Save file directory set to:')

@@ -8,6 +8,7 @@ Created on Mon Feb 17 16:44:03 2020
 @author: ericmuckley@gmail.com
 """
 
+import json
 import os
 import numpy as np
 import time
@@ -16,11 +17,44 @@ import pandas as pd
 import inspect
 import thorlabs_apt as apt
 from serial.tools import list_ports
-from PyQt5.QtWidgets import QLabel, QComboBox, QLineEdit, QSlider
+from PyQt5.QtWidgets import QLabel, QComboBox, QLineEdit, QSlider, QFileDialog
 from PyQt5.QtWidgets import QSpinBox, QDoubleSpinBox, QCheckBox, QRadioButton
 from PyQt5.QtCore import QSettings
 import markdown
 import webbrowser
+import matplotlib.pyplot as plt
+from matplotlib import cm
+
+
+plt.rcParams['xtick.labelsize'] = 14
+plt.rcParams['ytick.labelsize'] = 14
+plt.rcParams['axes.linewidth'] = 3
+plt.rcParams['xtick.minor.width'] = 3
+plt.rcParams['xtick.major.width'] = 3
+plt.rcParams['ytick.minor.width'] = 3
+plt.rcParams['ytick.major.width'] = 3
+plt.rcParams['figure.autolayout'] = True
+
+
+def plot_setup(labels=['X', 'Y'], fsize=14, setlimits=False,
+               title=None, legend=True, limits=(0,1,0,1), colorbar=False):
+    """Creates a custom plot configuration to make graphs look nice.
+    This can be called with matplotlib for setting axes labels,
+    titles, axes ranges, and the font size of plot labels.
+    This should be called between plt.plot() and plt.show() commands."""
+    plt.xlabel(str(labels[0]), fontsize=fsize)
+    plt.ylabel(str(labels[1]), fontsize=fsize)
+    #fig = plt.gcf()
+    #fig.set_size_inches(6, 4)
+    if title:
+        plt.title(title, fontsize=fsize)
+    if legend:
+        plt.legend(fontsize=fsize-4)
+    if setlimits:
+        plt.xlim((limits[0], limits[1]))
+        plt.ylim((limits[2], limits[3]))
+    if colorbar:
+        plt.colorbar()
 
 
 
@@ -38,12 +72,102 @@ def show_help():
     webbrowser.open(html_filename)
 
 
-
-
-
 def show_log_path(ops):
     """Show the path to the log file."""
     ops['outbox'].append('Log file path: %s' %(ops['logpath']))
+
+
+
+def generate_report(ops):
+    """Generate a report which links each Raman spectra with its metadata
+    which is stored in the log file."""
+    # read log file
+    #log = pd.read_csv(ops['logpath'])
+    
+    # prompt user to ask for log file
+    #default_dir = 
+    logpath = QFileDialog.getOpenFileName(
+                caption='Select log file', filter='CSV (*.csv)',
+                directory=ops['logdir'])[0]
+    log = pd.read_csv(logpath)
+    ops['selected_logname'] = os.path.split(logpath)[1].split('.')[0]
+    # create dictionary to hold all results, metadata, and statistics
+    d = {'df': {}, 'log': log}
+    max_int_list = []
+    max_int_wl_list = []
+    
+    # loop over each raman file and save to dictionary
+    for ri, r in enumerate(log['recent_raman_file']):
+        # read raman data file
+        df = pd.read_csv(os.path.join(ops['raman_dir'], r+'.csv'),
+                         usecols=['Wavelength', 'Intensity'])
+        # rename columns and add dataframe to dictionary
+        df.columns = ['wl', 'int']
+        d['df'][r] = df 
+        # calculate some statistics and add to dictionary
+        max_int_list.append(float(df['int'].max()))
+        max_int_wl_list.append(float(df['wl'].iloc[df['int'].idxmax()]))
+    d['log']['max_intensity'] = max_int_list
+    d['log']['max_intensity_wavelength'] = max_int_wl_list
+    
+    ops['report'] = d
+    plot_spec_in_report(ops)
+    serialize(ops)
+    
+    
+def plot_spec_in_report(ops):
+    """Plot the spectra in a log report."""
+    # plot Raman spectra as lines
+    d = ops['report']
+    if len(d['log']) == 0:
+        ops['outbox'].append('No spectra selected.')
+    else:
+        plt.ion()
+        fig = plt.figure(5)
+        fig.clf()
+        colors = cm.jet(np.linspace(0, 1, len(d['log'])))
+        for ri, r in enumerate(d['df']):
+            plot_setup(
+                    colorbar=False, legend=False,
+                    title='Raman spectra',
+                    labels=('Wavelength (nm)', 'Intensity (counts)'))
+            plt.plot(d['df'][r]['wl'], d['df'][r]['int'],
+                     #label=r,
+                     c=colors[ri], lw=1)
+    
+    
+'''   
+    plt.scatter(d['log']['x_position'],
+                d['log']['y_position'],
+                s=d['log']['max_intensity']/50)
+    plot_setup(colorbar=False, legend=False,
+               title='Max. Raman intensity accross grid',
+            labels=('X position (cm)', 'Y position (cm)'))
+    fig.canvas.set_window_title('Max. Raman intensity across grid')
+    plt.draw()
+'''   
+    
+
+def serialize(ops):
+    """Serialize a dictionary containing pandas dataframes."""
+    filename = os.path.join(
+            ops['logdir'], ops['selected_logname']+'_report.json')
+    with open(filename, 'w') as fp:
+        json.dump(ops['report'], fp, cls=JSONEncoder)
+
+
+
+class JSONEncoder(json.JSONEncoder):
+    """Class for serializing pandas dataframes using JSON."""
+    def default(self, obj):
+        if hasattr(obj, 'to_json'):
+            return obj.to_json(orient='records')
+        return json.JSONEncoder.default(self, obj)
+
+
+
+    
+    
 
 
 def get_log_row_data(srs, lf, kcube, mcl):
@@ -75,10 +199,9 @@ def log_to_file(ops, srs, lf, kcube, mcl):
     df.dropna(how='all', inplace=True)
     # save dataframe as csv file
     df.to_csv(ops['logpath'], index=False)
-    ops['outbox'].append('Log file appended.')
+    ops['outbox'].append('Log file appended to {}'.format(ops['logpath']))
     ops['row_counter'] += 1
-    # enable plotting Raman intensity across the grid
-    #lf['plot_grid_intensity'].setEnabled(True)
+
 
 
 
@@ -222,37 +345,40 @@ def import_settings(ops, filepath):
             'Experiment settings imported from '+filepath)
 
 
+def load_json(filename):
+    """Load the json file report."""
+    with open(filename) as fp:
+        data = json.load(fp)
+    return data
+
+def load_report_from_json(filename):
+    """Load a Raman report in JSON format and convert to dataframes."""
+    # load json file
+    with open(filename) as fp:
+        report = json.load(fp)
+    # convert serialized data back to dataframes
+    if 'df' in report:
+        for r in report['df']:
+            report['df'][r] = pd.read_json(report['df'][r])
+    if 'log' in report:
+        report['log'] = pd.read_json(report['log'])
+    return report
+    
 
 
 
-'''
-
-def set_directory(self):
-    """Set the directory for saving files."""
-    self.filedir = str(QFileDialog.getExistingDirectory(
-            self, 'Select a directory for storing data'))
-    self.ui.outbox.append('File directory is set to ' + self.filedir)
-
-
-def show_directory(self):
-    """Show the file directory in the output box."""
-    self.ui.outbox.append('File directory is set to ' + self.filedir)
+if __name__ == '__main__':
+    filename = 'C:\\Users\\Administrator\\Desktop\\eric\\laser_triggering\\logs\\2020-03-10_16-37-27_report.json'
+    rep = load_report_from_json(filename)
 
 
 
-def plot_df_surf(self):
-    """Plot delta F surface."""
-    plt.cla()
-    fig_df = plt.figure(5)
-    plt.ion()
-    plt.contour(self.contours['mu_mesh'], self.contours['eta_mesh'],
-                self.contours['df_surf'], self.contours['df_exp'])
-    plt.contourf(self.contours['mu_mesh'], self.contours['eta_mesh'],
-                 self.contours['df_surf'], 50, cmap='rainbow')
-    self.plot_setup(title='Δf (Hz/cm^2)',
-               labels=['Log (μ) (Pa)', 'Log (η) (Pa s)'], colorbar=True)
-    plt.tight_layout()
-    fig_df.canvas.set_window_title('Δf surface')
-    fig_df.show()
 
-'''
+
+
+
+
+
+
+
+
