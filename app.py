@@ -263,174 +263,77 @@ class App(QMainWindow):
                 self.ui.acquire_raman,
                 self.ui.seq_raman_acquisition]
         [i.setEnabled(False) for i in self.items_to_disable]
-
-        
-        self.xx = [self.mcl['seq'],
-              self.piline['seq'],
-              self.kcube['seq_polarizer_rot']]
-        [x.setEnabled(True) for x in self.xx]
-        
         
 
     # %% ======= experimental sequence control functions =================
 
-
     def run_seq(self):
         """Run an experimental sequence."""
-        
         # get grid of experimental settings to sample during sequence
         g = self.initialize_sequence()
 
         # loop over each step in the experimental sequence
-        for i in range(len(g)):     
-        
+        for i in range(len(g)):  
+
             if self.abort_seq is True: break
             
             # move instruments to next settings specified by the grid
-            self.initilize_seq_step(i)
-                 
+            self.run_seq_step(i)
+            
             if self.abort_seq is True: break
-        
             # pause a few seconds between cycles
             time.sleep(self.ui.pause_between_cycles.value())
-    
         self.finalize_sequence()
-        
 
 
-
-    def initilize_seq_step(self, i):
-        """Initialize instrument settings for the next step in the
-        experimental sequence."""
+    def run_seq_step(self, i):
+        """Run the experiment at the current step in the experimental
+        sequence."""
         # get grid of settings to sample
         g = self.ops['seq_grid']
-
-        if g.iloc[i] == 0:
-            self.ui.outbox.append(
-                'Cycle {}/{}...'.format(i+1, g['cycle'].max())
+        current_cycle = 0
+        if g['cycle'].iloc[i] == 0:
+            self.ui.outbox.append('Initiating cycle {}/{}...'.format(
+                    0, int(g['cycle'].max())))
         elif g['cycle'].iloc[i] != g['cycle'].iloc[i-1]:
-            self.ui.outbox.append(
-                'Cycle {}/{}...'.format(i+1, g['cycle'].max())    
-        
-            if self.abort_seq is True:
-                break
-
+            current_cycle += 1
+            self.ui.outbox.append('Initiating cycle {}/{}...'.format(
+                    current_cycle, int(g['cycle'].max())))
         # move MCL-3 stage to specified grid location
         if self.ui.seq_mcl.isChecked():
             self.mcl['set_x'].setValue(g['x'].iloc[i])
-            self.mcl['set_y'].setValue(g['x'].iloc[y])
+            self.mcl['set_y'].setValue(g['y'].iloc[i])
             self.mcl_set_now()
             time.sleep(0.1)
             while self.mcl['busy']:
-            time.sleep(.5)
-        
-        # move PILine rotational stage controller to specified angle
+                time.sleep(0.5)
+        # move PILine rotation controller to specified angle
         if self.ui.seq_piline.isChecked():
             self.ui.piline_set.setValue(g['piline_deg'].iloc[i]) 
             time.sleep(0.1)
             self.piline_set_now()
             time.sleep(2)   
-
-
-    
+        # move K-Cube rotation controller to specified angle
+        if self.ui.seq_polarizer_rot.isChecked():
+            self.ui.polarizer_angle.setValue(g['kcube_deg'].iloc[i])
+            time.sleep(0.1)
+            self.polarizer_set_now()
+            while kcube.p_in_motion(self.kcube):
+                time.sleep(1)
         # acquire raman spectrum
         if self.ui.seq_raman_acquisition.isChecked():
-            time.sleep(0.1)
+            time.sleep(3)
             self.acquire_raman()
-
-        '''
-        if self.ui.seq_piline.isChecked():
-            piline_angles = piline.get_angles(self.piline)
-        
-            for angle in piline_angles:
-                
-                self.ui.piline_set.setValue(float(angle)) 
-                time.sleep(0.1)
-                self.piline_set_now()
-                
-                time.sleep(2)
-            
-        '''
-        
-        
-        '''
-        
-        # get MCL-3 stage grid coordinates
-        if self.ui.seq_mcl.isChecked():
-            grid = mcl.get_grid(self.mcl)
-            self.ui.outbox.append(str(grid))
-        else:
-            grid = np.array([[0,0]])
-            
-        
-        # loop over each location on the grid of stage positions
-        for gi, g in enumerate(grid):
-            self.ui.outbox.append(
-                'Setting grid position {}/{} ({})'.format(gi+1,len(grid),g))
-            
-            
-            # get x and y coordinates
-            x, y = g 
-            self.mcl['set_x'].setValue(x)
-            self.mcl['set_y'].setValue(y)
-            
-            time.sleep(10)
-            
-            
-            #  get polarizer angles or use current angle
-            if self.ui.seq_polarizer_rot.isChecked():
-                polarizer_angles = kcube.get_angles(self.kcube)
-            else:
-                polarizer_angles = [self.ui.polarizer_angle.value()]
+        # trigger excimer laser pulses from pulse generator
+        if self.ui.seq_laser_trigger.isChecked():
+            self.trigger_pulses()
+            time.sleep(0.1)
+            # acquire raman spectrum
+            if self.ui.seq_raman_acquisition.isChecked():
+                time.sleep(3)
+                self.acquire_raman()
+        ops.generate_report(ops, logpath=ops['logpath'])
     
-
-            if self.ui.seq_raman_acquisition.isChecked(): 
-                # loop over each polarizer angle and acquire initial Raman spectra
-                for a in polarizer_angles:
-                    if self.abort_seq is True:
-                        self.ui.outbox.append('Sequence aborted.')
-                        break
-                    if self.ui.seq_polarizer_rot.isChecked():
-                        self.ui.outbox.append('polarizer angle: {}'.format(a))
-                        self.ui.polarizer_angle.setValue(a)
-                        time.sleep(2)
-                        while kcube.p_in_motion(self.kcube):
-                            time.sleep(1)
-                    if self.ui.seq_raman_acquisition.isChecked():
-                        self.acquire_raman()
-                    self.log_to_file()
-                    time.sleep(self.ui.pause_between_cycles.value())
-    
-    
-    
-            # loop over each experimental cycle
-            tot_cycles = self.ui.set_seq_cycles.value()
-            for c in range(tot_cycles):  
-                self.ui.outbox.append('cycle {}/{}'.format(c+1, tot_cycles))
-                if self.abort_seq is True:
-                    break
-    
-                # trigger laser pulses from pulse generator
-                if self.ui.seq_laser_trigger.isChecked():
-                    self.trigger_pulses()
-                    time.sleep(0.1)
-    
-                # loop over each polarizer angle and acquire Raman spectrum
-                for a in polarizer_angles:
-                    if self.abort_seq is True:
-                        self.ui.outbox.append('Sequence aborted.')
-                        break
-                    if self.ui.seq_polarizer_rot.isChecked():
-                        self.ui.outbox.append('polarizer angle: {}'.format(a))
-                        self.ui.polarizer_angle.setValue(a)
-                        time.sleep(2)
-                        while kcube.p_in_motion(self.kcube):
-                            time.sleep(1)
-                    if self.ui.seq_raman_acquisition.isChecked():
-                        self.acquire_raman()
-                    self.log_to_file()
-                    time.sleep(self.ui.pause_between_cycles.value())
-                    '''
 
     def get_seq_grid(self):
         """Get grid of points to sample during the experimental sequence."""
@@ -465,6 +368,7 @@ class App(QMainWindow):
         if len(sweeps) > 2:  
             grid = grid[np.lexsort((grid[:, 2], grid[:, 1]))]
         griddf = pd.DataFrame(data=grid, columns=sweep_types)
+        griddf['cycle'] = griddf['cycle'].astype(int)
         self.ops['seq_grid'] = griddf
         return griddf
         
@@ -481,7 +385,14 @@ class App(QMainWindow):
             self.ui.pause_between_cycles, self.ui.seq_laser_trigger,
             self.ui.seq_polarizer_rot, self.ui.seq_raman_acquisition,
             self.ui.rotation_end, self.ui.rotation_start,
-            self.ui.rotation_steps, self.ui.seq_mcl]
+            self.ui.rotation_steps, self.ui.seq_mcl,
+            self.ui.pulse_delay, self.ui.pulse_number,
+            self.ui.pulse_amplitude, self.ui.pulse_width,
+            self.ui.mcl_grid_x_start, self.ui.mcl_grid_x_end,
+            self.ui.mcl_grid_y_start, self.ui.mcl_grid_y_end,
+            self.ui.mcl_grid_x_steps, self.ui.mcl_grid_y_steps,
+            self.ui.piline_initial, self.ui.piline_final,
+            self.ui.piline_steps]
         [i.setEnabled(enabled) for i in items]
         
     def initialize_sequence(self):
@@ -673,8 +584,8 @@ class App(QMainWindow):
 
     def generate_report(self):
         """Generate a report which links each Raman spectra with its
-        metadata which is stored in the log file."""
-        ops.generate_report(self.ops)
+        metadata which is stored in a log file selected by the user."""
+        ops.generate_report(self.ops, logpath=None)
 
     def set_filedir(self):
         """Change the directory for saving log data files."""

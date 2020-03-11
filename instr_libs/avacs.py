@@ -34,6 +34,7 @@ def avacs_on(avacs):
             set_now(avacs)
         except:  # serial.SerialException:
             avacs['outbox'].append('Attenuator could not connect.')
+            avacs['outbox'].append('Try setting *Remote* mode on the unit.')
             avacs['dev'] = None
             avacs['on'].setChecked(False)
             avacs['display'].setText('---')

@@ -78,41 +78,43 @@ def show_log_path(ops):
 
 
 
-def generate_report(ops):
+def generate_report(ops, logpath=None):
     """Generate a report which links each Raman spectra with its metadata
     which is stored in the log file."""
-    # read log file
-    #log = pd.read_csv(ops['logpath'])
-    
-    # prompt user to ask for log file
-    #default_dir = 
-    logpath = QFileDialog.getOpenFileName(
-                caption='Select log file', filter='CSV (*.csv)',
-                directory=ops['logdir'])[0]
-    log = pd.read_csv(logpath)
-    ops['selected_logname'] = os.path.split(logpath)[1].split('.')[0]
-    # create dictionary to hold all results, metadata, and statistics
-    d = {'df': {}, 'log': log}
-    max_int_list = []
-    max_int_wl_list = []
-    
-    # loop over each raman file and save to dictionary
-    for ri, r in enumerate(log['recent_raman_file']):
-        # read raman data file
-        df = pd.read_csv(os.path.join(ops['raman_dir'], r+'.csv'),
-                         usecols=['Wavelength', 'Intensity'])
-        # rename columns and add dataframe to dictionary
-        df.columns = ['wl', 'int']
-        d['df'][r] = df 
-        # calculate some statistics and add to dictionary
-        max_int_list.append(float(df['int'].max()))
-        max_int_wl_list.append(float(df['wl'].iloc[df['int'].idxmax()]))
-    d['log']['max_intensity'] = max_int_list
-    d['log']['max_intensity_wavelength'] = max_int_wl_list
-    
-    ops['report'] = d
-    plot_spec_in_report(ops)
-    serialize(ops)
+    # prompt user to ask for log file 
+    if logpath is None:
+        logpath = QFileDialog.getOpenFileName(
+                    caption='Select log file', filter='CSV (*.csv)',
+                    directory=ops['logdir'])[0]
+    try:
+        log = pd.read_csv(logpath)
+    except FileNotFoundError:
+        ops['outbox'].append('No log file selected.')
+        log = None
+    if log is not None:
+        ops['selected_logname'] = os.path.split(logpath)[1].split('.')[0]
+        # create dictionary to hold all results, metadata, and statistics
+        d = {'df': {}, 'log': log}
+        max_int_list = []
+        max_int_wl_list = []
+        
+        # loop over each raman file and save to dictionary
+        for ri, r in enumerate(log['recent_raman_file']):
+            # read raman data file
+            df = pd.read_csv(os.path.join(ops['raman_dir'], r+'.csv'),
+                             usecols=['Wavelength', 'Intensity'])
+            # rename columns and add dataframe to dictionary
+            df.columns = ['wl', 'int']
+            d['df'][r] = df 
+            # calculate some statistics and add to dictionary
+            max_int_list.append(float(df['int'].max()))
+            max_int_wl_list.append(float(df['wl'].iloc[df['int'].idxmax()]))
+        d['log']['max_intensity'] = max_int_list
+        d['log']['max_intensity_wavelength'] = max_int_wl_list
+        
+        ops['report'] = d
+        plot_spec_in_report(ops)
+        serialize(ops)
     
     
 def plot_spec_in_report(ops):

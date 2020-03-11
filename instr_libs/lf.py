@@ -112,8 +112,6 @@ def acquire_raman(lf):
         lf['outbox'].append(str(String.Format("{0} {1}", "Data saved to",
           experiment.GetValue(ExperimentSettings.
                               FileNameGenerationDirectory))))
-        # enable plotting Raman intensity across the grid
-        lf['plot_grid_intensity'].setEnabled(True)
     else:
         lf['outbox'].append('No LightField-compatible devices found.')
 
