@@ -142,16 +142,12 @@ def analyzer_set_now(kcube):
 
 
 
-
-
-
-
-def get_angle_steps(kcube):
+def get_angles(kcube):
     """Get angle steps from the GUI."""
-    return np.linspace(kcube['rotation_start'].value(),
-                       kcube['rotation_end'].value(),
-                       num=1+kcube['rotation_steps'].value()).astype(int)
-
+    angles = np.linspace(kcube['rotation_start'].value(),
+                         kcube['rotation_end'].value(),
+                         num=1+kcube['rotation_steps'].value())
+    return angles
 
 def p_in_motion(kcube):
     """Check if polarizer is still moving."""

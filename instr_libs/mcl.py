@@ -33,7 +33,7 @@ def print_ports():
 
 def enable_stage(mcl, enabled):
     """Enable/disable GUI objects related to the MCL stage."""
-    items = ['seq_mcl', 'set_x', 'set_y', 'grid_xf', 'show_x', 'show_y',
+    items = ['seq', 'set_x', 'set_y', 'grid_xf', 'show_x', 'show_y',
              'grid_yf', 'grid_xi', 'grid_yi', 'grid_xsteps', 'grid_ysteps',
              'preview_grid_cords', 'set_now']
     [mcl[i].setEnabled(enabled) for i in items]
@@ -68,7 +68,7 @@ def stage_on(mcl):
             mcl['on'].setChecked(False)
             mcl['show_x'].setText('---')
             mcl['show_y'].setText('---')
-            mcl['seq_mcl'].setChecked(False)
+            mcl['seq'].setChecked(False)
     if not mcl['on'].isChecked():
         try:
             mcl['dev'].close()
@@ -80,7 +80,7 @@ def stage_on(mcl):
         mcl['show_x'].setText('---')
         mcl['show_y'].setText('---')
         mcl['dev'] = None
-        mcl['seq_mcl'].setChecked(False)
+        mcl['seq'].setChecked(False)
 
 
 
@@ -104,17 +104,13 @@ def set_now(mcl):
     # move to new position 
     dx, dy = round(new_x-current_x, 2), round(new_y-current_y, 2)
     if dx != 0 or dy != 0:
-        
         move_by(mcl['dev'], int(dx*4000), int(dy*4000))
         clear_stage_buffer(mcl['dev'])
         time.sleep(1)
-        
         # wait until stage position has reached its setpoint
         while current_x != new_x or current_y != new_y:
-            
             current_x = get_x_pos(mcl['dev'])
             current_y = get_y_pos(mcl['dev'])
-            
             time.sleep(1)
     mcl['outbox'].append('Stage at {}'.format((current_x, current_y)))
     mcl['show_x'].setText(str(current_x))
@@ -133,16 +129,20 @@ def preview_grid_cords(mcl):
 
 def get_grid(mcl):
     """Get grid coordinates from grid settings on GUI."""
+    x_cords, y_cords = get_sweep_cords(mcl)
+    grid_cords = np.array(np.meshgrid(x_cords, y_cords)).T.reshape(-1,2)
+    return grid_cords
+
+
+def get_sweep_cords(mcl):
+    """Get X-Y coordinates to sweep accross during sequence."""
     x_cords = np.linspace(mcl['grid_xi'].value(),
                           mcl['grid_xf'].value(),
                           mcl['grid_xsteps'].value()+1)
     y_cords = np.linspace(mcl['grid_yi'].value(),
                           mcl['grid_yf'].value(),
                           mcl['grid_ysteps'].value()+1)
-    grid_cords = np.array(np.meshgrid(x_cords, y_cords)).T.reshape(-1,2)
-    return grid_cords
-
-
+    return x_cords, y_cords
 
 
 def get_x_pos(dev):

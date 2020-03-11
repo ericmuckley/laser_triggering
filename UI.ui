@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>806</width>
-    <height>874</height>
+    <height>854</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -71,7 +71,7 @@ background: rgb(80, 80, 80);}
 
 
 QLineEdit, QSpinBox, QDoubleSpinBox {
-min-height: 18px;
+min-height: 16px;
 border-radius: 3px;
 background-color: rgb(100,100,100);
 border: 1px solid black;
@@ -82,7 +82,7 @@ border: 1px solid rgb(85, 255, 125);;
 
 QPushButton{
 color: white;
-min-height: 22px;
+min-height: 20px;
 min-width: 60px;
 border-radius: 3px;
 border: 1px solid black;
@@ -158,7 +158,7 @@ box-shape: plain;
       <x>20</x>
       <y>260</y>
       <width>231</width>
-      <height>201</height>
+      <height>191</height>
      </rect>
     </property>
     <property name="font">
@@ -178,7 +178,7 @@ box-shape: plain;
        <x>20</x>
        <y>30</y>
        <width>191</width>
-       <height>161</height>
+       <height>151</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="srs_grid">
@@ -339,7 +339,7 @@ box-shape: plain;
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>570</y>
+      <y>550</y>
       <width>521</width>
       <height>271</height>
      </rect>
@@ -390,7 +390,7 @@ p, li { white-space: pre-wrap; }
       <x>270</x>
       <y>20</y>
       <width>241</width>
-      <height>121</height>
+      <height>101</height>
      </rect>
     </property>
     <property name="font">
@@ -407,7 +407,7 @@ p, li { white-space: pre-wrap; }
        <x>10</x>
        <y>30</y>
        <width>211</width>
-       <height>81</height>
+       <height>51</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="a_grid">
@@ -454,7 +454,7 @@ p, li { white-space: pre-wrap; }
      </layout>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_seq">
+   <widget class="QGroupBox" name="groupBox_exp">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -463,7 +463,7 @@ p, li { white-space: pre-wrap; }
       <x>20</x>
       <y>20</y>
       <width>231</width>
-      <height>231</height>
+      <height>221</height>
      </rect>
     </property>
     <property name="font">
@@ -472,7 +472,7 @@ p, li { white-space: pre-wrap; }
      </font>
     </property>
     <property name="title">
-     <string>Experimental sequence</string>
+     <string>Experiment sequence</string>
     </property>
     <widget class="QWidget" name="gridLayoutWidget_2">
      <property name="geometry">
@@ -480,17 +480,10 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>191</width>
-       <height>191</height>
+       <height>161</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="7" column="0">
-       <widget class="QPushButton" name="run_seq">
-        <property name="text">
-         <string>Run</string>
-        </property>
-       </widget>
-      </item>
       <item row="4" column="0">
        <widget class="QLabel" name="p_rotation_label">
         <property name="text">
@@ -535,13 +528,6 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="text">
          <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="1">
-       <widget class="QPushButton" name="abort_seq">
-        <property name="text">
-         <string>Abort</string>
         </property>
        </widget>
       </item>
@@ -608,7 +594,7 @@ p, li { white-space: pre-wrap; }
       <item row="2" column="0">
        <widget class="QLabel" name="seq_laser_triggering_label">
         <property name="text">
-         <string>Laser triggering</string>
+         <string>Excimer triggering</string>
         </property>
        </widget>
       </item>
@@ -653,7 +639,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>221</width>
-       <height>82</height>
+       <height>81</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="scope_grid">
@@ -742,7 +728,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>221</width>
-       <height>82</height>
+       <height>81</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="avacs_grid">
@@ -829,9 +815,9 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>150</y>
+      <y>130</y>
       <width>241</width>
-      <height>401</height>
+      <height>411</height>
      </rect>
     </property>
     <property name="title">
@@ -1086,7 +1072,7 @@ p, li { white-space: pre-wrap; }
       <x>20</x>
       <y>470</y>
       <width>231</width>
-      <height>371</height>
+      <height>351</height>
      </rect>
     </property>
     <property name="title">
@@ -1098,7 +1084,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>191</width>
-       <height>331</height>
+       <height>311</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="mcl_grid">
@@ -1407,7 +1393,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>530</x>
-      <y>290</y>
+      <y>280</y>
       <width>261</width>
       <height>261</height>
      </rect>
@@ -1421,7 +1407,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>221</width>
-       <height>224</height>
+       <height>211</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="piline_grid_layout">
@@ -1661,8 +1647,19 @@ p, li { white-space: pre-wrap; }
     <addaction name="separator"/>
     <addaction name="select_spectra"/>
    </widget>
+   <widget class="QMenu" name="menuExperiment">
+    <property name="title">
+     <string>Experiment</string>
+    </property>
+    <addaction name="preview_seq"/>
+    <addaction name="separator"/>
+    <addaction name="run_seq"/>
+    <addaction name="separator"/>
+    <addaction name="abort_seq"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuData"/>
+   <addaction name="menuExperiment"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="print_ports">
@@ -1730,6 +1727,21 @@ p, li { white-space: pre-wrap; }
     <string>Generate report</string>
    </property>
   </action>
+  <action name="run_seq">
+   <property name="text">
+    <string>Start experiment</string>
+   </property>
+  </action>
+  <action name="abort_seq">
+   <property name="text">
+    <string>Abort sequence</string>
+   </property>
+  </action>
+  <action name="preview_seq">
+   <property name="text">
+    <string>Preview experiment</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>set_seq_cycles</tabstop>
@@ -1739,8 +1751,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>seq_polarizer_rot</tabstop>
   <tabstop>seq_mcl</tabstop>
   <tabstop>seq_piline</tabstop>
-  <tabstop>run_seq</tabstop>
-  <tabstop>abort_seq</tabstop>
   <tabstop>pulsegen_address</tabstop>
   <tabstop>pulsegen_on</tabstop>
   <tabstop>pulse_width</tabstop>

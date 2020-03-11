@@ -15,18 +15,16 @@ Created on Feb 3 2020
 
 """
 
-# --------------------- core GUI libraries --------------------------------
-
+# import python libraries
 import os
 import sys
 import time
 import numpy as np
-#import matplotlib.pyplot as plt
-from PyQt5 import QtWidgets, uic, QtCore  # , QtGui
+import pandas as pd
+from PyQt5 import QtWidgets, uic, QtCore
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
 
-# -------- import custom modules for controlling instruments ---------------
-
+# import custom modules for controlling instruments 
 from instr_libs import avacs  # Laseroptik AVACS beam attenuator
 from instr_libs import srs  # SRS DG645 digital delay pulse generator
 from instr_libs import mso  # Tektronix MSO64 oscilloscope
@@ -80,8 +78,11 @@ class App(QMainWindow):
         # example: self.ui.menu_item_name.triggered.connect(self.func_name)
         self.ui.quit_app.triggered.connect(self.quitapp)
         self.ui.show_help.triggered.connect(ops.show_help)
+        self.ui.abort_seq.triggered.connect(self.abort_seq)
+        self.ui.run_seq.triggered.connect(self.run_seq_thread)
         self.ui.set_filedir.triggered.connect(self.set_filedir)
         self.ui.print_ports.triggered.connect(self.print_ports)
+        self.ui.preview_seq.triggered.connect(self.preview_seq)
         self.ui.show_log_path.triggered.connect(self.show_log_path)
         self.ui.show_file_list.triggered.connect(self.show_file_list)
         self.ui.select_spectra.triggered.connect(self.select_spectra)   
@@ -91,8 +92,6 @@ class App(QMainWindow):
         
         # assign actions to GUI buttons
         # example: self.ui.BUTTON_NAME.clicked.connect(self.FUNCTION_NAME)
-        self.ui.abort_seq.clicked.connect(self.abort_seq)
-        self.ui.run_seq.clicked.connect(self.run_seq_thread)
         self.ui.analyzer_on.clicked.connect(self.analyzer_on)
         self.ui.polarizer_on.clicked.connect(self.polarizer_on)
         self.ui.launch_lf.clicked.connect(self.launch_lf_thread)
@@ -116,7 +115,7 @@ class App(QMainWindow):
         self.ui.avacs_on.stateChanged.connect(self.avacs_on_thread)
         self.ui.piline_on.stateChanged.connect(self.piline_on_thread)
         
-        # assign actions to user input fields (text and numeric)
+        # assign actions to value changes in text and numeric input fields
         # example: self.ui.TEXT_FIELD.textChanged.connect(self.FUNCTION_NAME)
         # example: self.ui.SPIN_BOX.valueChanged.connect(self.FUNCTION_NAME)      
         
@@ -217,8 +216,8 @@ class App(QMainWindow):
                'dev': None,
                'busy': False,
                'on': self.ui.mcl_on,
+               'seq': self.ui.seq_mcl,
                'outbox': self.ui.outbox,
-               'seq_mcl': self.ui.seq_mcl,
                'set_x': self.ui.mcl_set_x,
                'set_y': self.ui.mcl_set_y,
                'set_now': self.ui.mcl_set_now,
@@ -265,7 +264,13 @@ class App(QMainWindow):
                 self.ui.seq_raman_acquisition]
         [i.setEnabled(False) for i in self.items_to_disable]
 
-
+        
+        self.xx = [self.mcl['seq'],
+              self.piline['seq'],
+              self.kcube['seq_polarizer_rot']]
+        [x.setEnabled(True) for x in self.xx]
+        
+        
 
     # %% ======= experimental sequence control functions =================
 
@@ -273,27 +278,24 @@ class App(QMainWindow):
     def run_seq(self):
         """Run an experimental sequence."""
         
-        self.initialize_sequence()
-        tot_cycles = self.ui.set_seq_cycles.value()
-        
-        '''
-        x_cords = [1, 2, 3]
-        y_cords = [99, 100]
-        angles1 = [45, 90]
-        angles2 = [180, 181, 182]
-        
-        # assemble different sweeps to perform
-        sweeps = [x_cords, y_cords, angles1, angles2]
-        # create grid of coordinates to sample
-        grid = np.array(np.meshgrid(*sweeps)).T.reshape(-1, len(sweeps))
-        # sort coordinates by first two columns
-        grid = grid[np.lexsort((grid[:, 1], grid[:, 0]))]
-        
-        print(grid)
-        
-        df = pd.DataFrame(data=grid, columns=['x', 'y', 'angle1', 'angle2'])
-        '''
+        # get grid of experimental settings to sample during sequence
+        g, tot_cycles = self.initialize_sequence()
 
+        # loop over each experimental cycle
+        for c in range(tot_cycles):  
+            self.ui.outbox.append('Cycle {}/{}...'.format(c+1, tot_cycles))    
+        
+            if self.abort_seq is True:
+                break
+        
+            # move instruments to next settings specified by the grid
+            self.initilize_seq_step()
+        
+
+    def initilize_seq_step(self):
+        """Initialize instrument settings for the next step in the
+        experimental sequence."""
+        
         
         
         # get MCL-3 stage grid coordinates
@@ -304,10 +306,7 @@ class App(QMainWindow):
             grid = np.array([[float(self.mcl['show_x'].text()),
                               float(self.mcl['show_y'].text())]])        
         
-        # loop over each experimental cycle
-        for c in range(tot_cycles):  
-            self.ui.outbox.append(
-                    'starting cycle {}/{}...'.format(c+1, tot_cycles))
+
             
             
             
@@ -384,7 +383,7 @@ class App(QMainWindow):
             
             #  get polarizer angles or use current angle
             if self.ui.seq_polarizer_rot.isChecked():
-                polarizer_angles = kcube.get_angle_steps(self.kcube)
+                polarizer_angles = kcube.get_angles(self.kcube)
             else:
                 polarizer_angles = [self.ui.polarizer_angle.value()]
     
@@ -435,8 +434,43 @@ class App(QMainWindow):
                         self.acquire_raman()
                     self.log_to_file()
                     time.sleep(self.ui.pause_between_cycles.value())
-        '''
+                    '''
 
+    def get_seq_grid(self):
+        """Get grid of points to sample during the experimental sequence."""
+        # assemble list of lists to sweep across during sequence
+        sweeps = []
+        sweep_names = ['x', 'y', 'piline_deg', 'kcube_deg']
+        # coordinates to sweep if the instrument sequence box is checked
+        if self.mcl['seq'].isChecked():
+            x_cords, y_cords = mcl.get_sweep_cords(self.mcl)
+            sweeps += [x_cords, y_cords]
+        else:
+            sweeps += [[np.nan], [np.nan]]
+        if self.piline['seq'].isChecked():
+            piline_angles = piline.get_angles(self.piline)
+            sweeps += [[piline_angles]]
+        else:
+            sweeps += [[np.nan]]
+        if self.kcube['seq_polarizer_rot'].isChecked():
+            kcube_angles = kcube.get_angles(self.kcube)
+            sweeps += [[kcube_angles]]
+        else:
+            sweeps += [[np.nan]]
+        # create grid of coordinates to sample
+        grid = np.array(np.meshgrid(*sweeps)).T.reshape(-1, len(sweeps))
+        # sort sweep coordinates by first two columns
+        if len(sweeps) > 1:  
+            grid = grid[np.lexsort((grid[:, 1], grid[:, 0]))]
+        griddf = pd.DataFrame(data=grid, columns=sweep_names)
+        self.ops['seq_grid'] = griddf
+        return griddf
+        
+    def preview_seq(self):
+        """Preview the grid sweep which will occur during the sequence."""
+        griddf = self.get_seq_grid()
+        self.ui.outbox.append('Experimental sequence grid sweep:')
+        self.ui.outbox.append(griddf.to_string()) 
 
     def enable_during_seq(self, enabled):
         """Enable/disable GUI objects while a sequence is running."""
@@ -454,6 +488,9 @@ class App(QMainWindow):
         self.ui.abort_seq.setEnabled(True)
         self.enable_during_seq(False)
         self.ui.outbox.append('Sequence initiated')
+        g = self.get_seq_grid()
+        tot_cycles = self.ui.set_seq_cycles.value()
+        return g, tot_cycles
 
     def finalize_sequence(self):
         """Finalize settings when an experimental sequence ends."""
