@@ -279,69 +279,65 @@ class App(QMainWindow):
         """Run an experimental sequence."""
         
         # get grid of experimental settings to sample during sequence
-        g, tot_cycles = self.initialize_sequence()
+        g = self.initialize_sequence()
 
-        # loop over each experimental cycle
-        for c in range(tot_cycles):  
-            self.ui.outbox.append('Cycle {}/{}...'.format(c+1, tot_cycles))    
+        # loop over each step in the experimental sequence
+        for i in range(len(g)):     
         
-            if self.abort_seq is True:
-                break
-        
+            if self.abort_seq is True: break
+            
             # move instruments to next settings specified by the grid
-            self.initilize_seq_step()
+            self.initilize_seq_step(i)
+                 
+            if self.abort_seq is True: break
         
-
-    def initilize_seq_step(self):
-        """Initialize instrument settings for the next step in the
-        experimental sequence."""
-        
-        
-        
-        # get MCL-3 stage grid coordinates
-        if self.ui.seq_mcl.isChecked():
-            grid = mcl.get_grid(self.mcl)
-            self.ui.outbox.append('Grid to sample: {}'.format(grid))
-        else:
-            grid = np.array([[float(self.mcl['show_x'].text()),
-                              float(self.mcl['show_y'].text())]])        
-        
-
-            
-            
-            
-            if self.abort_seq is True:
-                break
-
-
-            # loop over each position across the X-Y grid
-            for g in grid:
-    
-                if self.ui.seq_mcl.isChecked():
-                    self.mcl['set_x'].setValue(g[0])
-                    self.mcl['set_y'].setValue(g[1])
-                    self.mcl_set_now()
-                    time.sleep(0.1)
-                    while self.mcl['busy']:
-                        
-                        if self.abort_seq is True:
-                            break
-    
-                        time.sleep(.5)
-    
-    
-                    # acquire raman spectrum
-                    if self.ui.seq_raman_acquisition.isChecked():
-                        time.sleep(0.1)
-                        self.acquire_raman()
-            
-
-                    
-                    # pause a few seconds between cycles
-                    time.sleep(self.ui.pause_between_cycles.value())
+            # pause a few seconds between cycles
+            time.sleep(self.ui.pause_between_cycles.value())
     
         self.finalize_sequence()
         
+
+
+
+    def initilize_seq_step(self, i):
+        """Initialize instrument settings for the next step in the
+        experimental sequence."""
+        # get grid of settings to sample
+        g = self.ops['seq_grid']
+
+        if g.iloc[i] == 0:
+            self.ui.outbox.append(
+                'Cycle {}/{}...'.format(i+1, g['cycle'].max())
+        elif g['cycle'].iloc[i] != g['cycle'].iloc[i-1]:
+            self.ui.outbox.append(
+                'Cycle {}/{}...'.format(i+1, g['cycle'].max())    
+        
+            if self.abort_seq is True:
+                break
+
+        # move MCL-3 stage to specified grid location
+        if self.ui.seq_mcl.isChecked():
+            self.mcl['set_x'].setValue(g['x'].iloc[i])
+            self.mcl['set_y'].setValue(g['x'].iloc[y])
+            self.mcl_set_now()
+            time.sleep(0.1)
+            while self.mcl['busy']:
+            time.sleep(.5)
+        
+        # move PILine rotational stage controller to specified angle
+        if self.ui.seq_piline.isChecked():
+            self.ui.piline_set.setValue(g['piline_deg'].iloc[i]) 
+            time.sleep(0.1)
+            self.piline_set_now()
+            time.sleep(2)   
+
+
+    
+        # acquire raman spectrum
+        if self.ui.seq_raman_acquisition.isChecked():
+            time.sleep(0.1)
+            self.acquire_raman()
+
         '''
         if self.ui.seq_piline.isChecked():
             piline_angles = piline.get_angles(self.piline)
@@ -440,7 +436,7 @@ class App(QMainWindow):
         """Get grid of points to sample during the experimental sequence."""
         # assemble list of lists to sweep across during sequence
         sweeps = []
-        sweep_names = ['x', 'y', 'piline_deg', 'kcube_deg']
+        sweep_types = ['cycle', 'x', 'y', 'piline_deg', 'kcube_deg']
         # coordinates to sweep if the instrument sequence box is checked
         if self.mcl['seq'].isChecked():
             x_cords, y_cords = mcl.get_sweep_cords(self.mcl)
@@ -458,11 +454,17 @@ class App(QMainWindow):
         else:
             sweeps += [[np.nan]]
         # create grid of coordinates to sample
-        grid = np.array(np.meshgrid(*sweeps)).T.reshape(-1, len(sweeps))
-        # sort sweep coordinates by first two columns
-        if len(sweeps) > 1:  
-            grid = grid[np.lexsort((grid[:, 1], grid[:, 0]))]
-        griddf = pd.DataFrame(data=grid, columns=sweep_names)
+        grid = np.array(np.meshgrid(*sweeps)).T.reshape(-1, len(sweeps))  
+        # total experimental cycles
+        tot_cycles = self.ui.set_seq_cycles.value()
+        # repeat grid for 'n' number of cycles
+        cycle_num_col = np.repeat(np.arange(tot_cycles), len(grid))
+        grid = np.tile(grid, (tot_cycles, 1))
+        grid = np.column_stack((cycle_num_col, grid))
+        # sort sweep coordinates by first two non-cycle-index columns
+        if len(sweeps) > 2:  
+            grid = grid[np.lexsort((grid[:, 2], grid[:, 1]))]
+        griddf = pd.DataFrame(data=grid, columns=sweep_types)
         self.ops['seq_grid'] = griddf
         return griddf
         
@@ -487,10 +489,10 @@ class App(QMainWindow):
         self.export_settings()
         self.ui.abort_seq.setEnabled(True)
         self.enable_during_seq(False)
+        self.ui.outbox.append('===========================================')
         self.ui.outbox.append('Sequence initiated')
         g = self.get_seq_grid()
-        tot_cycles = self.ui.set_seq_cycles.value()
-        return g, tot_cycles
+        return g
 
     def finalize_sequence(self):
         """Finalize settings when an experimental sequence ends."""
@@ -498,6 +500,7 @@ class App(QMainWindow):
         self.ui.abort_seq.setEnabled(False)
         self.enable_during_seq(True)
         self.ui.outbox.append('Sequence complete.')
+        self.ui.outbox.append('===========================================')
 
     def run_seq_thread(self):
         """Run sequence in a new thread."""
