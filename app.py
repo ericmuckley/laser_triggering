@@ -276,6 +276,25 @@ class App(QMainWindow):
         self.initialize_sequence()
         tot_cycles = self.ui.set_seq_cycles.value()
         
+        '''
+        x_cords = [1, 2, 3]
+        y_cords = [99, 100]
+        angles1 = [45, 90]
+        angles2 = [180, 181, 182]
+        
+        # assemble different sweeps to perform
+        sweeps = [x_cords, y_cords, angles1, angles2]
+        # create grid of coordinates to sample
+        grid = np.array(np.meshgrid(*sweeps)).T.reshape(-1, len(sweeps))
+        # sort coordinates by first two columns
+        grid = grid[np.lexsort((grid[:, 1], grid[:, 0]))]
+        
+        print(grid)
+        
+        df = pd.DataFrame(data=grid, columns=['x', 'y', 'angle1', 'angle2'])
+        '''
+
+        
         
         # get MCL-3 stage grid coordinates
         if self.ui.seq_mcl.isChecked():
