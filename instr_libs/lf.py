@@ -50,6 +50,7 @@ plt.rcParams['figure.autolayout'] = True
 
 def launch_lf(lf):
     """Launch LightField software."""
+    lf['outbox'].append('Opening LightField...')
     # kill the process which opens LightField if its already running
     #os.system("taskkill /f /im AddInProcess.exe")
     # create a C# compatible List of type String object
@@ -62,6 +63,8 @@ def launch_lf(lf):
     lf['acquire'].setEnabled(True)
     lf['notes'].setEnabled(True)
     lf['seq'].setEnabled(True)
+    lf['outbox'].append('LightField opened.')
+    lf['outbox'].append('Now load "Default_Python_Experiment" in Lightfield.')
 
 
 def device_found(experiment):
@@ -107,13 +110,18 @@ def acquire_raman(lf):
         lf['file_list'].append(file_name+'.csv')
         # pass location of saved file
         save_file(file_name, experiment)
+        time.sleep(0.2)
         # acquire image
         experiment.Acquire()
-        lf['outbox'].append(str(String.Format("{0} {1}", "Data saved to",
-          experiment.GetValue(ExperimentSettings.
-                              FileNameGenerationDirectory))))
+        time.sleep(0.2)
+        lf['outbox'].append('Raman data saved to:')
+        lf['outbox'].append(
+                str(experiment.GetValue(
+                        ExperimentSettings.FileNameGenerationDirectory)))
     else:
         lf['outbox'].append('No LightField-compatible devices found.')
+        lf['outbox'].append(
+                'Please load "Default_Python_Experiment" in Lightfield.')
 
 
 

@@ -34,8 +34,8 @@ def print_ports():
 def enable_stage(mcl, enabled):
     """Enable/disable GUI objects related to the MCL stage."""
     items = ['seq', 'set_x', 'set_y', 'grid_xf', 'show_x', 'show_y',
-             'grid_yf', 'grid_xi', 'grid_yi', 'grid_xsteps', 'grid_ysteps',
-             'preview_grid_cords', 'set_now']
+             'grid_yf', 'grid_xi', 'grid_yi', 'grid_xsteps',
+             'grid_ysteps','set_now']
     [mcl[i].setEnabled(enabled) for i in items]
     mcl['address'].setEnabled(not enabled)
 

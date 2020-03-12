@@ -14,7 +14,7 @@ from serial.tools import list_ports
 def enable_avacs(avacs, enabled):
     """Enable/disable GUI objects."""
     for i in avacs:
-        if i not in ['on', 'address', 'dev', 'outbox']:
+        if i not in ['on', 'address', 'dev', 'outbox', 'setpoint_str']:
             avacs[i].setEnabled(enabled)
     avacs['address'].setEnabled(not enabled)
     
@@ -31,9 +31,16 @@ def avacs_on(avacs):
             avacs['dev'] = dev
             # set unit in remote mode
             avacs['dev'].write('MR\r'.encode())
+            
+            # get current angle - just to see if an error will occur
+            avacs['dev'].write(('A450\r').encode())
+            angle_raw = avacs['dev'].read(11).decode()
+            round(float(angle_raw.split(';')[2])/10, 1)
+
+            set_now(avacs)
             enable_avacs(avacs, True)
             avacs['outbox'].append('Attenuator connected.')
-            set_now(avacs)
+
         except:  # serial.SerialException:
             avacs['outbox'].append('Attenuator could not connect.')
             avacs['outbox'].append('Try setting *Remote* mode on the unit.')
@@ -41,6 +48,7 @@ def avacs_on(avacs):
             avacs['on'].setChecked(False)
             avacs['display'].setText('---')
             enable_avacs(avacs, False)
+
     if not avacs['on'].isChecked():
         try:
             avacs['dev'].close()
@@ -58,6 +66,7 @@ def set_now(avacs):
     avacs['set_now'].setEnabled(False)
     avacs['set_percent_now'].setEnabled(False)
     avacs['display'].setText('moving')
+    avacs['display_percent'].setText('moving')
     # get set position from GUI
     setpoint = round(avacs['set'].value(), 1)
     avacs['set_percent'].setValue(angle_to_percent(setpoint))
@@ -74,7 +83,8 @@ def set_now(avacs):
         time.sleep(1)
         current_angle = get_current_angle(avacs)
     avacs['display'].setText(str(current_angle))
-    avacs['display_percent'].setText(str(angle_to_percent(current_angle)))
+    avacs['display_percent'].setText(str(
+            round(angle_to_percent(current_angle), 1)))
     avacs['outbox'].append('Attenuator set.')   
     avacs['set_now'].setEnabled(True)
     avacs['set_percent_now'].setEnabled(True)
@@ -130,7 +140,12 @@ def percent_to_angle(percent):
     """Convert attenuator percent power to angle with logistic function."""
     x0 = 28.1336
     k = -0.288186
-    L = 0.994308 
+    L = 1
+    # avoid dividing by zero nad negative log
+    if percent <= 0:
+        percent = 0.001
+    if percent >= 100:
+        percent = 0.99
     return x0 - np.log(100*L/percent - 1)/k
 
 

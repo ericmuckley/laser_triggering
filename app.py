@@ -23,6 +23,7 @@ import numpy as np
 import pandas as pd
 from PyQt5 import QtWidgets, uic, QtCore
 from PyQt5.QtWidgets import QMainWindow, QFileDialog
+from PyQt5.QtGui import QTextCursor
 
 # import custom modules for controlling instruments 
 from instr_libs import avacs  # Laseroptik AVACS beam attenuator
@@ -99,13 +100,12 @@ class App(QMainWindow):
         self.ui.acquire_raman.clicked.connect(self.acquire_raman)
         self.ui.mcl_set_now.clicked.connect(self.mcl_set_now_thread)
         self.ui.analyzer_set_now.clicked.connect(self.a_set_now_thread)
-        self.ui.avacs_set_pc_now.clicked.connect(self.avacs_set_pc_now)
         self.ui.avacs_set_now.clicked.connect(self.avacs_set_now_thread)
         self.ui.polarizer_set_now.clicked.connect(self.p_set_now_thread)
         self.ui.trigger_pulses.clicked.connect(self.trigger_pulses_thread)
         self.ui.piline_set_now.clicked.connect(self.piline_set_now_thread)        
         self.ui.export_scope_trace.clicked.connect(self.export_scope_trace)
-        
+        self.ui.avacs_set_pc_now.clicked.connect(self.avacs_set_pc_now_thread)
 
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
@@ -118,7 +118,7 @@ class App(QMainWindow):
         # assign actions to value changes in text and numeric input fields
         # example: self.ui.TEXT_FIELD.textChanged.connect(self.FUNCTION_NAME)
         # example: self.ui.SPIN_BOX.valueChanged.connect(self.FUNCTION_NAME)      
-        
+        self.ui.outbox.textChanged.connect(self.scroll_outbox)
 
         # intialize log file for logging experimental settings
         self.logdir = os.path.join(os.getcwd(), 'logs\\')
@@ -158,8 +158,8 @@ class App(QMainWindow):
                 'set_now': self.ui.avacs_set_now,
                 'display': self.ui.avacs_display,
                 'set_percent': self.ui.avacs_set_percent,
-                'display_percent': self.ui.avacs_display_percent,
-                'set_percent_now': self.ui.avacs_set_percent_now}
+                'set_percent_now': self.ui.avacs_set_pc_now,
+                'display_percent': self.ui.avacs_display_percent}
         
         # information related to SRS DG645 digital delay pulse generator
         self.srs = {
@@ -272,23 +272,6 @@ class App(QMainWindow):
 
     # %% ======= experimental sequence control functions =================
 
-    def run_seq(self):
-        """Run an experimental sequence."""
-        # get grid of experimental settings to sample during sequence
-        g = self.initialize_sequence()
-
-        # loop over each step in the experimental sequence
-        for i in range(len(g)):  
-
-            if self.abort_seq is True: break
-            
-            # move instruments to next settings specified by the grid
-            self.run_seq_step(i)
-            
-            if self.abort_seq is True: break
-            # pause a few seconds between cycles
-            time.sleep(self.ui.pause_between_cycles.value())
-        self.finalize_sequence()
 
 
     def run_seq_step(self, i):
@@ -296,14 +279,9 @@ class App(QMainWindow):
         sequence."""
         # get grid of settings to sample
         g = self.ops['seq_grid']
-        current_cycle = 0
-        if g['cycle'].iloc[i] == 0:
-            self.ui.outbox.append('Initiating cycle {}/{}...'.format(
-                    0, int(g['cycle'].max())))
-        elif g['cycle'].iloc[i] != g['cycle'].iloc[i-1]:
-            current_cycle += 1
-            self.ui.outbox.append('Initiating cycle {}/{}...'.format(
-                    current_cycle, int(g['cycle'].max())))
+        self.ui.outbox.append('---------------------------------------------')
+        self.ui.outbox.append('experiment step {}/{}...'.format(i+1, len(g)))
+
         # move MCL-3 stage to specified grid location
         if self.ui.seq_mcl.isChecked():
             self.mcl['set_x'].setValue(g['x'].iloc[i])
@@ -327,7 +305,7 @@ class App(QMainWindow):
                 time.sleep(1)
         # move AVACS beam attenuator to specified power
         if self.ui.seq_avacs.isChecked():
-            self.avacs['set_percent'].setValue(g['power'].iloc[i])
+            self.avacs['set_percent'].setValue(g['power_%'].iloc[i])
             self.avacs_set_pc_now()
             time.sleep(2)
 
@@ -335,6 +313,7 @@ class App(QMainWindow):
         if self.ui.seq_raman_acquisition.isChecked():
             time.sleep(3)
             self.acquire_raman()
+            time.sleep(3)
         # trigger excimer laser pulses from pulse generator
         if self.ui.seq_laser_trigger.isChecked():
             self.trigger_pulses()
@@ -343,14 +322,33 @@ class App(QMainWindow):
             if self.ui.seq_raman_acquisition.isChecked():
                 time.sleep(3)
                 self.acquire_raman()
-        ops.generate_report(ops, logpath=ops['logpath'])
-    
+                time.sleep(3)
+
+
+
+
+    def run_seq(self):
+        """Run an experimental sequence."""
+        # get grid of experimental settings to sample during sequence
+        g = self.initialize_sequence()
+        # loop over each step in the experimental sequence
+        for i in range(len(g)):  
+            if self.abort_seq is True: break
+            # move instruments to next settings specified by the grid
+            self.run_seq_step(i)
+            if self.abort_seq is True: break
+            # pause a few seconds between cycles
+            time.sleep(self.ui.pause_between_cycles.value())
+        self.finalize_sequence()
+        ops.generate_report(self.ops, logpath=self.ops['logpath'])
+   
 
     def get_seq_grid(self):
         """Get grid of points to sample during the experimental sequence."""
         # assemble list of lists to sweep across during sequence
         sweeps = []
-        sweep_types = ['cycle', 'x', 'y', 'power', 'piline_deg', 'kcube_deg']
+        sweep_types = ['cycle', 'x', 'y', 'power_%',
+                       'piline_deg', 'kcube_deg']
         
         # coordinates to sweep if the instrument sequence box is checked
         if self.mcl['seq'].isChecked():
@@ -422,7 +420,7 @@ class App(QMainWindow):
         self.ui.abort_seq.setEnabled(True)
         self.enable_during_seq(False)
         self.ui.outbox.append('===========================================')
-        self.ui.outbox.append('Sequence initiated')
+        self.ui.outbox.append('Experiment initiated')
         g = self.get_seq_grid()
         return g
 
@@ -431,7 +429,7 @@ class App(QMainWindow):
         self.abort_seq = False
         self.ui.abort_seq.setEnabled(False)
         self.enable_during_seq(True)
-        self.ui.outbox.append('Sequence complete.')
+        self.ui.outbox.append('Experiment complete.')
         self.ui.outbox.append('===========================================')
 
     def run_seq_thread(self):
@@ -464,6 +462,7 @@ class App(QMainWindow):
     def piline_set_now(self):
         """Move the piline stage."""
         piline.move(self.piline)
+        self.log_to_file()
 
 
     # %% ============ Marzhauser MCL-3 stage controller ==================    
@@ -477,6 +476,7 @@ class App(QMainWindow):
     def mcl_set_now(self):
         """Set the stage position."""
         mcl.set_now(self.mcl)
+        self.log_to_file()
 
     def mcl_on_thread(self):
         """Open Marzhauser MCL-3 stage controller in a new thread."""
@@ -506,6 +506,7 @@ class App(QMainWindow):
     def analyzer_set_now(self):
         """Move the analizer to its home position."""
         kcube.analyzer_set_now(self.kcube)
+        self.log_to_file()
 
     def p_set_now_thread(self):
         """Move the polarizer to specified angle in a new thread."""
@@ -515,6 +516,7 @@ class App(QMainWindow):
     def polarizer_set_now(self):
         """Move the polarizer to its home position."""
         kcube.polarizer_set_now(self.kcube)
+        self.log_to_file()
 
 
     # %% ========= Princeton Instruments LightField control ==============
@@ -530,7 +532,6 @@ class App(QMainWindow):
 
     def launch_lf(self):
         """Launch LightField software."""
-        self.ui.outbox.append('Opening LightField...')
         lf.launch_lf(self.lf)
 
     def show_file_list(self):
@@ -541,7 +542,11 @@ class App(QMainWindow):
         """Acquire Raman spectra using an opened instance of LightField."""
         lf.acquire_raman(self.lf)
         # save metadata information to the log file
+        time.sleep(0.5)
         self.log_to_file()
+        time.sleep(0.5)
+        ops.generate_report(self.ops, logpath=self.ops['logpath'])
+
 
 
     # %% ========= Tektronix MSO64 mixed signal oscilloscope ==============
@@ -553,6 +558,7 @@ class App(QMainWindow):
     def scope_acquire(self):
         """Acquire and plot signal from oscilloscope."""
         mso.acquire(self.mso)
+        self.log_to_file()
 
     def export_scope_trace(self):
         """Export most recent oscilloscope trace to file."""
@@ -567,6 +573,7 @@ class App(QMainWindow):
     def trigger_pulses(self):
         """Fire a single burst of n pulses with spacing in seconds."""
         srs.trigger_pulses(self.srs)
+        self.log_to_file()
 
     def trigger_pulses_thread(self):
         """Trigger pulses in a new thread."""
@@ -589,11 +596,17 @@ class App(QMainWindow):
         worker = Worker(self.avacs_set_now)  # pass other args here
         self.threadpool.start(worker)
     
+    def avacs_set_pc_now_thread(self):
+        """Set the AVACS beam attenuator power in a new thread."""
+        worker = Worker(self.avacs_set_pc_now)  # pass other args here
+        self.threadpool.start(worker)
+    
     def avacs_set_now(self):
         """Set beam attenuator angle now."""
         avacs.set_now(self.avacs)
+        self.log_to_file()
     
-    def avacs_set_oc_now(self):
+    def avacs_set_pc_now(self):
         """Set beam attenuator percent power now."""
         avacs.set_percent_now(self.avacs)
 
@@ -624,7 +637,8 @@ class App(QMainWindow):
 
     def show_log_path(self):
         """Show the path to the log file."""
-        self.ui.outbox.append('Log file path: %s' % (self.ops['logpath']))
+        self.ui.outbox.append('Log file path:')
+        self.ui.outbox.append(str(self.ops['logpath']))
 
     def log_to_file(self):
         """Create log file."""
@@ -635,6 +649,14 @@ class App(QMainWindow):
     def print_ports(self):
         """Print a list of available serial and VISA ports."""
         ops.print_ports(self.ops)
+
+    def scroll_outbox(self):
+        """Scroll down in the output box each time text is added to it."""
+        cursor = self.ui.outbox.textCursor()
+        cursor.movePosition(QTextCursor.End)
+        self.ui.outbox.setTextCursor(cursor)
+        self.ui.outbox.ensureCursorVisible()
+
 
     def quitapp(self):
         """Quit the application."""

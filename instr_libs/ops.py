@@ -74,48 +74,105 @@ def show_help():
 
 def show_log_path(ops):
     """Show the path to the log file."""
-    ops['outbox'].append('Log file path: %s' %(ops['logpath']))
+    ops['outbox'].append('Log file path:')
+    ops['outbox'].append(ops['logpath'])
 
 
 
 def generate_report(ops, logpath=None):
     """Generate a report which links each Raman spectra with its metadata
     which is stored in the log file."""
+    
     # prompt user to ask for log file 
     if logpath is None:
         logpath = QFileDialog.getOpenFileName(
                     caption='Select log file', filter='CSV (*.csv)',
                     directory=ops['logdir'])[0]
+    # try to open log file
     try:
         log = pd.read_csv(logpath)
+    # log file could not open
     except FileNotFoundError:
         ops['outbox'].append('No log file selected.')
         log = None
+            
+    # use log file to match data with Raman spectra
     if log is not None:
         ops['selected_logname'] = os.path.split(logpath)[1].split('.')[0]
         # create dictionary to hold all results, metadata, and statistics
         d = {'df': {}, 'log': log}
-        max_int_list = []
-        max_int_wl_list = []
+        
+        max_int_list = np.full(len(log), np.nan)
+        max_int_wl_list = np.full(len(log), np.nan)
         
         # loop over each raman file and save to dictionary
         for ri, r in enumerate(log['recent_raman_file']):
-            # read raman data file
-            df = pd.read_csv(os.path.join(ops['raman_dir'], r+'.csv'),
-                             usecols=['Wavelength', 'Intensity'])
-            # rename columns and add dataframe to dictionary
-            df.columns = ['wl', 'int']
-            d['df'][r] = df 
-            # calculate some statistics and add to dictionary
-            max_int_list.append(float(df['int'].max()))
-            max_int_wl_list.append(float(df['wl'].iloc[df['int'].idxmax()]))
+            if not pd.isna(r):
+                filename = os.path.join(ops['raman_dir'], r+'.csv')
+                
+                # try to open the raman file when it is finished loading
+                df = None
+                while df is None:
+                    try:
+                        df = pd.read_csv(filename, usecols=['Wavelength',
+                                                            'Intensity'])
+                    except FileNotFoundError:
+                        time.sleep(1)
+                        df = None
+                # rename columns and add dataframe to dictionary
+                df.columns = ['wl', 'int']
+                d['df'][r] = df 
+                # calculate some statistics and add to dictionary
+                max_int_list[ri] = float(df['int'].max())
+                max_int_wl_list[ri] = float(df['wl'].iloc[df['int'].idxmax()])
         d['log']['max_intensity'] = max_int_list
         d['log']['max_intensity_wavelength'] = max_int_wl_list
         
         ops['report'] = d
-        plot_spec_in_report(ops)
-        serialize(ops)
+        # create json file summarizing results
+        report_filepath = serialize(ops)
+        ops['outbox'].append('Report generated:')
+        ops['outbox'].append(report_filepath)
     
+    
+    
+def log_to_file(ops, srs, lf, kcube, mcl, avacs):
+    """Create log file."""
+    # get most recent row of data
+    d = get_log_row_data(srs, lf, kcube, mcl, avacs)
+    # assign most recent row to last row in log data
+    ops['data'][ops['row_counter']] = list(d.values())
+    # convert log data to Pandas DataFrame
+    df = pd.DataFrame(columns=list(d.keys()), data=ops['data'])
+    # remove empty rows before saving
+    df.replace('', np.nan, inplace=True)
+    df.dropna(how='all', inplace=True)
+    # save dataframe as csv file
+    df.to_csv(ops['logpath'], index=False)
+    ops['outbox'].append('Log file appended to:')
+    ops['outbox'].append(ops['logpath'])
+    ops['row_counter'] += 1
+
+
+def get_log_row_data(srs, lf, kcube, mcl, avacs):
+    """Get data for the most recent row of the log file."""
+    d = {'time': time.strftime('%Y-%m-%d_%H-%M-%S'),
+         'total_pulses': srs['tot_pulses'],
+         'pulsewidth_ms':  srs['width'].value()/1e3,
+         'pulse_amplitude_v': srs['amplitude'].value(),
+         'pulse_delay_ms': srs['delay'].value()/1e3,
+         'pulse_number': srs['number'].value(),
+         'x_position_cm': mcl['show_x'].text(),
+         'y_position_cm': mcl['show_y'].text(),
+         'avacs_power_%': avacs['set_percent'].value(),
+         'polarizer_angle_deg': kcube['p_set'].value(),
+         'notes': lf['notes'].text().replace(',','__').replace('\t', '__'),
+         'recent_raman_file': lf['recent_file']}
+    return d
+
+
+
+
     
 def plot_spec_in_report(ops):
     """Plot the spectra in a log report."""
@@ -136,8 +193,9 @@ def plot_spec_in_report(ops):
             plt.plot(d['df'][r]['wl'], d['df'][r]['int'],
                      #label=r,
                      c=colors[ri], lw=1)
-    
-    
+        fig.canvas.set_window_title('Raman spectra in report')
+        plt.draw()
+
 '''   
     plt.scatter(d['log']['x_position'],
                 d['log']['y_position'],
@@ -156,6 +214,7 @@ def serialize(ops):
             ops['logdir'], ops['selected_logname']+'_report.json')
     with open(filename, 'w') as fp:
         json.dump(ops['report'], fp, cls=JSONEncoder)
+    return filename
 
 
 
@@ -170,41 +229,6 @@ class JSONEncoder(json.JSONEncoder):
 
     
     
-
-
-def get_log_row_data(srs, lf, kcube, mcl, avacs):
-    """Get data for the most recent row of the log file."""
-    d = {'time': time.strftime('%Y-%m-%d_%H-%M-%S'),
-         'total_pulses': srs['tot_pulses'],
-         'pulsewidth_ms':  srs['width'].value()/1e3,
-         'pulse_amplitude_v': srs['amplitude'].value(),
-         'pulse_delay_ms': srs['delay'].value()/1e3,
-         'pulse_number': srs['number'].value(),
-         'x_position_cm': mcl['show_x'].text(),
-         'y_position_cm': mcl['show_y'].text(),
-         'avacs_power_%': avacs['avacs_set_percent'].value(),
-         'polarizer_angle_deg': kcube['p_set'].value(),
-         'notes': lf['notes'].text().replace(',','__').replace('\t', '__'),
-         'recent_raman_file': lf['recent_file']}
-    return d
-
-
-def log_to_file(ops, srs, lf, kcube, mcl, avacs):
-    """Create log file."""
-    # get most recent row of data
-    d = get_log_row_data(srs, lf, kcube, mcl)
-    # assign most recent row to last row in log data
-    ops['data'][ops['row_counter']] = list(d.values())
-    # convert log data to Pandas DataFrame
-    df = pd.DataFrame(columns=list(d.keys()), data=ops['data'])
-    # remove empty rows before saving
-    df.replace('', np.nan, inplace=True)
-    df.dropna(how='all', inplace=True)
-    # save dataframe as csv file
-    df.to_csv(ops['logpath'], index=False)
-    ops['outbox'].append('Log file appended to {}'.format(ops['logpath']))
-    ops['row_counter'] += 1
-
 
 
 
@@ -371,8 +395,9 @@ def load_report_from_json(filename):
 
 
 if __name__ == '__main__':
-    filename = 'C:\\Users\\Administrator\\Desktop\\eric\\laser_triggering\\logs\\2020-03-10_16-37-27_report.json'
+    filename = 'C:\\Users\\Administrator\\Desktop\\eric\\laser_triggering\\logs\\2020-03-12_14-19-58_report.json'
     rep = load_report_from_json(filename)
+    
 
 
 
