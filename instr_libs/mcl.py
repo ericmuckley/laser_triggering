@@ -120,13 +120,6 @@ def set_now(mcl):
 
 
 
-def preview_grid_cords(mcl):
-    """Preview the grid coordinates."""
-    grid = get_grid(mcl)
-    mcl['outbox'].append('Grid coordinates (X, Y):')
-    [mcl['outbox'].append(str(g)) for g in grid]
-
-
 def get_grid(mcl):
     """Get grid coordinates from grid settings on GUI."""
     x_cords, y_cords = get_sweep_cords(mcl)

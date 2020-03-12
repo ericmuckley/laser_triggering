@@ -172,23 +172,24 @@ class JSONEncoder(json.JSONEncoder):
     
 
 
-def get_log_row_data(srs, lf, kcube, mcl):
+def get_log_row_data(srs, lf, kcube, mcl, avacs):
     """Get data for the most recent row of the log file."""
     d = {'time': time.strftime('%Y-%m-%d_%H-%M-%S'),
          'total_pulses': srs['tot_pulses'],
          'pulsewidth_ms':  srs['width'].value()/1e3,
-         'pulse_amplitude_V': srs['amplitude'].value(),
+         'pulse_amplitude_v': srs['amplitude'].value(),
          'pulse_delay_ms': srs['delay'].value()/1e3,
          'pulse_number': srs['number'].value(),
-         'x_position': mcl['show_x'].text(),
-         'y_position': mcl['show_y'].text(),
+         'x_position_cm': mcl['show_x'].text(),
+         'y_position_cm': mcl['show_y'].text(),
+         'avacs_power_%': avacs['avacs_set_percent'].value(),
          'polarizer_angle_deg': kcube['p_set'].value(),
          'notes': lf['notes'].text().replace(',','__').replace('\t', '__'),
          'recent_raman_file': lf['recent_file']}
     return d
 
 
-def log_to_file(ops, srs, lf, kcube, mcl):
+def log_to_file(ops, srs, lf, kcube, mcl, avacs):
     """Create log file."""
     # get most recent row of data
     d = get_log_row_data(srs, lf, kcube, mcl)

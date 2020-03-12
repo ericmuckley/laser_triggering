@@ -97,15 +97,15 @@ class App(QMainWindow):
         self.ui.launch_lf.clicked.connect(self.launch_lf_thread)
         self.ui.scope_acquire.clicked.connect(self.scope_acquire)
         self.ui.acquire_raman.clicked.connect(self.acquire_raman)
-        self.ui.piline_preview.clicked.connect(self.piline_preview)
         self.ui.mcl_set_now.clicked.connect(self.mcl_set_now_thread)
         self.ui.analyzer_set_now.clicked.connect(self.a_set_now_thread)
+        self.ui.avacs_set_pc_now.clicked.connect(self.avacs_set_pc_now)
         self.ui.avacs_set_now.clicked.connect(self.avacs_set_now_thread)
         self.ui.polarizer_set_now.clicked.connect(self.p_set_now_thread)
         self.ui.trigger_pulses.clicked.connect(self.trigger_pulses_thread)
         self.ui.piline_set_now.clicked.connect(self.piline_set_now_thread)        
         self.ui.export_scope_trace.clicked.connect(self.export_scope_trace)
-        self.ui.preview_grid_cords.clicked.connect(self.preview_grid_cords)
+        
 
         # assign actions to checkboxes
         # example: self.ui.CHECKBOX.stateChanged.connect(self.FUNCTION_NAME)
@@ -141,7 +141,7 @@ class App(QMainWindow):
                 'raman_dir': self.raman_dir,
                 'starttime': self.starttime,
                 'gui_update_finished': True,
-                'data': np.full((1000, 11), '', dtype=object),
+                'data': np.full((1000, 12), '', dtype=object),
                 'logpath': self.logdir+self.starttime+'.csv'}
     
         # information related to Laseroptik beam attenuator
@@ -150,9 +150,16 @@ class App(QMainWindow):
                 'on': self.ui.avacs_on,
                 'outbox': self.ui.outbox,
                 'set': self.ui.avacs_set,
+                'seq': self.ui.seq_avacs,
+                'final': self.ui.avacs_final,
+                'steps': self.ui.avacs_steps,
+                'initial': self.ui.avacs_initial,
                 'address': self.ui.avacs_address,
                 'set_now': self.ui.avacs_set_now,
-                'display': self.ui.avacs_display}
+                'display': self.ui.avacs_display,
+                'set_percent': self.ui.avacs_set_percent,
+                'display_percent': self.ui.avacs_display_percent,
+                'set_percent_now': self.ui.avacs_set_percent_now}
         
         # information related to SRS DG645 digital delay pulse generator
         self.srs = {
@@ -229,8 +236,7 @@ class App(QMainWindow):
                'grid_xi': self.ui.mcl_grid_x_start,
                'grid_yi': self.ui.mcl_grid_y_start,
                'grid_xsteps': self.ui.mcl_grid_x_steps,
-               'grid_ysteps': self.ui.mcl_grid_y_steps,
-               'preview_grid_cords': self.ui.preview_grid_cords}
+               'grid_ysteps': self.ui.mcl_grid_y_steps}
 
         # information related to PILine PI C-867 rotation stage controller
         self.piline = {
@@ -242,7 +248,6 @@ class App(QMainWindow):
             'initial': self.ui.piline_initial,
             'final': self.ui.piline_final,
             'steps': self.ui.piline_steps,
-            'preview': self.ui.piline_preview,
             'set_now': self.ui.piline_set_now,
             'display': self.ui.piline_display,
             'address': self.ui.piline_address}
@@ -320,6 +325,12 @@ class App(QMainWindow):
             self.polarizer_set_now()
             while kcube.p_in_motion(self.kcube):
                 time.sleep(1)
+        # move AVACS beam attenuator to specified power
+        if self.ui.seq_avacs.isChecked():
+            self.avacs['set_percent'].setValue(g['power'].iloc[i])
+            self.avacs_set_pc_now()
+            time.sleep(2)
+
         # acquire raman spectrum
         if self.ui.seq_raman_acquisition.isChecked():
             time.sleep(3)
@@ -339,23 +350,33 @@ class App(QMainWindow):
         """Get grid of points to sample during the experimental sequence."""
         # assemble list of lists to sweep across during sequence
         sweeps = []
-        sweep_types = ['cycle', 'x', 'y', 'piline_deg', 'kcube_deg']
+        sweep_types = ['cycle', 'x', 'y', 'power', 'piline_deg', 'kcube_deg']
+        
         # coordinates to sweep if the instrument sequence box is checked
         if self.mcl['seq'].isChecked():
             x_cords, y_cords = mcl.get_sweep_cords(self.mcl)
             sweeps += [x_cords, y_cords]
         else:
             sweeps += [[np.nan], [np.nan]]
+            
+        if self.avacs['seq'].isChecked():
+            avacs_sweep = avacs.get_sweep(self.avacs)
+            sweeps += [[avacs_sweep]]
+        else:
+            sweeps += [[np.nan]]    
+            
         if self.piline['seq'].isChecked():
             piline_angles = piline.get_angles(self.piline)
             sweeps += [[piline_angles]]
         else:
             sweeps += [[np.nan]]
+            
         if self.kcube['seq_polarizer_rot'].isChecked():
             kcube_angles = kcube.get_angles(self.kcube)
             sweeps += [[kcube_angles]]
         else:
             sweeps += [[np.nan]]
+            
         # create grid of coordinates to sample
         grid = np.array(np.meshgrid(*sweeps)).T.reshape(-1, len(sweeps))  
         # total experimental cycles
@@ -443,10 +464,6 @@ class App(QMainWindow):
     def piline_set_now(self):
         """Move the piline stage."""
         piline.move(self.piline)
-        
-    def piline_preview(self):
-        """Get preview of sequence of angles to sample."""
-        piline.preview_angles(self.piline)
 
 
     # %% ============ Marzhauser MCL-3 stage controller ==================    
@@ -469,10 +486,6 @@ class App(QMainWindow):
     def mcl_on(self):
         """Checkbox for MCL stage controller is checked/unchecked."""
         mcl.stage_on(self.mcl)
-    
-    def preview_grid_cords(self):
-        """Preview the grid coordinates."""
-        mcl.preview_grid_cords(self.mcl)
 
 
     # %% ========= Thorlabs KDC101 servo motor controllers= ==============
@@ -579,6 +592,11 @@ class App(QMainWindow):
     def avacs_set_now(self):
         """Set beam attenuator angle now."""
         avacs.set_now(self.avacs)
+    
+    def avacs_set_oc_now(self):
+        """Set beam attenuator percent power now."""
+        avacs.set_percent_now(self.avacs)
+
 
     # %% ============ system control functions =============================
 
@@ -610,15 +628,13 @@ class App(QMainWindow):
 
     def log_to_file(self):
         """Create log file."""
-        ops.log_to_file(self.ops, self.srs, self.lf, self.kcube, self.mcl)
+        ops.log_to_file(self.ops, self.srs,
+                        self.lf, self.kcube,
+                        self.mcl, self.avacs)
 
     def print_ports(self):
         """Print a list of available serial and VISA ports."""
         ops.print_ports(self.ops)
-
-    #def show_help():
-    #    """Show the help window as an HTML popup."""
-    #    ops.show_help()
 
     def quitapp(self):
         """Quit the application."""

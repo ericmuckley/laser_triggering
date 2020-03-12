@@ -6,15 +6,16 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>806</width>
-    <height>854</height>
+    <width>1055</width>
+    <height>712</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Laser triggering</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QMainWindow{
+   <string notr="true">
+QMainWindow{
 background-color: rgb(70,70,70);
 color: white;}
 
@@ -156,9 +157,9 @@ box-shape: plain;
     </property>
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>260</y>
-      <width>231</width>
+      <x>280</x>
+      <y>360</y>
+      <width>241</width>
       <height>191</height>
      </rect>
     </property>
@@ -178,7 +179,7 @@ box-shape: plain;
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>191</width>
+       <width>201</width>
        <height>151</height>
       </rect>
      </property>
@@ -312,7 +313,7 @@ box-shape: plain;
          <number>1000000000</number>
         </property>
         <property name="value">
-         <number>10</number>
+         <number>1</number>
         </property>
        </widget>
       </item>
@@ -326,7 +327,7 @@ box-shape: plain;
       <item row="5" column="1">
        <widget class="QPushButton" name="trigger_pulses">
         <property name="text">
-         <string>Trigger</string>
+         <string>Trigger pulses</string>
         </property>
         <property name="flat">
          <bool>false</bool>
@@ -339,10 +340,10 @@ box-shape: plain;
    <widget class="QGroupBox" name="groupBox_output">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>550</y>
-      <width>521</width>
-      <height>271</height>
+      <x>550</x>
+      <y>420</y>
+      <width>491</width>
+      <height>251</height>
      </rect>
     </property>
     <property name="font">
@@ -358,8 +359,8 @@ box-shape: plain;
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>501</width>
-       <height>231</height>
+       <width>471</width>
+       <height>211</height>
       </rect>
      </property>
      <property name="font">
@@ -383,16 +384,16 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;To acquire Raman spectra, first launch LightField software using the &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-weight:600;&quot;&gt;Launch LF&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; button. Once LightField has loaded, open the &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;Default_Python_Experiment&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; in LightField. Then acquire spectra using the &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-weight:600;&quot;&gt;Acquire&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; button in this application.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;To begin an automated experimental procedure, use settings in the &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;Experimental Sequence&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; panel. For more information, navigate to &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;Help&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; -&amp;gt; &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-style:italic;&quot;&gt;Show help&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;. Full code and documentation for this application are available at: &lt;/span&gt;&lt;span style=&quot; font-size:9pt; font-weight:600;&quot;&gt;http://github.com/ericmuckley/laser_triggering&lt;/span&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; ----------------------------------------------------------------------------------------------------------------&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; -------------------------------------------------------------------------------------------------------------&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_configurelightfield">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>20</y>
-      <width>241</width>
+      <x>20</x>
+      <y>570</y>
+      <width>501</width>
       <height>101</height>
      </rect>
     </property>
@@ -409,7 +410,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>30</y>
-       <width>211</width>
+       <width>471</width>
        <height>51</height>
       </rect>
      </property>
@@ -430,6 +431,12 @@ p, li { white-space: pre-wrap; }
       </item>
       <item row="1" column="1">
        <widget class="QPushButton" name="launch_lf">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
         <property name="text">
          <string>Launch LF</string>
         </property>
@@ -483,14 +490,24 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>191</width>
-       <height>161</height>
+       <height>170</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="4" column="0">
-       <widget class="QLabel" name="p_rotation_label">
+      <item row="5" column="0">
+       <widget class="QLabel" name="seq_stage_movement_label">
         <property name="text">
-         <string>K-Cube rotation</string>
+         <string>MCL-3 stage</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="seq_raman_acquisition">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </item>
@@ -504,33 +521,6 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="checked">
          <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="seq_stage_movement_label">
-        <property name="text">
-         <string>MCL-3 stage</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QCheckBox" name="seq_mcl">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QCheckBox" name="seq_piline">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="text">
-         <string/>
         </property>
        </widget>
       </item>
@@ -548,10 +538,27 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="p_rotation_label">
+        <property name="text">
+         <string>K-Cube rotation</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="pause_between_cycles_label">
         <property name="text">
          <string>Cycle delay (s)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QCheckBox" name="seq_piline">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </item>
@@ -571,22 +578,6 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QSpinBox" name="set_seq_cycles">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>10000</number>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="0">
        <widget class="QLabel" name="seq_raman_acquisition_label">
         <property name="text">
@@ -594,15 +585,8 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="seq_laser_triggering_label">
-        <property name="text">
-         <string>Excimer triggering</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QCheckBox" name="seq_raman_acquisition">
+      <item row="5" column="1">
+       <widget class="QCheckBox" name="seq_mcl">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -621,15 +605,55 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="seq_laser_triggering_label">
+        <property name="text">
+         <string>Excimer triggering</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="set_seq_cycles">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>10000</number>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="seq_avacs_label">
+        <property name="text">
+         <string>AVACS attenuation</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QCheckBox" name="seq_avacs">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_scope">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>20</y>
-      <width>261</width>
+      <x>810</x>
+      <y>270</y>
+      <width>231</width>
       <height>121</height>
      </rect>
     </property>
@@ -641,7 +665,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>221</width>
+       <width>191</width>
        <height>81</height>
       </rect>
      </property>
@@ -716,10 +740,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_avacs">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>150</y>
-      <width>261</width>
-      <height>121</height>
+      <x>20</x>
+      <y>270</y>
+      <width>231</width>
+      <height>281</height>
      </rect>
     </property>
     <property name="title">
@@ -730,13 +754,104 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>221</width>
-       <height>81</height>
+       <width>185</width>
+       <height>231</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="avacs_grid">
-      <item row="1" column="1">
-       <widget class="QDoubleSpinBox" name="avacs_set">
+      <item row="7" column="1">
+       <widget class="QDoubleSpinBox" name="avacs_initial">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>100.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QDoubleSpinBox" name="avacs_final">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>100.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="value">
+         <double>50.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QSpinBox" name="avacs_steps">
+        <property name="minimum">
+         <number>0</number>
+        </property>
+        <property name="maximum">
+         <number>1000</number>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="avacs_manual_label">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Manual</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QPushButton" name="avacs_set_pc_now">
+        <property name="text">
+         <string>Set power</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="avacs_power_label">
+        <property name="text">
+         <string>Power (%)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="avacs_auto_label">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Auto</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QDoubleSpinBox" name="avacs_set_percent">
         <property name="decimals">
          <number>1</number>
         </property>
@@ -751,10 +866,67 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="8" column="0">
+       <widget class="QLabel" name="avacs_final_label">
+        <property name="text">
+         <string>Final (%)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
+       <widget class="QLabel" name="avacs_steps_label">
+        <property name="text">
+         <string>Steps</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QLabel" name="avacs_display_percent">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>---       </string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="avacs_initial_label">
+        <property name="text">
+         <string>Initial (%)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
        <widget class="QLabel" name="avacs_angle_label">
         <property name="text">
          <string>Angle (deg)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QDoubleSpinBox" name="avacs_set">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>45.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>45.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="avacs_on">
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </item>
@@ -774,14 +946,7 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="avacs_address_label">
-        <property name="text">
-         <string>Address</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
+      <item row="2" column="2">
        <widget class="QLabel" name="avacs_display">
         <property name="minimumSize">
          <size>
@@ -794,17 +959,17 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
-       <widget class="QPushButton" name="avacs_set_now">
+      <item row="0" column="0">
+       <widget class="QLabel" name="avacs_address_label">
         <property name="text">
-         <string>Set</string>
+         <string>Address</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <widget class="QCheckBox" name="avacs_on">
+      <item row="3" column="1">
+       <widget class="QPushButton" name="avacs_set_now">
         <property name="text">
-         <string/>
+         <string>Set angle</string>
         </property>
        </widget>
       </item>
@@ -817,10 +982,10 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>130</y>
+      <x>280</x>
+      <y>20</y>
       <width>241</width>
-      <height>411</height>
+      <height>321</height>
      </rect>
     </property>
     <property name="title">
@@ -832,7 +997,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>201</width>
-       <height>361</height>
+       <height>281</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="polarizer_grid">
@@ -867,6 +1032,9 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="text">
          <string>Polarizer</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
         </property>
        </widget>
       </item>
@@ -947,7 +1115,7 @@ p, li { white-space: pre-wrap; }
          <string>Auto</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
         </property>
        </widget>
       </item>
@@ -968,14 +1136,14 @@ p, li { white-space: pre-wrap; }
       <item row="3" column="1">
        <widget class="QPushButton" name="polarizer_set_now">
         <property name="text">
-         <string>Set</string>
+         <string>Set angle</string>
         </property>
        </widget>
       </item>
       <item row="7" column="1">
        <widget class="QPushButton" name="analyzer_set_now">
         <property name="text">
-         <string>Set</string>
+         <string>Set angle</string>
         </property>
        </widget>
       </item>
@@ -989,6 +1157,9 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="text">
          <string>Analyzer</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
         </property>
        </widget>
       </item>
@@ -1072,10 +1243,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_mcl">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>470</y>
+      <x>550</x>
+      <y>20</y>
       <width>231</width>
-      <height>351</height>
+      <height>371</height>
      </rect>
     </property>
     <property name="title">
@@ -1087,186 +1258,10 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>30</y>
        <width>191</width>
-       <height>311</height>
+       <height>321</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="mcl_grid">
-      <item row="0" column="2">
-       <widget class="QCheckBox" name="mcl_on">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1">
-       <widget class="QDoubleSpinBox" name="mcl_grid_x_start">
-        <property name="decimals">
-         <number>2</number>
-        </property>
-        <property name="minimum">
-         <double>-10.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>10.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>1.000000000000000</double>
-        </property>
-        <property name="value">
-         <double>-1.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="1">
-       <widget class="QSpinBox" name="mcl_grid_x_steps">
-        <property name="maximum">
-         <number>100</number>
-        </property>
-        <property name="value">
-         <number>2</number>
-        </property>
-       </widget>
-      </item>
-      <item row="10" column="0">
-       <widget class="QLabel" name="mcl_grid_final_y_label">
-        <property name="text">
-         <string>Final Y (cm)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="0">
-       <widget class="QLabel" name="mcl_grid_initial_label_y">
-        <property name="text">
-         <string>Initial X (cm)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="1">
-       <widget class="QDoubleSpinBox" name="mcl_grid_y_start">
-        <property name="decimals">
-         <number>2</number>
-        </property>
-        <property name="minimum">
-         <double>-10.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>10.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>1.000000000000000</double>
-        </property>
-        <property name="value">
-         <double>-1.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="11" column="1">
-       <widget class="QSpinBox" name="mcl_grid_y_steps">
-        <property name="maximum">
-         <number>100</number>
-        </property>
-        <property name="value">
-         <number>2</number>
-        </property>
-       </widget>
-      </item>
-      <item row="12" column="1">
-       <widget class="QPushButton" name="preview_grid_cords">
-        <property name="text">
-         <string>Preview</string>
-        </property>
-       </widget>
-      </item>
-      <item row="10" column="1">
-       <widget class="QDoubleSpinBox" name="mcl_grid_y_end">
-        <property name="decimals">
-         <number>2</number>
-        </property>
-        <property name="minimum">
-         <double>-10.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>10.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>1.000000000000000</double>
-        </property>
-        <property name="value">
-         <double>-1.000000000000000</double>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="mcl_grid_label">
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Auto</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="mcl_label">
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Manual</string>
-        </property>
-       </widget>
-      </item>
-      <item row="11" column="0">
-       <widget class="QLabel" name="y_steps_label">
-        <property name="maximumSize">
-         <size>
-          <width>100</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Y steps</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0">
-       <widget class="QLabel" name="mcl_grid_final_label">
-        <property name="text">
-         <string>Final X (cm)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="1">
-       <widget class="QDoubleSpinBox" name="mcl_grid_x_end">
-        <property name="decimals">
-         <number>2</number>
-        </property>
-        <property name="minimum">
-         <double>-10.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>10.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>1.000000000000000</double>
-        </property>
-        <property name="value">
-         <double>1.000000000000000</double>
-        </property>
-       </widget>
-      </item>
       <item row="8" column="0">
        <widget class="QLabel" name="mcl_grid_steps_label">
         <property name="text">
@@ -1278,36 +1273,6 @@ p, li { white-space: pre-wrap; }
        <widget class="QLabel" name="mcl_grid_initial_label">
         <property name="text">
          <string>Initial X (cm)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="mcl_address">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>COM18</string>
-        </property>
-        <property name="placeholderText">
-         <string>COM18</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="mcl_address_label">
-        <property name="text">
-         <string>Address</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="mcl_y_label">
-        <property name="text">
-         <string>Y pos. (cm)</string>
         </property>
        </widget>
       </item>
@@ -1337,22 +1302,84 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QDoubleSpinBox" name="mcl_set_y">
-        <property name="decimals">
-         <number>2</number>
+      <item row="7" column="0">
+       <widget class="QLabel" name="mcl_grid_final_label">
+        <property name="text">
+         <string>Final X (cm)</string>
         </property>
-        <property name="minimum">
-         <double>-10.000000000000000</double>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="mcl_label">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
         </property>
+        <property name="text">
+         <string>Manual</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0">
+       <widget class="QLabel" name="y_steps_label">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Y steps</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="mcl_address">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>COM18</string>
+        </property>
+        <property name="placeholderText">
+         <string>COM18</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="mcl_grid_label">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Auto</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1">
+       <widget class="QSpinBox" name="mcl_grid_y_steps">
         <property name="maximum">
-         <double>10.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>1.000000000000000</double>
+         <number>100</number>
         </property>
         <property name="value">
-         <double>0.000000000000000</double>
+         <number>2</number>
         </property>
        </widget>
       </item>
@@ -1382,10 +1409,150 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
+      <item row="10" column="1">
+       <widget class="QDoubleSpinBox" name="mcl_grid_y_end">
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>-10.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>-1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
       <item row="4" column="1">
        <widget class="QPushButton" name="mcl_set_now">
         <property name="text">
-         <string>Set</string>
+         <string>Set position</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="mcl_address_label">
+        <property name="text">
+         <string>Address</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="mcl_y_label">
+        <property name="text">
+         <string>Y pos. (cm)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QDoubleSpinBox" name="mcl_grid_x_end">
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>-10.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QDoubleSpinBox" name="mcl_set_y">
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>-10.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
+       <widget class="QLabel" name="mcl_grid_initial_label_y">
+        <property name="text">
+         <string>Initial X (cm)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QDoubleSpinBox" name="mcl_grid_y_start">
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>-10.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>-1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QDoubleSpinBox" name="mcl_grid_x_start">
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>-10.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>10.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>-1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="mcl_on">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="0">
+       <widget class="QLabel" name="mcl_grid_final_y_label">
+        <property name="text">
+         <string>Final Y (cm)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QSpinBox" name="mcl_grid_x_steps">
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>2</number>
         </property>
        </widget>
       </item>
@@ -1395,10 +1562,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QGroupBox" name="groupBox_piline">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>280</y>
-      <width>261</width>
-      <height>261</height>
+      <x>810</x>
+      <y>20</y>
+      <width>231</width>
+      <height>221</height>
      </rect>
     </property>
     <property name="title">
@@ -1409,8 +1576,8 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>20</x>
        <y>30</y>
-       <width>221</width>
-       <height>211</height>
+       <width>192</width>
+       <height>181</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="piline_grid_layout">
@@ -1432,26 +1599,34 @@ p, li { white-space: pre-wrap; }
          <string>Manual</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
         </property>
        </widget>
       </item>
-      <item row="6" column="1">
-       <widget class="QDoubleSpinBox" name="piline_final">
-        <property name="decimals">
-         <number>2</number>
+      <item row="2" column="2">
+       <widget class="QLabel" name="piline_display">
+        <property name="minimumSize">
+         <size>
+          <width>40</width>
+          <height>0</height>
+         </size>
         </property>
-        <property name="minimum">
-         <double>0.000000000000000</double>
+        <property name="text">
+         <string>---</string>
         </property>
-        <property name="maximum">
-         <double>360.000000000000000</double>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="piline_set_label">
+        <property name="text">
+         <string>Angle (deg)</string>
         </property>
-        <property name="singleStep">
-         <double>1.000000000000000</double>
-        </property>
-        <property name="value">
-         <double>45.000000000000000</double>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QPushButton" name="piline_set_now">
+        <property name="text">
+         <string>Set angle</string>
         </property>
        </widget>
       </item>
@@ -1467,26 +1642,7 @@ p, li { white-space: pre-wrap; }
          <string>Auto</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1">
-       <widget class="QDoubleSpinBox" name="piline_initial">
-        <property name="decimals">
-         <number>2</number>
-        </property>
-        <property name="minimum">
-         <double>0.000000000000000</double>
-        </property>
-        <property name="maximum">
-         <double>360.000000000000000</double>
-        </property>
-        <property name="singleStep">
-         <double>1.000000000000000</double>
-        </property>
-        <property name="value">
-         <double>0.000000000000000</double>
+         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
         </property>
        </widget>
       </item>
@@ -1494,20 +1650,6 @@ p, li { white-space: pre-wrap; }
        <widget class="QLabel" name="piline_steps_label">
         <property name="text">
          <string>Steps</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="piline_final_label">
-        <property name="text">
-         <string>Final</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="piline_set_label">
-        <property name="text">
-         <string>Angle (deg)</string>
         </property>
        </widget>
       </item>
@@ -1530,26 +1672,6 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
-       <widget class="QLabel" name="piline_display">
-        <property name="minimumSize">
-         <size>
-          <width>40</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>---</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="piline_address_label">
-        <property name="text">
-         <string>Address</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="1">
        <widget class="QDoubleSpinBox" name="piline_set">
         <property name="decimals">
@@ -1569,10 +1691,62 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="8" column="1">
-       <widget class="QPushButton" name="piline_preview">
+      <item row="5" column="0">
+       <widget class="QLabel" name="piline_initial_label">
         <property name="text">
-         <string>Preview</string>
+         <string>Initial (deg)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QDoubleSpinBox" name="piline_final">
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>0.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>360.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>45.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QDoubleSpinBox" name="piline_initial">
+        <property name="decimals">
+         <number>2</number>
+        </property>
+        <property name="minimum">
+         <double>0.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>360.000000000000000</double>
+        </property>
+        <property name="singleStep">
+         <double>1.000000000000000</double>
+        </property>
+        <property name="value">
+         <double>0.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="piline_final_label">
+        <property name="text">
+         <string>Final (deg)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="piline_on">
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </item>
@@ -1586,24 +1760,10 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QPushButton" name="piline_set_now">
+      <item row="0" column="0">
+       <widget class="QLabel" name="piline_address_label">
         <property name="text">
-         <string>Set</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="piline_initial_label">
-        <property name="text">
-         <string>Initial</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QCheckBox" name="piline_on">
-        <property name="text">
-         <string/>
+         <string>Address</string>
         </property>
        </widget>
       </item>
@@ -1616,7 +1776,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>806</width>
+     <width>1055</width>
      <height>24</height>
     </rect>
    </property>
@@ -1732,12 +1892,12 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="run_seq">
    <property name="text">
-    <string>Start experiment</string>
+    <string>RUN EXPERIMENT</string>
    </property>
   </action>
   <action name="abort_seq">
    <property name="text">
-    <string>Abort sequence</string>
+    <string>Abort experiment</string>
    </property>
   </action>
   <action name="preview_seq">
@@ -1772,7 +1932,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>mcl_grid_y_start</tabstop>
   <tabstop>mcl_grid_y_end</tabstop>
   <tabstop>mcl_grid_y_steps</tabstop>
-  <tabstop>preview_grid_cords</tabstop>
   <tabstop>raman_filename_notes</tabstop>
   <tabstop>polarizer_on</tabstop>
   <tabstop>polarizer_address</tabstop>
@@ -1802,7 +1961,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>piline_initial</tabstop>
   <tabstop>piline_final</tabstop>
   <tabstop>piline_steps</tabstop>
-  <tabstop>piline_preview</tabstop>
  </tabstops>
  <resources/>
  <connections/>

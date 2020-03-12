@@ -23,7 +23,7 @@ def enable_piline(piline, enable):
     PILine C-1867 rotation controller."""
     piline['address'].setEnabled(not enable)
     items = ['set', 'display', 'seq', 'initial', 'seq',
-             'set_now', 'final', 'steps', 'preview']
+             'set_now', 'final', 'steps']
     [piline[i].setEnabled(enable) for i in items]
 
 
@@ -107,14 +107,7 @@ def get_position_float(piline):
     pos = float(pos.split('=')[1])
     return pos
 
-
-def preview_angles(piline):
-    """Get preview of angles to sample."""
-    angles = get_angles(piline)
-    piline['outbox'].append('Angles to sample in degrees:')
-    piline['outbox'].append(str(angles))
-    piline['outbox'].verticalScrollBar().setValue(99999999)
-    
+   
 
 def get_angles(piline):
     """Get angles to sample."""
