@@ -27,7 +27,7 @@ Troubleshooting:
 * The user may also determine whether the instument can be identified by the PC using Windows Device Manager or National Instruments Measurement & Automation Explorer (NI MAX).
 
 ### Connecting to LightField
-To acquire Raman spectra using Princeton Instruments LightField software, LightField must be opened from the GUI by clicking **Launch LightField**. Once LightField loads, the user should load the LightField experiment called **Default Python Experiment**. After the experiment is loaded, settings can be modified in LightField. Raman spectra can be acquired by clicking the **Acquire Raman spectrum*** button the the GUI.
+To acquire Raman spectra using Princeton Instruments LightField software, LightField must be opened from the GUI by clicking **Launch LightField**. The Princeton Instruments laser and monochromator must be powered on. Once LightField loads, the user should load the LightField experiment called **Default Python Experiment**. After the experiment is loaded, settings can be modified in LightField. Raman spectra can be acquired by clicking the **Acquire Raman spectrum*** button on the *Laser triggering* user interface.
 
 ### Connecting to the SRS DG645 digital delay generator
 The application is set up to trigger pulses from the SRS DG645 using the A-B output. So when using the SRS DG645 as an external trigger for an auxilary laser, connect the DG645 *A-B output* to the laser *external trigger* input.
@@ -47,14 +47,16 @@ The AVACS beam atenuator will not communicate with the PC unless the *Mode* is s
 
 
 ## Running an experimental Sequence
-The *Experimental sequence* box contains options for running an automated experimental sequence. The sequence is started by selecting the *Run* button. Clicking *Abort sequence* will stop the sequence before it is complete. The sequence will initiate a procedure which runs *Number of cycles* times, with each cycle separated by *Cycle delay* number of seconds. Each checkbox that is checked in the *Experimental sequence* box will repeat during each cycle. For example, when *Laser triggering*, *Raman acquisition*, and *Polarizer rotation* checkboxes are all selected, the sequence will proceed as follows:
-1. a list of polarizer angles is generated based on values in the *Start angle*, *End angle*, and *Steps* fields in the *Thorlabs controllers* box.
+The most valuable feature of this application is the ability to run an automated *experimental sequence*. The *Experimental sequence* box contains options for which instruments should be controlled during the *experimental sequence*. The sequence is started by selecting the *Run* button in the *Experimental sequence* box. Clicking *Abort sequence* will stop the sequence before it is complete. The sequence will initiate a procedure which runs *Number of cycles* times, with each cycle separated by *Cycle delay* number of seconds. Each checkbox that is checked in the *Experimental sequence* box will repeat during each cycle. For example, when *Laser triggering*, *Raman acquisition*, and *Polarizer rotation* checkboxes are all selected, the sequence will proceed as follows:
+1. a list of polarizer angles is generated based on values in the *Start angle*, *End angle*, and *Steps* fields in the *Auto* section of the *Thorlabs controllers* box.
 2. a Raman spectrum is acquired at each of the polarizer angles
 3. the pulse generator is used to trigger laser pulses for material processing. The pulses are controlled by the *pulse width*, *pulse delay*, *pulse maplitude*, and *number of pulses* in the *Pulse generator* box.
-4. Steps (2) and (3) are repeated *Number of cycles* times.
+4. Each step is repeated *Number of cycles* times.
+
+
 
 ## File output
-Each time a Raman spectrum is acquired, the spectrum is saved to a *.csv* file, and the application log file is appended. The log file contains the list of experimental parameters that were active during each Raman acquisition, as well as the filename of the Raman spectrum. The log file can be found by selecting *Menu* -> *Show path to log file*, and the location of Raman spectra can be viewed by selecting *Menu* -> *Show acquisition file list*.
+Each time a Raman spectrum is acquired, the **Default_Python_Experiment** in LightField is configured to export the Raman spectrum as a *.csv* file, and the application log file is appended. The log file contains the list of experimental parameters that were active during each Raman acquisition, as well as the filename of the Raman spectrum. The log file can be found by selecting *Menu* -> *Show path to log file*, and the location of Raman spectra can be viewed by selecting *Menu* -> *Show acquisition file list*.
 
 
 
@@ -62,7 +64,8 @@ Each time a Raman spectrum is acquired, the spectrum is saved to a *.csv* file, 
 
 * **laser_triggering**: main directory which holds files and supporting directories 
     * **app.py**: main file for starting the GUI application. Calls _ui.ui_ and files inside _instr_files_ directory to create the application. Controls logic of the application and links GUI widgets to their actions.
-    * **README.md**: the file you are reading, which describes instructuins for use
+    * **README.md**: the file you are reading, which describes instructions for use of the application
+    * **README.html**: HTML version of the *README* file, which is generated automatically each time a user selects the *Help* menu on the unser interface
     * **ui.ui**: user interface file, created in QT Desginer, which is called by _app.py_ and provides thelayout of graphical user interface widgets for the application.
     * **RUN_LASER_TRIGGERING.bat**: Windows bat file. Make a shortcut of this file and place it anywhere on the PC to run _app.py_ by clicking on the shortcut.
     * **requirements.txt**: text file containing list of all dependencies. These can be installed using Anaconda as described in the _Installation_ section below.
