@@ -1,42 +1,49 @@
-
 # Laser triggering: an application for high-throughput laser processing and characterization
 
 This respository contains code for an application which allows in situ spectroscopic characterization of materials during automated laser processing. The application controls triggering of laser pulses, acquisition of Raman spectra, acquisition of traces from an oscilloscope, control of motorized translational stages, and control of motorized optical polarizer/analyzer systems.
-
-
 
 A screenshot of the user interface is shown below.
 ![Screenshot of the GUI](./img/gui.jpg)
 
 
 # Use
-The software can be started using the ```RUN_LASER_TRIGGERING.bat``` Windows BAT file.
-The application can be started by opening a Python code editor running the ```app.py``` file. Alternatively, 
+
+The software can be run two different ways:
+
+
+1. (recommended) Open the *Spyder* shortcut in the *C:\\Desktop\\eric\\* directory. *Spyder* is a Python editor which has been installed inside a virtual environment with specific Python packages required for this application. Once *Spyder* is opened, open the *app.py* file inside *Spyder* if it is not opened already. The *app.py* file should be located in the *C:\\Desktop\\eric\\laser_triggering\\* directory. Once *app.py* is opened in *Spyder*, run the file by clicking *Run*, or the green play button on the top toolbar.
+2. Alternatively, the software can be started by double-clicking the ```RUN_LASER_TRIGGERING.bat``` Windows BAT file located in the *C:\\Desktop\\eric\\* directory. This BAT file will run the software but the user will not be able to see any errors which occurred.
+
+
+When the application starts running, the gray user interface window should pop up.
 
 
 ## Connecting to instruments
+Once the application is running, the user will likely need to connect open connections to instruments. To view the avilable instrument addresses connected to the PC, select **Menu -> Show avilable instrument ports**. Addresses of each avilable VISA, serial, and FTID USB port will be printed in the output box on the user interface. To connect with a particular instrument, navigate to the box for that instrument on the front panel of the user interface. Enter the appropriate address for the instrument in the **Address** field, and click the checkbox adjacent to the address field to connect to the instrument. For example: to communicate with the SRS DG645 pulse generator, enter the serial port address (e.g. COM6) in the address field and select the checkbox to connect to the device. The output box will indicate if connection to the instrument was successful. 
 
-To view the avilable instrument ports, navigate to **Menu -> Show avilable instrument ports**. Addresses of each avilable VISA, serial, and FTID USB port will be printed in the output box. To connect with a particular instrument, navigate to the box for that instrument on the front panel of the GUI. Enter the appropriate address for the instrument in the **Address** field, and click the checkbox adjacent to the address field to connect to the instrument. For example: to communicate with the SRS DG645 pulse generator, enter the serial port address (e.g. COM6) in the address field and select the checkbox to connect to the device. The output box will indicate if connection to the instrument was successful. If the connection failed, check the instument address and connection to the PC. The user may also determine whether the instument can be identified by the PC using Windows Device Manager or National Instruments Measurement & Automation Explorer (NI MAX).
+Troubleshooting:
+* Instruments may not be communicating properly unless they return an identification message in the outout box when the are connected. If an instrument will not connect, check that its address is correct, connection to the PC is good, and the instrument is powered on.
+* Some instruments require a reboot before they can connect to the PC after a failed connection.
+* The user may also determine whether the instument can be identified by the PC using Windows Device Manager or National Instruments Measurement & Automation Explorer (NI MAX).
 
-Notes:
-* Instruments may not be communicating properly unless they return an identification message in the outout box when the are connected. If instruments will not connect, check that their addresses are correct.
-* The application is set up to trigger pulses from the SRS DG645 using the A-B output. So when using the SRS DG645 as an external trigger for an auxilary laser, connect the DG645 *A-B output* to the laser *external trigger* input.
+### Connecting to LightField
+To acquire Raman spectra using Princeton Instruments LightField software, LightField must be opened from the GUI by clicking **Launch LightField**. Once LightField loads, the user should load the LightField experiment called **Default Python Experiment**. After the experiment is loaded, settings can be modified in LightField. Raman spectra can be acquired by clicking the **Acquire Raman spectrum*** button the the GUI.
 
-## Connecting to Gentec S-Link photometer
+### Connecting to the SRS DG645 digital delay generator
+The application is set up to trigger pulses from the SRS DG645 using the A-B output. So when using the SRS DG645 as an external trigger for an auxilary laser, connect the DG645 *A-B output* to the laser *external trigger* input.
+
+### Connecting to Gentec S-Link photometer
 The photometer will not communicate with the PC if it has been left in an inconsistent state. To reset connection to the PC, unplug the USB cable from the photometer for 5 seconds and then plug it back in. 
 
-## Connecting to Thorlabs K-Cube KDC101 controllers
+### Connecting to Thorlabs K-Cube KDC101 controllers
 These controllers cannot be found by the computer if the ```import thorlabs_apt as apt``` command has been run before the controllers were connected to the PC. After they are connected, make sure the Python kernel has been restarted to allow initialization of ```APT.DLL``` while the controllers are connected and powered. 
 
-## Connecting to Marzhauser MCL-3 stage controler
+### Connecting to Marzhauser MCL-3 stage controler
 Make sure the "Joystick" knob on the front panel of the MCL-3 is in the "Auto" position. In the "Man" position, serial communication is disabled.
 
-## Connecting to Laseroptik AVACS beam attenuator
+### Connecting to Laseroptik AVACS beam attenuator
 The AVACS beam atenuator will not communicate with the PC unless the *Mode* is set to *Remote* on the top panel of the AVACS unit. 
 
-
-## Connecting to LightField
-To acquire Raman spectra using Princeton Instruments LightField software, LightField must be opened from the GUI by clicking **Launch LightField**. Once LightField loads, the user should load the LightField experiment called **Default Python Experiment**. After the experiment is loaded, settings can be modified in LightField. Raman spectra can be acquired by clicking the **Acquire Raman spectrum*** button the the GUI.
 
 
 ## Running an experimental Sequence
