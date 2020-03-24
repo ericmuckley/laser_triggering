@@ -15,7 +15,7 @@ The software can be run two different ways:
 2. Alternatively, the software can be started by double-clicking the ```RUN_LASER_TRIGGERING.bat``` Windows BAT file located in the *C:\\Desktop\\eric\\* directory. This BAT file will run the software but the user will not be able to see any errors which occurred.
 
 
-When the application starts running, the gray user interface window should pop up.
+When the application starts running, the gray user interface window should pop up. At any time while the application is running, the user can view this instruction file by navigating to the top menubar of the user interface and selecting **Help -> Show help**.
 
 
 ## Connecting to instruments
@@ -79,24 +79,27 @@ Each time a Raman spectrum is acquired, the **Default_Python_Experiment** in Lig
     * **srs.py**: module for controlling SRS DG645 digital delay pulse generator
     * **slink.py**: module for controlling Gentech S-link photometer
 * **logs**: default directory for saving experiment configuration files and logging experimental data
-* **support_files**: directory for storing supporting files (_APT.dll_, _APTAPI.h_, _ATP.lib_) and other unused depreciated files
+* **support_files**: directory for storing supporting Windows *DLL* files (_APT.dll_, _APTAPI.h_, _ATP.lib_) and other snippets of test code
 * **img**: directory for storing images which are embedded in the README.md file
 
 
 
 
 # Editing the software
-To edit the user interface, use *QT Designer*. This installed by default with *Anaconda*. After *Anaconda* is installed, open the *Anaconda prompt*. In the command prompt, type ```designer``` and hit *enter*. The program *QT Designer* will open. Next, open the file *ui.ui* which is the unser-interface design file in this directory. The user interface can now be edited. Each widget on the user-interface can be named with a custom name, and this name will be called by the *app.py* file to assign functionality to the widget.
+
+To edit the user interface, use *QT Designer*. This program is installed by default with *Anaconda*. After *Anaconda* is installed, open the *Anaconda prompt*. In the command prompt, type ```designer``` and hit *enter*. The program *QT Designer* will open. Alternatively, open *Designer* using the *Designer* shortcut in the *C:\\Desktop\\eric\\* directory. Once *Designer* is opened, open the user interface design file *ui.ui*. The *ui.ui* file should be located in the *C:\\Desktop\\eric\\laser_triggering\\* directory. The user interface can now be edited. Each widget on the user-interface is named with a custom name, and this name is called by the *app.py* file to assign functionality to the widget. Beware that changing any widget names or deleting any of the widgets on the user interface file will cause errors in the Python code unless the code is updated to accomodate the changes.
 
 
-The main script which opens up the user-interface file is *app.py*. This script contains code for connecting each user-interface widget with associated functions to run when that widget is activated by the user. The script also calls other modules which control specific instruments. These are located inside the *instr_libs* directory. For example, the module *srs.py* inside the *instr_libs* directory contains code for controlling the SRS digital Delay Generator. In *app.py*, data is transferred between *app.py* and *srs.py* using the dictionary *self.srs*, which ocntains references to all SRS-related widgets on the user-interface.
+The main script which opens up the user-interface file is *app.py*. This script contains code for connecting each user interface widget with associated functions to run when that widget is activated by the user. The script also calls other modules which control specific instruments. These are located inside the *instr_libs* directory. For example, the module *srs.py* inside the *instr_libs* directory contains code for controlling the SRS digital Delay Generator. In *app.py*, data is transferred between *app.py* and *srs.py* using the dictionary *self.srs*, which contains references to all SRS-related widgets on the user-interface.
+
+The *app.py* and all other modules inside the *instr_libs* directory can be modified to add features or to add functions which are associated with new widgets in the *ui.ui* file.
 
 
 
 # Installation of dependencies
-Prior to use, Python libraries and dependencies must be installed. To install dependencies, it is recommended to use Anaconda (https://www.anaconda.com/distribution/#download-section).
+Prior to use of *Laser triggering*, Python libraries and dependencies must be installed. To install dependencies, it is recommended to use Anaconda (https://www.anaconda.com/distribution/#download-section).
 
-To install all dependencies on a Windows 64-bit computer, create an Anaconda envinrment and populate it with the required dependencies by opening the Anaconda command prompt and running: 
+To install all dependencies on a Windows 64-bit computer, create an Anaconda environment and populate it with the required dependencies by opening the Anaconda command prompt and running: 
 ```conda create --name env --file requirements.txt```
 where ```env``` is the name of the new environment.
 
@@ -107,5 +110,7 @@ After installation of the _thorlabs_apt_ library, three files in the support_fil
 
 This allows communication between Thorlabs instruments, Windows, and Python.
 
-
 The *PI_GCS2_DLL_x64.dll* library must be placed inside the same folder as the *piline.py* script for communication between Python and the PI hardware.
+
+# Additional help
+For additional help with this application, contact the author Eric: ericmuckley at gmail dot com.
