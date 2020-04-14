@@ -2,8 +2,12 @@
 
 This respository contains code for an application which allows in situ spectroscopic characterization of materials during automated laser processing. The application controls triggering of laser pulses, acquisition of Raman spectra, acquisition of traces from an oscilloscope, control of motorized translational stages, and control of motorized optical polarizer/analyzer systems.
 
-A screenshot of the user interface is shown below.
+### Screenshot of the user interface
 ![Screenshot of the GUI](./img/gui.jpg)
+
+### Schematic diagram of the experimental configuration
+![Schematic of the experimental configuration](./img/experiment_diagram.JPG)
+
 
 
 # Use
