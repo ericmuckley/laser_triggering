@@ -86,7 +86,6 @@ isort=4.3.21=py37_0
 itsdangerous=1.1.0=py37_0
 jdcal=1.4.1=py_0
 jedi=0.15.1=py37_0
-jinja2=2.10.3=py_0
 joblib=0.13.2=py37_0
 jpeg=9b=hb83a4c4_2
 json5=0.8.5=py_0
