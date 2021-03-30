@@ -178,7 +178,7 @@ pycosat=0.6.3=py37hfa6e2cd_0
 pycparser=2.19=py37_0
 pycurl=7.43.0.3=py37h7a1dbc1_0
 pyflakes=2.1.1=py37_0
-pygments=2.4.2=py_0
+pygments=2.7.4=py_0
 pylint=2.4.2=py37_0
 pyodbc=4.0.27=py37ha925a31_0
 pyopenssl=19.0.0=py37_0
