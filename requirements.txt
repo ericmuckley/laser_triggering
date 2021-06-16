@@ -254,7 +254,7 @@ tornado=6.0.3=py37he774522_0
 tqdm=4.36.1=py_0
 traitlets=4.3.3=py37_0
 unicodecsv=0.14.1=py37_0
-urllib3=1.24.2=py37_0
+urllib3=1.26.5=py37_0
 vc=14.1=h0510ff6_4
 vs2015_runtime=14.16.27012=hf0eaf9b_1
 wcwidth=0.1.7=py37_0
