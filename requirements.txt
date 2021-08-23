@@ -1,7 +1,6 @@
 # This file may be used to create an environment using:
 # $ conda create --name <env> --file <this file>
 # platform: win-64
-alabaster=0.7.12=py37_0
 anaconda=2019.10=py37_0
 anaconda-client=1.7.2=py37_0
 anaconda-navigator=1.9.7=py37_0
@@ -93,8 +92,6 @@ jupyter=1.0.0=py37_7
 jupyter_client=5.3.3=py37_1
 jupyter_console=6.0.0=py37_0
 jupyter_core=4.5.0=py_0
-jupyterlab=1.1.4=pyhf63ae98_0
-jupyterlab_server=1.0.6=py_0
 keyring=18.0.0=py37_0
 kiwisolver=1.1.0=py37ha925a31_0
 krb5=1.16.1=hc04afaa_7
