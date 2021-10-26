@@ -10,7 +10,6 @@ astroid=2.3.1=py37_0
 astropy=3.2.1=py37he774522_0
 atomicwrites=1.3.0=py37_1
 attrs=19.2.0=py_0
-babel=2.7.0=py_0
 backcall=0.1.0=py37_0
 backports=1.0=py_2
 backports.functools_lru_cache=1.5=py_2
