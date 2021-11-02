@@ -46,8 +46,6 @@ curl=7.65.3=h2a8f88b_0
 cycler=0.10.0=py37_0
 cython=0.29.13=py37ha925a31_0
 cytoolz=0.10.0=py37he774522_0
-dask=2.5.2=py_0
-dask-core=2.5.2=py_0
 decorator=4.4.0=py37_1
 defusedxml=0.6.0=py_0
 distributed=2.5.2=py_0
