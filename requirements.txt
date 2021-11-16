@@ -154,8 +154,6 @@ pathlib2=2.3.5=py37_0
 patsy=0.5.1=py37_0
 pep8=1.7.1=py37_0
 pickleshare=0.7.5=py37_0
-pip=19.2.3=py37_0
-pipython=1.3.6.16=pypi_0
 pkginfo=1.5.0.1=py37_0
 pluggy=0.13.0=py37_0
 ply=3.11=py37_0
