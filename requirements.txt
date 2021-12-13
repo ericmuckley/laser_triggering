@@ -254,7 +254,6 @@ win_unicode_console=0.5=py37_0
 wincertstore=0.2=py37_0
 winpty=0.4.3=4
 wrapt=1.11.2=py37he774522_0
-xlrd=1.2.0=py37_0
 xlsxwriter=1.2.1=py_0
 xlwings=0.15.10=py37_0
 xlwt=1.3.0=py37_0
