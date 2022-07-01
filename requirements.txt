@@ -48,7 +48,7 @@ cython=0.29.13=py37ha925a31_0
 cytoolz=0.10.0=py37he774522_0
 decorator=4.4.0=py37_1
 defusedxml=0.6.0=py_0
-distributed=2.5.2=py_0
+distributed>=2021.10.0
 docutils=0.15.2=py37_0
 entrypoints=0.3=py37_0
 et_xmlfile=1.0.1=py37_0
